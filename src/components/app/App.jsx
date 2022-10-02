@@ -7,9 +7,8 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 
 
-class App extends React.Component {
+function App () {
 
-  render() {
     return (
       <div className='App'>
         <AppHeader/>
@@ -20,7 +19,6 @@ class App extends React.Component {
       </div>
     )
   }
-}
 
 
 export default App;

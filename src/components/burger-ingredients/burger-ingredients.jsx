@@ -5,41 +5,11 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import { data } from '../utils';
 
-function Ingredient ({productInfo}) {
-    return (
-        <li className={menuStyles.card}>
-            <div>
-             <Counter count={1} size="default" />
-            </div>
-            <img src={productInfo.image} alt={productInfo.name}/>
-            <div className={menuStyles.span_area}>
-                    <span className={`${menuStyles.title} text text_type_digits-default`}>{productInfo.price}</span>
-                    <CurrencyIcon type="primary" />
-            </div>
-            <p className={`${menuStyles.product__name} text text_type_main-default`}>{productInfo.name}</p>
-        </li>
-    )
-}
-
-function MenuSection ({list, type}) {
-    return (
-        <div className={`${menuStyles.menu}`}>
-                <h2 className={`${menuStyles.title} text text_type_main-medium`}>
-                    {type}
-                    </h2>
-                <ul className={`${menuStyles.menubox}`}>
-                {list.map((product)=>(
-                <Ingredient productInfo={product} key={product._id}/>
-            ))}
-                </ul>
-            </div>
-    )
-}
 
 
-class BurgerIngredients extends React.Component {
+function BurgerIngredients () {
 
-    TabMenu = () => {
+    const TabMenu = () => {
         const [current, setCurrent] = React.useState('one')
         return (
           <div style={{ display: 'flex' }}>
@@ -56,12 +26,43 @@ class BurgerIngredients extends React.Component {
         )
       }
 
-    render() {
+
+      function Ingredient ({productInfo}) {
+        return (
+            <li className={menuStyles.card}>
+                <div>
+                 <Counter count={1} size="default" />
+                </div>
+                <img src={productInfo.image} alt={productInfo.name}/>
+                <div className={menuStyles.span_area}>
+                        <span className={`${menuStyles.title} text text_type_digits-default`}>{productInfo.price}</span>
+                        <CurrencyIcon type="primary" />
+                </div>
+                <p className={`${menuStyles.product__name} text text_type_main-default`}>{productInfo.name}</p>
+            </li>
+        )
+    }
+    
+    function MenuSection ({list, type}) {
+        return (
+            <div className={`${menuStyles.menu} pt-10`}>
+                    <h2 className={`${menuStyles.title} text text_type_main-medium`}>
+                        {type}
+                        </h2>
+                    <ul className={`${menuStyles.menubox}`}>
+                    {list.map((product)=>(
+                    <Ingredient productInfo={product} key={product._id}/>
+                ))}
+                    </ul>
+                </div>
+        )
+    }
+    
       return (
         <section>
             <div className="pt-10 pb-10">
                 <h1 className={`${menuStyles.title} text text_type_main-large pb-5`}>Соберите бургер</h1>
-                <this.TabMenu/>
+                <TabMenu/>
             </div>
             <div className={`${menuStyles.scrollzone}`}>
                 <MenuSection list={data.filter(e => e.type === "bun")} type="Булки"/>
@@ -71,6 +72,6 @@ class BurgerIngredients extends React.Component {
         </section>
       );
     }
-  }
+  
   
   export default BurgerIngredients
