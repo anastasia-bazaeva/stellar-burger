@@ -1,8 +1,25 @@
 
 .title {
     margin: 0;
-    width: 100%;
 }
+
+.scrollzone {
+    max-height: 740px;
+    overflow-y: auto;
+    overflow-y: scroll;
+}
+
+.scrollzone::-webkit-scrollbar {
+    width: 8px;
+    background-color: #2F2F37;
+    height: 492px;
+}
+
+.scrollzone::-webkit-scrollbar-thumb {
+    background: #8585AD;
+
+}
+
 .menu {
     display: flex;
     flex-direction: column;
@@ -20,4 +37,17 @@
     align-items: center;
     justify-content: center;
     width: 272px;
+    position: relative;
+}
+
+.span_area {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    text-align: center;
+}
+
+.product__name {
+    composes: title;
+    text-align: center;
 }
