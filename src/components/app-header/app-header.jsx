@@ -9,24 +9,26 @@ import { ProfileIcon  } from '@ya.praktikum/react-developer-burger-ui-components
 class AppHeader extends React.Component {
     render() {
       return (
-        <header className={`${headerStyles.header} p-4`}>
+        <header className={`${headerStyles.header}`}>
+          <nav className={`${headerStyles.nav} p-4`}>
             <div className={headerStyles.iconblock}>
-                <div className={`${headerStyles.iconbox} p-5`}>
+                <a href="#" className={`${headerStyles.iconbox} p-5`}>
                   <BurgerIcon type="primary" />
                   <p className={`${headerStyles.title} text text_type_main-default`}>Конструктор</p>
-                </div>
-                <div className={`${headerStyles.iconbox} p-5`}>
+                </a>
+                <a href="#" className={`${headerStyles.iconbox} p-5`}>
                   <ListIcon type="secondary" />
                   <p className={`${headerStyles.title} text text_type_main-default text_color_inactive`}>Лента заказов</p>
-                </div>
+                </a>
             </div>
             <div>
               <Logo />
             </div>
-            <div className={`${headerStyles.iconbox_profile} p-5`}>
+            <a href="#" className={`${headerStyles.iconbox_profile} p-5`}>
               <ProfileIcon type="secondary" />
               <p className={`${headerStyles.title} text text_type_main-default text_color_inactive`}>Личный кабинет</p>
-            </div>
+            </a>
+          </nav>
         </header>
       );
     }
