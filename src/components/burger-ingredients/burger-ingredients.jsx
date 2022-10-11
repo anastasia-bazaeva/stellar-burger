@@ -1,11 +1,11 @@
 import React from "react";
 import menuStyles from './burger-ingredients.module.css';
 import TabMenu from "../tab-menu/tab-menu";
-import { data } from '../utils';
+// import { data } from '../utils';
 import MenuSection from "../menu-section/menu-section";
 
 
-function BurgerIngredients () {
+function BurgerIngredients (props) {
       return (
         <section>
             <div className="pt-10 pb-10">
@@ -13,9 +13,9 @@ function BurgerIngredients () {
                 <TabMenu/>
             </div>
             <div className={`${menuStyles.scrollzone}`}>
-                <MenuSection list={data.filter(e => e.type === "bun")} type="Булки"/>
-                <MenuSection list={data.filter(e => e.type === "sauce")} type="Соусы"/>
-                <MenuSection list={data.filter(e => e.type === "main")} type="Начинки"/>
+                <MenuSection list={props.data.filter(e => e.type === "bun")} type="Булки"/>
+                <MenuSection list={props.data.filter(e => e.type === "sauce")} type="Соусы"/>
+                <MenuSection list={props.data.filter(e => e.type === "main")} type="Начинки"/>
             </div>
         </section>
       );

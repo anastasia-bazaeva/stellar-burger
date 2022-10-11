@@ -2,7 +2,24 @@ import React from "react";
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 
 export default function TabMenu () {
-    const [current, setCurrent] = React.useState('one')
+    const [current, setCurrent] = React.useState('one');
+
+  //   React.useEffect(() => {
+  //     const putScroll = () => {
+  //         if (menuZone.current.scrollTop <= 270) {
+  //             setCurrent('one')
+  //         } else if (menuZone.current.scrollTop <= 700) {
+  //             setCurrent('two')
+  //         } else {
+  //             setCurrent('three')
+  //         }
+  //     }
+  //     menuZone.current.addEventListener('scroll', putScroll)
+  //     return () => {
+  //       menuZone.current.removeEventListener('scroll', putScroll)
+  //     }
+  // }, [])
+
     return (
       <div style={{ display: 'flex' }}>
         <Tab value="one" active={current === 'one'} onClick={setCurrent}>
