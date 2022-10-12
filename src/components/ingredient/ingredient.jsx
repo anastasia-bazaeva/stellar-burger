@@ -9,11 +9,11 @@ export default function Ingredient ({productInfo}) {
 
   const [isOrderDetailsOpened, setIsOrderDetailsOpened] = React.useState(false);
 
-  React.useEffect(()=>{
-    return ()=>{
-        document.removeEventListener('click', handleClick);
-    }
-  })
+  // React.useEffect(()=>{
+  //   return ()=>{
+  //       document.removeEventListener('click', handleClick);
+  //   }
+  // })
 
   const closeAllModals = () => {
     setIsOrderDetailsOpened(false);
@@ -44,12 +44,11 @@ export default function Ingredient ({productInfo}) {
         </li>
         {isOrderDetailsOpened &&
             <Modal
-             title="Детали ингридиента"
              onOverlayClick={closeAllModals}
              onEscKeydown={handleEscKeydown}
              modalsContainer={modalsContainer}
            >
-             <IngredientInfo productInfo={productInfo}/>
+             <IngredientInfo productInfo={productInfo} closeAllModals={closeAllModals}/>
              </Modal>}
              </>
     )

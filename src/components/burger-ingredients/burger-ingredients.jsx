@@ -23,9 +23,9 @@ function BurgerIngredients (props) {
         
         menuZone.current.addEventListener('scroll', putScroll);
 
-        return ()=>{
-          menuZone.current.removeEventListener('scroll', putScroll);
-        }
+        // return ()=>{
+        //   menuZone.current.removeEventListener('scroll', putScroll);
+        // }
     }, [])
 
       return (

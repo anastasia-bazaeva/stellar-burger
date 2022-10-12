@@ -6,7 +6,7 @@
     justify-content: flex-start;
     gap: 40px;
     width: 600px;
-    max-height: 650px;
+    max-height: 750px;
 }
 .order__window {
     overflow-y: scroll;
@@ -35,3 +35,10 @@
     gap: 8px;
 }
 
+.drag {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+}

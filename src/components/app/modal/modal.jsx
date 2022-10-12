@@ -4,7 +4,7 @@ import ModalOverlay from "../modal-overlay/modal-overlay";
 import modalStyles from './modal.module.css';
 
 
-export default function Modal ({ title, onOverlayClick, onEscKeydown, children, modalsContainer }) {
+export default function Modal ({ onOverlayClick, onEscKeydown, children, modalsContainer }) {
 
   React.useEffect(() => {
     document.addEventListener('keydown', onEscKeydown);
@@ -16,11 +16,8 @@ export default function Modal ({ title, onOverlayClick, onEscKeydown, children, 
 
   return ReactDOM.createPortal(
     <>
-      <div className={modalStyles.window}>
-        <div className={modalStyles.container}>
-        <h3>{title}</h3> 
+      <div className={modalStyles.window}>Это модальное окно
         {children}
-        </div>
       </div>
       <ModalOverlay onClick={onOverlayClick} />
     </>,

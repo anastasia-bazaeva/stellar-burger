@@ -12,22 +12,21 @@ import BurgerConstructor from '../burger-constructor/burger-constructor';
 
 
 function App () {
-  const [state, setState] = React.useState({
-    data: [],
-    isLoading: false
-  });
+  const [data, setState] = React.useState([]);
+  const [isLoading, setLoading] = React.useState(false);
 
   const getServerData = async () => {
     try {
-      setState({...state, isLoading: true})
+      setLoading(true);
       const res = await fetch(`${apiLink}ingredients`);
       const data = await res.json();
-      setState({...state, data: data.data, isLoading: false});
+      setState(data.data);
+      setLoading(false);
       console.log('Успешная загрузка')
     }
     catch(e) {
       console.log(`При загрузке данных с сервера что-то пошло не так: ${e}`)
-      setState({...state, isLoading: false})
+      setLoading(false);
     }
   }
 
@@ -38,10 +37,12 @@ function App () {
     return (
       <div className='App'>
         <AppHeader/>
+        <React.StrictMode>
         <main className='content' id='modals'>
-          <BurgerIngredients data={state.data}/>
-          <BurgerConstructor data={state.data}/>
+          <BurgerIngredients data={data}/>
+          <BurgerConstructor data={data}/>
         </main>
+        </React.StrictMode>
       </div>
     )
   }
