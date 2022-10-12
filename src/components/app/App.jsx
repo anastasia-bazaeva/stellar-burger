@@ -38,7 +38,7 @@ function App () {
     return (
       <div className='App'>
         <AppHeader/>
-        <main className='content'>
+        <main className='content' id='modals'>
           <BurgerIngredients data={state.data}/>
           <BurgerConstructor data={state.data}/>
         </main>
