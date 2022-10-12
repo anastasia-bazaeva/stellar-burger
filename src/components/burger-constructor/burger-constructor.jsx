@@ -5,12 +5,16 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import constructStyles from './burger-constructor.module.css';
 import kraterBun from '../../images/kratorbulka.svg'
-import Modal from "../app/modal/modal";
-import OrderDetails from "../app/order-details/order-details";
+import Modal from "../modal/modal";
+import OrderDetails from "../order-details/order-details";
+import orderStyles from '../../components/order-details/order-details.module.css';
+import nutritionStyles from '../ingredient-info/ingredient-info.module.css';
+import donePic from '../../images/done.svg'
 
 
 export default function BurgerConstructor ({data}) {
   const [isOrderDetailsOpened, setIsOrderDetailsOpened] = React.useState(false);
+  const [orderNumber, setOrderNumber] = React.useState(0);
 
   const saucesAndFillingsData = data.filter((e) => e.type !== 'bun');
   const total = saucesAndFillingsData.reduce((acc, p) => acc + p.price, 0);
@@ -21,13 +25,13 @@ export default function BurgerConstructor ({data}) {
 
   const handleClick = () => {
     setIsOrderDetailsOpened(true);
+    setOrderNumber(Math.floor(Math.random() * 999999));
   };
   
   const handleEscKeydown = (event) => {
     event.key === "Escape" && closeAllModals();
   };
 
-  const modalsContainer = document.querySelector('#modals');
 
       return (
         <>
@@ -73,9 +77,19 @@ export default function BurgerConstructor ({data}) {
             <Modal
              onOverlayClick={closeAllModals}
              onEscKeydown={handleEscKeydown}
-             modalsContainer={modalsContainer}
            >
-            <OrderDetails total={total} closeAllModals={closeAllModals}/>
+            <div className={orderStyles.order}>
+              <div className={orderStyles.info}>
+                  <h2 className={`${orderStyles.digits} text text_type_digits-large`}>{orderNumber}</h2>
+                  <p className={`${orderStyles.text} text text_type_main-medium`}>Идентификатор заказа</p>
+              </div>
+              <img src={donePic} alt='Галочка'/>
+              <div className={orderStyles.spanArea}>
+                  <span className={`${orderStyles.text} text text_type_main-default`}>Ваш заказ уже начали готовить</span>
+                  <span className={`${orderStyles.text} text text_type_main-default text_color_inactive`}>Дождитесь готовности на орбитальной станции</span>
+              </div>
+              <button className={nutritionStyles.button} onClick={closeAllModals}></button>
+            </div>
              </Modal>}
              </>
       );

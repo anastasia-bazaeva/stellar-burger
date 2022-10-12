@@ -2,7 +2,7 @@ import React from "react";
 import menuStyles from '../burger-ingredients/burger-ingredients.module.css';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
-import Modal from "../app/modal/modal";
+import Modal from "../modal/modal";
 import IngredientInfo from "../ingredient-info/ingredient-info";
 
 export default function Ingredient ({productInfo}) {
@@ -26,8 +26,6 @@ export default function Ingredient ({productInfo}) {
   const handleEscKeydown = (event) => {
     event.key === "Escape" && closeAllModals();
   };
-
-  const modalsContainer = document.querySelector('#modals');
     
     return (
         <>
@@ -46,7 +44,6 @@ export default function Ingredient ({productInfo}) {
             <Modal
              onOverlayClick={closeAllModals}
              onEscKeydown={handleEscKeydown}
-             modalsContainer={modalsContainer}
            >
              <IngredientInfo productInfo={productInfo} closeAllModals={closeAllModals}/>
              </Modal>}

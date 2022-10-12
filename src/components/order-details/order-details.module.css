@@ -1,0 +1,34 @@
+.order {
+    width: 720px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    z-index: 10;
+    padding: 120px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+}
+
+.digits {
+    margin: 0;
+    text-shadow: 0px 0px 16px rgba(51, 51, 255, 0.25), 
+    0px 0px 8px rgba(51, 51, 255, 0.25), 
+    0px 4px 32px rgba(51, 51, 255, 0.5);
+}
+
+.text {
+    margin: 0;
+}
+
+.spanArea {
+    composes: info;
+    gap: 8px;
+}

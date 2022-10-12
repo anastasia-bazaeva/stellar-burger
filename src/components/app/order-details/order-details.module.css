@@ -1,7 +1,0 @@
-.order {
-    width: 720px;
-    display: flex;
-    flex-direction: column;
-    gap: 60px;
-    z-index: 10;
-}
