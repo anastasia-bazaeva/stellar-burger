@@ -1,7 +1,7 @@
 import React from "react";
 import nutritionStyles from './ingredient-info.module.css';
 
-export default function IngredientInfo ({productInfo, closeAllModals}) {
+export default function IngredientInfo ({productInfo}) {
 
     return (
         <div className={nutritionStyles.container}>
@@ -14,7 +14,6 @@ export default function IngredientInfo ({productInfo, closeAllModals}) {
                 <p className="text text_type_main-default text_color_inactive">Жиры, г<br/>{productInfo.fat}</p>
                 <p className="text text_type_main-default text_color_inactive">Углеводы, г<br/>{productInfo.carbohydrates}</p>
             </div>
-            <button className={nutritionStyles.button} onClick={closeAllModals}></button>
         </div>
     )
 }

@@ -24,17 +24,3 @@
     flex-direction: row;
     gap: 20px;
 }
-
-.button {
-    width: 24px;
-    height: 24px;
-    background-color: transparent;
-    background-image: url(../../images/crossicon.svg);
-    position: absolute;
-    top: 60px;
-    right: 40px;
-    border: none;
-}
-.button:hover {
-    cursor: pointer;
-}

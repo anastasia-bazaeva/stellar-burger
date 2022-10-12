@@ -44,8 +44,9 @@ export default function Ingredient ({productInfo}) {
             <Modal
              onOverlayClick={closeAllModals}
              onEscKeydown={handleEscKeydown}
+             isOrder={false}
            >
-             <IngredientInfo productInfo={productInfo} closeAllModals={closeAllModals}/>
+             <IngredientInfo productInfo={productInfo}/>
              </Modal>}
              </>
     )

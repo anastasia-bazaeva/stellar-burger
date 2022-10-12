@@ -32,7 +32,6 @@ export default function BurgerConstructor ({data}) {
     event.key === "Escape" && closeAllModals();
   };
 
-
       return (
         <>
         <section className={`${constructStyles.order}`}>
@@ -77,6 +76,7 @@ export default function BurgerConstructor ({data}) {
             <Modal
              onOverlayClick={closeAllModals}
              onEscKeydown={handleEscKeydown}
+             isOrder={true}
            >
             <div className={orderStyles.order}>
               <div className={orderStyles.info}>
@@ -88,7 +88,6 @@ export default function BurgerConstructor ({data}) {
                   <span className={`${orderStyles.text} text text_type_main-default`}>Ваш заказ уже начали готовить</span>
                   <span className={`${orderStyles.text} text text_type_main-default text_color_inactive`}>Дождитесь готовности на орбитальной станции</span>
               </div>
-              <button className={nutritionStyles.button} onClick={closeAllModals}></button>
             </div>
              </Modal>}
              </>
