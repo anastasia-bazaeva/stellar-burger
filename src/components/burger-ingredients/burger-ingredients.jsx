@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from 'prop-types';
+
 import menuStyles from './burger-ingredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 // import { data } from '../utils';
@@ -23,9 +25,9 @@ function BurgerIngredients (props) {
         
         menuZone.current.addEventListener('scroll', putScroll);
 
-        // return ()=>{
-        //   menuZone.current.removeEventListener('scroll', putScroll);
-        // }
+        return ()=>{
+          document.removeEventListener('scroll', putScroll);
+        }
     }, [])
 
       return (
@@ -52,6 +54,13 @@ function BurgerIngredients (props) {
         </section>
       )
     }
-  
+    
+  BurgerIngredients.propsTypes = ({
+    active: PropTypes.bool,
+    onClick: PropTypes.func,
+    list: PropTypes.array,
+    type: PropTypes.string,
+    id: PropTypes.string
+  })
   
   export default BurgerIngredients

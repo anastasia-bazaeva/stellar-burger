@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from 'prop-types';
+
 import menuStyles from '../burger-ingredients/burger-ingredients.module.css';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -51,3 +53,11 @@ export default function Ingredient ({productInfo}) {
              </>
     )
 }
+
+Ingredient.propTypes = ({
+  count: PropTypes.number,
+  src: PropTypes.any,
+  onOverlayClick: PropTypes.func,
+  onEscKeydown: PropTypes.func,
+  isOrder: PropTypes.bool,
+})

@@ -1,5 +1,6 @@
 import ReactDOM from 'react-dom';
 import React from "react";
+import PropTypes from 'prop-types';
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import modalStyles from './modal.module.css';
 
@@ -24,4 +25,8 @@ export default function Modal ({ onOverlayClick, onEscKeydown, children, isOrder
     </>,
     modalsContainer
   );
+}
+
+Modal.propsTypes = {
+  onClick: PropTypes.func
 }

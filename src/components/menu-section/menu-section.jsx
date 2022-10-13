@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from 'prop-types';
+
 import menuStyles from '../burger-ingredients/burger-ingredients.module.css';
 import Ingredient from "../ingredient/ingredient";
 
@@ -17,3 +19,9 @@ export default function MenuSection ({list, type, handleClick}) {
             </div>
     )
 }
+
+MenuSection.propsTypes = ({
+    productInfo: PropTypes.object,
+    key: PropTypes.any,
+    onClick: PropTypes.func
+  })

@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from 'prop-types';
+
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -9,7 +11,7 @@ import Modal from "../modal/modal";
 import OrderDetails from "../order-details/order-details";
 import orderStyles from '../../components/order-details/order-details.module.css';
 import nutritionStyles from '../ingredient-info/ingredient-info.module.css';
-import donePic from '../../images/done.svg'
+import donePic from '../../images/done.svg';
 
 
 export default function BurgerConstructor ({data}) {
@@ -17,7 +19,7 @@ export default function BurgerConstructor ({data}) {
   const [orderNumber, setOrderNumber] = React.useState(0);
 
   const saucesAndFillingsData = data.filter((e) => e.type !== 'bun');
-  const total = saucesAndFillingsData.reduce((acc, p) => acc + p.price, 0);
+  const total = saucesAndFillingsData.reduce((acc, p) => acc + p.price, 400);
 
   const closeAllModals = () => {
     setIsOrderDetailsOpened(false);
@@ -69,7 +71,7 @@ export default function BurgerConstructor ({data}) {
               <h2 className="text text_type_digits-medium">{total}</h2>
               <CurrencyIcon type="primary" />
             </div>
-            <Button type="primary" size="large" onClick={handleClick}>Оформить заказ</Button>
+            <Button type="primary" size="large" onClick={handleClick} htmlType={"submit"}>Оформить заказ</Button>
           </div>
         </section>
         {isOrderDetailsOpened &&
@@ -93,3 +95,15 @@ export default function BurgerConstructor ({data}) {
              </>
       );
     }
+BurgerConstructor.propTypes = ({
+  type: PropTypes.string,
+  isLocked: PropTypes.bool,
+  text: PropTypes.string, 
+  price: PropTypes.number,
+  thumbnail: PropTypes.any,
+  key: PropTypes.any,
+  onOverlayClick: PropTypes.func,
+  onEscKeydown: PropTypes.func,
+  isOrder: PropTypes.bool,
+  src: PropTypes.any
+})
