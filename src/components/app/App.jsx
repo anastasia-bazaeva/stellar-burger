@@ -1,26 +1,54 @@
 import React from 'react';
-import logo from './logo.svg';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import { getInfo } from '../utils';
+
+import AppHeader from '../app-header/app-header';
+import BurgerIngredients from '../burger-ingredients/burger-ingredients';
+import BurgerConstructor from '../burger-constructor/burger-constructor';
+
+
+
+function App () {
+  const [ingredientsData, setIngredientsData] = React.useState([null]);
+  const [isLoading, setLoading] = React.useState(true);
+
+  const getServerData = async () => {
+    try {
+      await getInfo()
+      .then((data) => setIngredientsData(data.data))
+      setLoading(false);
+      
+      console.log('Успешная загрузка')
+    }
+    catch(e) {
+      console.log(`При загрузке данных с сервера что-то пошло не так: ${e}`)
+      setLoading(false);
+    }
+  }
+
+  React.useEffect(()=>{
+    getServerData();
+  }, [])
+
+    return (isLoading?
+      <div className='loader-box'>
+        <div className='loading text text_type_main-large'>Загрузка</div>
+        <div className='spinner'></div>
+      </div>
+      : <div className='App'>
+        <AppHeader/>
+        <React.StrictMode>
+        <main className='content' id='modals'>
+          <BurgerIngredients ingredientsData={ingredientsData}/>
+          <BurgerConstructor ingredientsData={ingredientsData}/>
+        </main>
+        </React.StrictMode>
+      </div>
+    )
+  }
+  
 
 export default App;

@@ -1,0 +1,51 @@
+
+.order {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 40px;
+    width: 600px;
+    max-height: 750px;
+}
+.order__window {
+    overflow-y: scroll;
+}
+
+.order__window::-webkit-scrollbar {
+    width: 8px;
+    background-color: #2F2F37;
+    height: 492px;
+}
+
+.order__window::-webkit-scrollbar-thumb {
+    background: #8585AD;
+
+}
+
+.order__panel {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    align-items: center;
+}
+
+.order__info {
+    composes: order__panel;
+    gap: 8px;
+}
+
+.drag {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+}
+
+.order__content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+}
