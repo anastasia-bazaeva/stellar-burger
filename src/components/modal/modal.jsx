@@ -5,13 +5,18 @@ import ModalOverlay from "../modal-overlay/modal-overlay";
 import modalStyles from './modal.module.css';
 
 
-export default function Modal ({ onOverlayClick, onEscKeydown, children, isOrder }) {
+export default function Modal ({ onOverlayClick, children, isOrder }) {
   const modalsContainer = document.querySelector('#modals');
+
+  const handleEscKeydown = (event) => {
+      event.key === "Escape" && onOverlayClick();
+    }
+
   React.useEffect(() => {
-    document.addEventListener('keydown', onEscKeydown);
+    document.addEventListener('keydown', handleEscKeydown);
 
     return () => {
-      document.removeEventListener('keydown', onEscKeydown);
+      document.removeEventListener('keydown', handleEscKeydown);
     };
   }, []);
 

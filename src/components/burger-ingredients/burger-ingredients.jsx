@@ -3,26 +3,23 @@ import PropTypes from 'prop-types';
 
 import menuStyles from './burger-ingredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-// import { data } from '../utils';
 import MenuSection from "../menu-section/menu-section";
 
-
-
 function BurgerIngredients (props) {
-  const [current, setCurrent] = React.useState('one');
+  const [current, setCurrent] = React.useState('bun');
   const menuZone = React.useRef();
 
   React.useEffect(() => {
         const putScroll = () => {
             if (menuZone.current.scrollTop <= 270) {
-                setCurrent('one')
+                setCurrent('bun')
             } else if (menuZone.current.scrollTop <= 700) {
-                setCurrent('two')
+                setCurrent('sauce')
             } else {
-                setCurrent('three')
+                setCurrent('main')
             }
         }
-        
+         
         menuZone.current.addEventListener('scroll', putScroll);
 
         return ()=>{
@@ -30,26 +27,32 @@ function BurgerIngredients (props) {
         }
     }, [])
 
+    // const putView = (value) => {
+    //   setCurrent(value);
+    //   document.querySelector(`#${value}`).scrollIntoView({behavior: 'smooth'});
+    // }
+    // вообще никак не получилось через element.scrollIntoView - элемент все время null с рефами или по id
+
       return (
         <section>
             <div className="pt-10 pb-10">
                 <h1 className={`${menuStyles.title} text text_type_main-large pb-5`}>Соберите бургер</h1>
                 <div style={{ display: 'flex' }}>
-                  <Tab value="one" active={current === 'one'} onClick={setCurrent}>
+                  <Tab value='bun' active={current === 'bun'} onClick={setCurrent}>
                     Булки
                   </Tab>
-                  <Tab value="two" active={current === 'two'} onClick={setCurrent}>
+                  <Tab value='sauce' active={current === 'sauce'} onClick={setCurrent}>
                     Соусы
                   </Tab>
-                  <Tab value="three" active={current === 'three'} onClick={setCurrent}>
+                  <Tab value='main' active={current === 'main'} onClick={setCurrent}>
                     Начинки
                   </Tab>
                 </div>
             </div>
             <div className={`${menuStyles.scrollzone}`} ref={menuZone}>
-                <MenuSection list={props.data.filter(e => e.type === "bun")} type="Булки" id={'one'}/>
-                <MenuSection list={props.data.filter(e => e.type === "sauce")} type="Соусы" id={'two'}/>
-                <MenuSection list={props.data.filter(e => e.type === "main")} type="Начинки" id={'three'}/>
+                <MenuSection list={props.ingredientsData?.filter(e => e.type === "bun")} type="Булки" id={'bun'}/>
+                <MenuSection list={props.ingredientsData?.filter(e => e.type === "sauce")} type="Соусы" id={'sauce'}/>
+                <MenuSection list={props.ingredientsData?.filter(e => e.type === "main")} type="Начинки" id={'main'}/>
             </div>
         </section>
       )

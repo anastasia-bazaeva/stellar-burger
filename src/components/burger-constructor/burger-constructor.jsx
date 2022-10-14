@@ -8,18 +8,21 @@ import { DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import constructStyles from './burger-constructor.module.css';
 import kraterBun from '../../images/kratorbulka.svg'
 import Modal from "../modal/modal";
-import OrderDetails from "../order-details/order-details";
 import orderStyles from '../../components/order-details/order-details.module.css';
-import nutritionStyles from '../ingredient-info/ingredient-info.module.css';
 import donePic from '../../images/done.svg';
 
 
-export default function BurgerConstructor ({data}) {
+export default function BurgerConstructor ({ingredientsData}) {
   const [isOrderDetailsOpened, setIsOrderDetailsOpened] = React.useState(false);
   const [orderNumber, setOrderNumber] = React.useState(0);
 
-  const saucesAndFillingsData = data.filter((e) => e.type !== 'bun');
-  const total = saucesAndFillingsData.reduce((acc, p) => acc + p.price, 400);
+  const saucesAndFillingsData = React.useMemo(() => 
+    ingredientsData?.filter((e) => e.type !== 'bun'),
+     [ingredientsData]); 
+
+  const total = React.useMemo(()=> 
+    saucesAndFillingsData.reduce((acc, p) => acc + p.price, 400),
+      [saucesAndFillingsData]);
 
   const closeAllModals = () => {
     setIsOrderDetailsOpened(false);
@@ -29,16 +32,12 @@ export default function BurgerConstructor ({data}) {
     setIsOrderDetailsOpened(true);
     setOrderNumber(Math.floor(Math.random() * 999999));
   };
-  
-  const handleEscKeydown = (event) => {
-    event.key === "Escape" && closeAllModals();
-  };
 
       return (
         <>
         <section className={`${constructStyles.order}`}>
           <div className={`${constructStyles.order__window} mt-25 pr-2`}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end'}}>
+            <div className={constructStyles.order__content}>
               <ConstructorElement
                 type="top"
                 isLocked={true}
@@ -46,14 +45,13 @@ export default function BurgerConstructor ({data}) {
                 price={200}
                 thumbnail={kraterBun}
                 key="top-constr"
-              />{data && saucesAndFillingsData.map((ingredient)=> (
-                <div className={constructStyles.drag}>
+              />{ingredientsData && saucesAndFillingsData.map((ingredient)=> (
+                <div key={ingredient._id} className={constructStyles.drag}>
                 <DragIcon key={`${ingredient._id}-icon`} type="primary"/>
                 <ConstructorElement
                 text={ingredient.name}
                 price={ingredient.price}
-                thumbnail={ingredient.image}
-                key={ingredient._id}/>
+                thumbnail={ingredient.image}/>
                 </div>
               ))}
               <ConstructorElement
@@ -77,7 +75,6 @@ export default function BurgerConstructor ({data}) {
         {isOrderDetailsOpened &&
             <Modal
              onOverlayClick={closeAllModals}
-             onEscKeydown={handleEscKeydown}
              isOrder={true}
            >
             <div className={orderStyles.order}>
@@ -103,7 +100,6 @@ BurgerConstructor.propTypes = ({
   thumbnail: PropTypes.any,
   key: PropTypes.any,
   onOverlayClick: PropTypes.func,
-  onEscKeydown: PropTypes.func,
   isOrder: PropTypes.bool,
   src: PropTypes.any
 })

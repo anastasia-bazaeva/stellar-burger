@@ -24,10 +24,6 @@ export default function Ingredient ({productInfo}) {
   const handleClick = () => {
     setIsOrderDetailsOpened(true);
   };
-  
-  const handleEscKeydown = (event) => {
-    event.key === "Escape" && closeAllModals();
-  };
     
     return (
         <>
@@ -45,7 +41,6 @@ export default function Ingredient ({productInfo}) {
         {isOrderDetailsOpened &&
             <Modal
              onOverlayClick={closeAllModals}
-             onEscKeydown={handleEscKeydown}
              isOrder={false}
            >
              <IngredientInfo productInfo={productInfo}/>
@@ -58,6 +53,5 @@ Ingredient.propTypes = ({
   count: PropTypes.number,
   src: PropTypes.any,
   onOverlayClick: PropTypes.func,
-  onEscKeydown: PropTypes.func,
   isOrder: PropTypes.bool,
 })
