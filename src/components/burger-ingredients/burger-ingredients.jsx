@@ -1,4 +1,5 @@
 import React from "react";
+// import ReactDOM from "react";
 import PropTypes from 'prop-types';
 
 import menuStyles from './burger-ingredients.module.css';
@@ -27,10 +28,10 @@ function BurgerIngredients (props) {
         }
     }, [])
 
-    // const putView = (value) => {
-    //   setCurrent(value);
-    //   document.querySelector(`#${value}`).scrollIntoView({behavior: 'smooth'});
-    // }
+    const putView = (value) => {
+      setCurrent(value);
+      document.querySelector(`#${value}`).scrollIntoView({behavior: 'smooth'});
+    }
     // вообще никак не получилось через element.scrollIntoView - элемент все время null с рефами или по id
 
       return (
@@ -38,21 +39,27 @@ function BurgerIngredients (props) {
             <div className="pt-10 pb-10">
                 <h1 className={`${menuStyles.title} text text_type_main-large pb-5`}>Соберите бургер</h1>
                 <div style={{ display: 'flex' }}>
-                  <Tab value='bun' active={current === 'bun'} onClick={setCurrent}>
+                  <Tab value='bun' active={current === 'bun'} onClick={putView}>
                     Булки
                   </Tab>
-                  <Tab value='sauce' active={current === 'sauce'} onClick={setCurrent}>
+                  <Tab value='sauce' active={current === 'sauce'} onClick={putView}>
                     Соусы
                   </Tab>
-                  <Tab value='main' active={current === 'main'} onClick={setCurrent}>
+                  <Tab value='main' active={current === 'main'} onClick={putView}>
                     Начинки
                   </Tab>
                 </div>
             </div>
             <div className={`${menuStyles.scrollzone}`} ref={menuZone}>
-                <MenuSection list={props.ingredientsData?.filter(e => e.type === "bun")} type="Булки" id={'bun'}/>
-                <MenuSection list={props.ingredientsData?.filter(e => e.type === "sauce")} type="Соусы" id={'sauce'}/>
-                <MenuSection list={props.ingredientsData?.filter(e => e.type === "main")} type="Начинки" id={'main'}/>
+              <div id={'bun'}>
+                <MenuSection list={props.ingredientsData?.filter(e => e.type === "bun")} type="Булки"/>
+              </div>
+              <div id={'sauce'}>
+                <MenuSection list={props.ingredientsData?.filter(e => e.type === "sauce")} type="Соусы"/>
+              </div>
+              <div id={'main'}>
+                <MenuSection list={props.ingredientsData?.filter(e => e.type === "main")} type="Начинки"/>
+              </div>
             </div>
         </section>
       )
