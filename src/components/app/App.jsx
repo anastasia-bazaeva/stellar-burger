@@ -9,6 +9,8 @@ import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 
+import BurgerIngredientsContext from '../../context/burgerIngredientsContext';
+
 
 
 function App () {
@@ -40,12 +42,12 @@ function App () {
       </div>
       : <div className='App'>
         <AppHeader/>
-        <React.StrictMode>
-        <main className='content' id='modals'>
-          <BurgerIngredients ingredientsData={ingredientsData}/>
-          <BurgerConstructor ingredientsData={ingredientsData}/>
-        </main>
-        </React.StrictMode>
+        <BurgerIngredientsContext.Provider value={ingredientsData}>
+          <main className='content' id='modals'>
+            <BurgerIngredients/>
+            <BurgerConstructor ingredientsData={ingredientsData}/>
+          </main>
+        </BurgerIngredientsContext.Provider>
       </div>
     )
   }

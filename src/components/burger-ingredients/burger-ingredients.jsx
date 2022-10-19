@@ -6,9 +6,13 @@ import menuStyles from './burger-ingredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import MenuSection from "../menu-section/menu-section";
 
-function BurgerIngredients (props) {
+import BurgerIngredientsContext from "../../context/burgerIngredientsContext";
+
+function BurgerIngredients () {
   const [current, setCurrent] = React.useState('bun');
   const menuZone = React.useRef();
+
+  const ingredients = React.useContext(BurgerIngredientsContext);
 
   React.useEffect(() => {
         const putScroll = () => {
@@ -20,7 +24,7 @@ function BurgerIngredients (props) {
                 setCurrent('main')
             }
         }
-         
+         console.log(ingredients);
         menuZone.current.addEventListener('scroll', putScroll);
 
         return ()=>{
@@ -32,7 +36,6 @@ function BurgerIngredients (props) {
       setCurrent(value);
       document.querySelector(`#${value}`).scrollIntoView({behavior: 'smooth'});
     }
-    // вообще никак не получилось через element.scrollIntoView - элемент все время null с рефами или по id
 
       return (
         <section>
@@ -52,13 +55,13 @@ function BurgerIngredients (props) {
             </div>
             <div className={`${menuStyles.scrollzone}`} ref={menuZone}>
               <div id={'bun'}>
-                <MenuSection list={props.ingredientsData?.filter(e => e.type === "bun")} type="Булки"/>
+                <MenuSection list={ingredients?.filter(e => e.type === "bun")} type="Булки"/>
               </div>
               <div id={'sauce'}>
-                <MenuSection list={props.ingredientsData?.filter(e => e.type === "sauce")} type="Соусы"/>
+                <MenuSection list={ingredients?.filter(e => e.type === "sauce")} type="Соусы"/>
               </div>
               <div id={'main'}>
-                <MenuSection list={props.ingredientsData?.filter(e => e.type === "main")} type="Начинки"/>
+                <MenuSection list={ingredients?.filter(e => e.type === "main")} type="Начинки"/>
               </div>
             </div>
         </section>
