@@ -24,7 +24,7 @@ function BurgerIngredients () {
                 setCurrent('main')
             }
         }
-         console.log(ingredients);
+         
         menuZone.current.addEventListener('scroll', putScroll);
 
         return ()=>{

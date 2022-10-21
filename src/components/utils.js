@@ -13,3 +13,14 @@ export const getInfo = () => {
     return fetch(`${apiLink}ingredients`)
     .then(checkResponse);
 }
+
+export const getOrderNumber = (data) => {
+    return fetch(`${apiLink}orders`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(checkResponse)
+}

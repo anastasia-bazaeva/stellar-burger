@@ -10,12 +10,26 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 
 import BurgerIngredientsContext from '../../context/burgerIngredientsContext';
+import PriceContext from '../../context/burger-price-context';
 
+const initialIngredientsPrice = { totalPrice: 0 };
+
+function reducer (state, action) {
+  switch (action.type) {
+    case "item":
+      return { totalPrice: action.price };
+    case "reset":
+      return initialIngredientsPrice;
+    default:
+      throw new Error(`Wrong type of action: ${action.type}`);
+  }
+}
 
 
 function App () {
   const [ingredientsData, setIngredientsData] = React.useState([null]);
   const [isLoading, setLoading] = React.useState(true);
+  const [priceState, priceDispatcher] = React.useReducer(reducer, initialIngredientsPrice, undefined);
 
   const getServerData = async () => {
     try {
@@ -43,10 +57,12 @@ function App () {
       : <div className='App'>
         <AppHeader/>
         <BurgerIngredientsContext.Provider value={ingredientsData}>
+          <PriceContext.Provider value={{priceState, priceDispatcher}}>
           <main className='content' id='modals'>
             <BurgerIngredients/>
-            <BurgerConstructor ingredientsData={ingredientsData}/>
+            <BurgerConstructor/>
           </main>
+          </PriceContext.Provider>
         </BurgerIngredientsContext.Provider>
       </div>
     )
