@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import menuStyles from './burger-ingredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import MenuSection from "../menu-section/menu-section";
+import { useSelector } from 'react-redux';
 
 import BurgerIngredientsContext from "../../context/burgerIngredientsContext";
 
@@ -12,7 +13,8 @@ function BurgerIngredients () {
   const [current, setCurrent] = React.useState('bun');
   const menuZone = React.useRef();
 
-  const ingredients = React.useContext(BurgerIngredientsContext);
+  //const ingredients = React.useContext(BurgerIngredientsContext);
+  const ingredients = useSelector(state => state.reducerIngredients.ingredientsData);
 
   React.useEffect(() => {
         const putScroll = () => {

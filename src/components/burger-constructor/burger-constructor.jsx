@@ -13,59 +13,63 @@ import donePic from '../../images/done.svg';
 import BurgerIngredientsContext from "../../context/burgerIngredientsContext";
 import PriceContext from "../../context/burger-price-context";
 import {getOrderNumber} from '../utils';
+import { useSelector } from 'react-redux';
 
 
 export default function BurgerConstructor () {
-  const ingredientsData = React.useContext(BurgerIngredientsContext);
+  const { priceState, constructorIngredients, orderList, orderNumber } = useSelector(state => state.reducerConstructor);
+  const ingredients = useSelector(state => state.reducerIngredients.ingredientsData);
+  //const ingredientsData = React.useContext(BurgerIngredientsContext);
   const [isOrderDetailsOpened, setIsOrderDetailsOpened] = React.useState(false);
-  const [orderNumber, setOrderNumber] = React.useState(0);
-  const {priceState, priceDispatcher} = React.useContext(PriceContext);
+  //const [orderNumber, setOrderNumber] = React.useState(0);
+  //const {priceState, priceDispatcher} = React.useContext(PriceContext);
 
   const saucesAndFillingsData = React.useMemo(() => 
-    ingredientsData?.filter((e) => e.type !== 'bun'),
-     [ingredientsData]); 
+  ingredients?.filter((e) => e.type !== 'bun'),
+     [ingredients]); 
 
-  const total = React.useMemo(()=> 
-    saucesAndFillingsData.reduce((acc, p) => acc + p.price, 1255*2),
-      [saucesAndFillingsData]);
+  // const total = React.useMemo(()=> 
+  //   saucesAndFillingsData.reduce((acc, p) => acc + p.price, 1255*2),
+  //     [saucesAndFillingsData]);
 
-  const ingredientArr = [];
-  const orderList = { "ingredients": ingredientArr };
+  // const ingredientArr = [];
+  // const orderList = { "ingredients": ingredientArr };
 
-  const getOrderIds = React.useMemo(() =>{
-    ingredientsData.forEach((ingredient) => {
-      ingredientArr.push(ingredient._id);
-    });
-    console.log(orderList);
-  },[ingredientsData, isOrderDetailsOpened])
+  // const getOrderIds = React.useMemo(() =>{
+  //   ingredientsData.forEach((ingredient) => {
+  //     ingredientArr.push(ingredient._id);
+  //   });
+  //   console.log(orderList);
+  // },[ingredientsData, isOrderDetailsOpened])
 
   const closeAllModals = () => {
     setIsOrderDetailsOpened(false);
   };
 
-  const getOrderInfo = async () => {
-    try {
-      await getOrderNumber(orderList)
-      .then((data)=> {
-        setOrderNumber(data.order.number)
-      console.log(data)})
-      console.log('Данные по заказу загружены')
-    }
-    catch (e) {
-      console.log(`При загрузке данных с сервера по заказу что-то пошло не так: ${e}`)
-    }
-  }
+  // const getOrderInfo = async () => {
+  //   try {
+  //     await getOrderNumber(orderList)
+  //     .then((data)=> {
+  //       setOrderNumber(data.order.number)
+  //     console.log(data)})
+  //     console.log('Данные по заказу загружены')
+  //   }
+  //   catch (e) {
+  //     console.log(`При загрузке данных с сервера по заказу что-то пошло не так: ${e}`)
+  //   }
+  // }
 
 
   const handleClick = () => {
-    getOrderInfo()
-    .then(() => setIsOrderDetailsOpened(true))
+    //getOrderInfo()
+    //.then(() => setIsOrderDetailsOpened(true))
+    console.log('CLICK')
   };  
 
-  React.useEffect(()=>{
-    priceDispatcher({type: 'item', price: total});
-    console.log(orderList)
-  },[total])
+  // React.useEffect(()=>{
+  //   priceDispatcher({type: 'item', price: total});
+  //   console.log(orderList)
+  // },[total])
 
       return (
         <>
@@ -79,7 +83,7 @@ export default function BurgerConstructor () {
                 price={1255}
                 thumbnail={kraterBun}
                 key="top-constr"
-              />{ingredientsData && saucesAndFillingsData.map((ingredient)=> (
+              />{ingredients && saucesAndFillingsData.map((ingredient)=> (
                 <div key={ingredient._id} className={constructStyles.drag}>
                 <DragIcon key={`${ingredient._id}-icon`} type="primary"/>
                 <ConstructorElement

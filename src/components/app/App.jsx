@@ -11,6 +11,10 @@ import BurgerConstructor from '../burger-constructor/burger-constructor';
 
 import BurgerIngredientsContext from '../../context/burgerIngredientsContext';
 import PriceContext from '../../context/burger-price-context';
+import { useSelector, useDispatch } from 'react-redux';
+
+import store from '../..';
+import { getData } from '../services/reducers/ingredient-reducers';
 
 const initialIngredientsPrice = { totalPrice: 0 };
 
@@ -27,26 +31,28 @@ function reducer (state, action) {
 
 
 function App () {
-  const [ingredientsData, setIngredientsData] = React.useState([null]);
-  const [isLoading, setLoading] = React.useState(true);
-  const [priceState, priceDispatcher] = React.useReducer(reducer, initialIngredientsPrice, undefined);
+  //const [ingredientsData, setIngredientsData] = React.useState([null]);
+  const { isLoading } = useSelector (state => state.reducerIngredients.isLoading);
+  //const [priceState, priceDispatcher] = React.useReducer(reducer, initialIngredientsPrice, undefined);
+  const dispatch = useDispatch();
 
-  const getServerData = async () => {
-    try {
-      await getInfo()
-      .then((data) => setIngredientsData(data.data))
-      setLoading(false);
+  // const getServerData = async () => {
+  //   try {
+  //     await dispatch(getIngredients())
+  //     .then((data) => dispatch(setIngredients(data.data)))
+  //     // setLoading(false);
       
-      console.log('Успешная загрузка')
-    }
-    catch(e) {
-      console.log(`При загрузке данных с сервера что-то пошло не так: ${e}`)
-      setLoading(false);
-    }
-  }
+  //     console.log('Успешная загрузка')
+  //   }
+  //   catch(e) {
+  //     console.log(`При загрузке данных с сервера что-то пошло не так: ${e}`);
+  //     dispatch(getError());
+  //     // setLoading(false);
+  //   }
+  // }
 
   React.useEffect(()=>{
-    getServerData();
+    dispatch(getData());
   }, [])
 
     return (isLoading?
@@ -56,14 +62,10 @@ function App () {
       </div>
       : <div className='App'>
         <AppHeader/>
-        <BurgerIngredientsContext.Provider value={ingredientsData}>
-          <PriceContext.Provider value={{priceState, priceDispatcher}}>
           <main className='content' id='modals'>
             <BurgerIngredients/>
             <BurgerConstructor/>
           </main>
-          </PriceContext.Provider>
-        </BurgerIngredientsContext.Provider>
       </div>
     )
   }

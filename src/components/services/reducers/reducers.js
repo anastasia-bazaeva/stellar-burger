@@ -1,8 +1,9 @@
-// import { combineReducers } from 'redux';
-// import { GET_INGREDIENTS_REQ, GET_INGREDIENTS_SUCC, GET_INGREDIENTS_ERR, 
-//         SHOW_DETAILS, HIDE_DETAILS,
-//         ADD_ITEM, DELETE_ITEM, ADD_BUN, DELETE_BUN, 
-//         CREATE_ORDER_OBJ,GET_ORDER_NUMBER } from '../actions/actions';
+//import { combineReducers } from 'redux';
+import { createSlice } from '@reduxjs/toolkit';
+import { GET_INGREDIENTS_REQ, GET_INGREDIENTS_SUCC, GET_INGREDIENTS_ERR, 
+        SHOW_DETAILS, HIDE_DETAILS,
+        ADD_ITEM, DELETE_ITEM, ADD_BUN, DELETE_BUN, 
+        CREATE_ORDER_OBJ,GET_ORDER_NUMBER } from '../actions/actions';
 
 // const initialStateIngredients = {
 //     ingredientsData: [null],
@@ -44,15 +45,43 @@
 //                 ingredientsDetails: {}
 //             }
 //         }
+//         default: {
+//             return {
+//                 state
+//             }
+//         }
 //     }
 // }
 
-// const initialStateConstructor = {
-//     constructorIngredients: [null],
-//     orderList: {},
-//     orderNumber: null,
-//     priceState: 0,
-// }
+// export const reducerIngredients = createSlice({
+//     name: 'reducerIngredients',
+//     initialStateIngredients,
+//     reducers: {
+//         getIngredients: (state, action) => {
+//             state.isLoading = true
+//         },
+//         setIngredients: (state, action) => {
+//             state.ingredientsData = action.payload;
+//             state.isLoading = false
+//         },
+//         getError: (state, action) => {
+//             state.isLoading = false
+//         },
+//         showDetails: (state, action) => {
+//             state.ingredientsDetails = action.payload
+//         },
+//         hideDetails: (state, action) => {
+//             state.ingredientsDetails = {}
+//         }
+//     }
+// })
+
+const initialStateConstructor = {
+    constructorIngredients: [null],
+    orderList: {},
+    orderNumber: null,
+    priceState: 0,
+}
 
 // export const reducerConstructor = (state = initialStateConstructor, action) => {
 //     switch (action.type) {
@@ -98,12 +127,54 @@
 //                 priceState: 0
 //             }
 //         }
+//         default: {
+//             return {
+//                 state
+//             }
+//         }
 //     }
 // }
 
+export const reducerConstructor = createSlice({
+    name: 'reducerConstructor',
+    initialState: initialStateConstructor,
+    reducers: {
+        addItem: (state, action) => {
+            state.constructorIngredients = action.payload
+        },
+        addItemPrice: (state, action) => {
+            state.priceState = state.priceState + action.payload
+        },
+        deleteItem: (state, action) => {
+            state.constructorIngredients = state.constructorIngredients.filter(item => item._id !== action.payload)
+        },
+        removeItemPrice: (state, action) => {
+            state.priceState = state.priceState - action.payload
+        },
+        addBunPrice: (state, action) => {
+            state.priceState = state.priceState + action.payload * 2
+        },
+        removeBunPrice: (state, action) => {
+            state.priceState = state.priceState - action.payload * 2
+        },
+        createOrder: (state, action) => {
+            state.orderList = action.payload
+        },
+        getOrderNumber: (state, action) => {
+            state.orderNumber = action.payload;
+            state.orderList = {}
+        }
+    }
+})
+
+
 // const rootReducer = combineReducers({
-//     ingredients: reducerIngredients,
-//     burgerConstructor: reducerConstructor
+//     reducerIngredients,
+//     reducerConstructor
 // })
 
-// export default rootReducer;
+// export default reducerIngredients.reducer;
+export const { addItem, addItemPrice, deleteItem, removeItemPrice, 
+    addBunPrice, removeBunPrice, createOrder, getOrderNumber } = reducerConstructor.actions
+
+export default reducerConstructor.reducer;
