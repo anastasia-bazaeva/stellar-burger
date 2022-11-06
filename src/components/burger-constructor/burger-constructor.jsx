@@ -13,24 +13,27 @@ import donePic from '../../images/done.svg';
 import BurgerIngredientsContext from "../../context/burgerIngredientsContext";
 import PriceContext from "../../context/burger-price-context";
 import {getOrderNumber} from '../utils';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { addBunPrice, deleteItem, removeItemPrice, setBun } from "../services/reducers/reducers";
 
 
 export default function BurgerConstructor () {
-  const { priceState, constructorIngredients, orderList, orderNumber } = useSelector(state => state.reducerConstructor);
+  const { priceState, constructorIngredients, orderList, orderNumber, selectedBun } = useSelector(state => state.reducerConstructor);
   const ingredients = useSelector(state => state.reducerIngredients.ingredientsData);
+  const defaultBun = useSelector(state => state.reducerIngredients.defaultBun);
+  const dispatch = useDispatch();
   //const ingredientsData = React.useContext(BurgerIngredientsContext);
   const [isOrderDetailsOpened, setIsOrderDetailsOpened] = React.useState(false);
   //const [orderNumber, setOrderNumber] = React.useState(0);
   //const {priceState, priceDispatcher} = React.useContext(PriceContext);
 
   const saucesAndFillingsData = React.useMemo(() => 
-  ingredients?.filter((e) => e.type !== 'bun'),
-     [ingredients]); 
+  constructorIngredients?.filter((e) => e.type !== 'bun'),
+     [constructorIngredients]); 
 
   // const total = React.useMemo(()=> 
-  //   saucesAndFillingsData.reduce((acc, p) => acc + p.price, 1255*2),
-  //     [saucesAndFillingsData]);
+  // constructorIngredients.reduce((acc, p) => acc + p.price, 1255*2),
+  //     [constructorIngredients]);
 
   // const ingredientArr = [];
   // const orderList = { "ingredients": ingredientArr };
@@ -59,6 +62,10 @@ export default function BurgerConstructor () {
   //   }
   // }
 
+  const handleClose = (id, price) => {
+    dispatch(deleteItem(id));
+    dispatch(removeItemPrice(price))
+  }
 
   const handleClick = () => {
     //getOrderInfo()
@@ -66,10 +73,9 @@ export default function BurgerConstructor () {
     console.log('CLICK')
   };  
 
-  // React.useEffect(()=>{
-  //   priceDispatcher({type: 'item', price: total});
-  //   console.log(orderList)
-  // },[total])
+  React.useEffect(()=>{
+    dispatch(setBun(defaultBun));
+  },[])
 
       return (
         <>
@@ -79,32 +85,33 @@ export default function BurgerConstructor () {
               <ConstructorElement
                 type="top"
                 isLocked={true}
-                text="Краторная булка N-200i (верх)"
-                price={1255}
-                thumbnail={kraterBun}
+                text={selectedBun?.name}
+                price={selectedBun?.price}
+                thumbnail={selectedBun?.image}
                 key="top-constr"
-              />{ingredients && saucesAndFillingsData.map((ingredient)=> (
+              />{constructorIngredients && saucesAndFillingsData.map((ingredient)=> (
                 <div key={ingredient._id} className={constructStyles.drag}>
                 <DragIcon key={`${ingredient._id}-icon`} type="primary"/>
                 <ConstructorElement
                 text={ingredient.name}
                 price={ingredient.price}
-                thumbnail={ingredient.image}/>
+                thumbnail={ingredient.image}
+                handleClose={()=> handleClose(ingredient._id, ingredient.price)}/>
                 </div>
               ))}
               <ConstructorElement
                 type="bottom"
                 isLocked={true}
-                text="Краторная булка N-200i (низ)"
-                price={1255}
-                thumbnail={kraterBun}
+                text={selectedBun?.name}
+                price={selectedBun?.price}
+                thumbnail={selectedBun?.image}
                 key="bottom-constr"
               />
             </div>
           </div>
           <div className={`${constructStyles.order__panel} mb-5`}>
             <div className={constructStyles.order__info}>
-              <h2 className="text text_type_digits-medium">{priceState.totalPrice}</h2>
+              <h2 className="text text_type_digits-medium">{priceState}</h2>
               <CurrencyIcon type="primary" />
             </div>
             <Button type="primary" size="large" onClick={handleClick} htmlType={"submit"}>Оформить заказ</Button>
@@ -127,7 +134,7 @@ export default function BurgerConstructor () {
               </div>
             </div>
              </Modal>}
-             </>
+        </>
       );
     }
 

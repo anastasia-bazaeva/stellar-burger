@@ -6,10 +6,15 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from "../modal/modal";
 import IngredientInfo from "../ingredient-info/ingredient-info";
+import { useSelector, useDispatch } from 'react-redux';
+import { addBunPrice, addItem, addItemPrice, removeBunPrice, setBun } from "../services/reducers/reducers";
 
 export default function Ingredient ({productInfo}) {
 
   const [isOrderDetailsOpened, setIsOrderDetailsOpened] = React.useState(false);
+  const { priceState, constructorIngredients, selectedBun } = useSelector( state => state.reducerConstructor);
+  const dispatch = useDispatch();
+  const [counter, setCounter] = React.useState(null);
 
   // React.useEffect(()=>{
   //   return ()=>{
@@ -21,15 +26,29 @@ export default function Ingredient ({productInfo}) {
     setIsOrderDetailsOpened(false);
   };
 
-  const handleClick = () => {
-    setIsOrderDetailsOpened(true);
+  const handleClick = (productInfo, price, id) => {
+    if (productInfo.type === "bun") {
+      dispatch(removeBunPrice(selectedBun.price))
+      dispatch(setBun(productInfo));
+      dispatch(addBunPrice(productInfo.price))
+    } else {
+      setIsOrderDetailsOpened(true);
+      dispatch(addItem(productInfo));
+      dispatch(addItemPrice(price));
+      if (counter) {
+        setCounter(counter + 1);
+      }
+      else {
+        setCounter(1);
+    }
+    }
   };
     
     return (
         <>
-        <li className={menuStyles.card} id='card' onClick={handleClick}>
+        <li className={menuStyles.card} id='card' onClick={() => handleClick(productInfo, productInfo.price, productInfo._id)}>
             <div>
-             <Counter count={1} size="default" />
+            {counter && <Counter count={counter} size="default" />}
             </div>
             <img src={productInfo.image} alt={productInfo.name}/>
             <div className={menuStyles.span_area}>

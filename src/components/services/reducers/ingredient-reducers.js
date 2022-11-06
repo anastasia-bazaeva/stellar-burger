@@ -5,13 +5,12 @@ import { getInfo } from '../../utils';
 const initialStateIngredients = {
     ingredientsData: [],
     isLoading: false,
-    ingredientsDetails: {}
+    ingredientsDetails: {},
+    defaultBun: []
 }
 
 export const getData = createAsyncThunk(
-    //action type string
     'reducerIngredients/getData',
-    // callback function
     async (thunkAPI) => {
       const res = getInfo();
     return res
@@ -21,16 +20,6 @@ const reducerIngredients = createSlice({
     name: 'reducerIngredients',
     initialState: initialStateIngredients,
     reducers: {
-        // getIngredients: (state, action) => {
-        //     state.isLoading = true
-        // },
-        // setIngredients: (state, action) => {
-        //     state.ingredientsData = action.payload;
-        //     state.isLoading = false
-        // },
-        // getError: (state, action) => {
-        //     state.isLoading = false
-        // },
         showDetails: (state, action) => {
             state.ingredientsDetails = action.payload
         },
@@ -44,6 +33,7 @@ const reducerIngredients = createSlice({
         },
         [getData.fulfilled]: (state, action) => {
             state.ingredientsData = action.payload.data;
+            state.defaultBun = action.payload.data.find(item => item.type === "bun");
             state.isLoading = false
         },
         [getData.rejected]: (state) => {

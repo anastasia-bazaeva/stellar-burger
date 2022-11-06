@@ -15,24 +15,26 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import store from '../..';
 import { getData } from '../services/reducers/ingredient-reducers';
+import { addBunPrice, setBun } from '../services/reducers/reducers';
 
-const initialIngredientsPrice = { totalPrice: 0 };
+// const initialIngredientsPrice = { totalPrice: 0 };
 
-function reducer (state, action) {
-  switch (action.type) {
-    case "item":
-      return { totalPrice: action.price };
-    case "reset":
-      return initialIngredientsPrice;
-    default:
-      throw new Error(`Wrong type of action: ${action.type}`);
-  }
-}
+// function reducer (state, action) {
+//   switch (action.type) {
+//     case "item":
+//       return { totalPrice: action.price };
+//     case "reset":
+//       return initialIngredientsPrice;
+//     default:
+//       throw new Error(`Wrong type of action: ${action.type}`);
+//   }
+// }
 
 
 function App () {
   //const [ingredientsData, setIngredientsData] = React.useState([null]);
-  const { isLoading } = useSelector (state => state.reducerIngredients.isLoading);
+  const { isLoading, ingredientsData } = useSelector (state => state.reducerIngredients);
+  const  selectedBun  = useSelector(state => state.reducerConstructor);
   //const [priceState, priceDispatcher] = React.useReducer(reducer, initialIngredientsPrice, undefined);
   const dispatch = useDispatch();
 
@@ -62,10 +64,11 @@ function App () {
       </div>
       : <div className='App'>
         <AppHeader/>
+          {ingredientsData && 
           <main className='content' id='modals'>
             <BurgerIngredients/>
             <BurgerConstructor/>
-          </main>
+          </main>}
       </div>
     )
   }
