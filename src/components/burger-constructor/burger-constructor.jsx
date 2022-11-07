@@ -6,15 +6,12 @@ import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import constructStyles from './burger-constructor.module.css';
-import kraterBun from '../../images/kratorbulka.svg'
 import Modal from "../modal/modal";
 import orderStyles from '../../components/order-details/order-details.module.css';
 import donePic from '../../images/done.svg';
-import BurgerIngredientsContext from "../../context/burgerIngredientsContext";
-import PriceContext from "../../context/burger-price-context";
 import {getOrderNumber} from '../utils';
 import { useSelector, useDispatch } from 'react-redux';
-import { addBunPrice, deleteItem, removeItemPrice, setBun } from "../services/reducers/reducers";
+import { addBunPrice, createOrder, deleteItem, getOrder, removeItemPrice, setBun, setOrderNumber } from "../services/reducers/reducers";
 
 
 export default function BurgerConstructor () {
@@ -35,32 +32,41 @@ export default function BurgerConstructor () {
   // constructorIngredients.reduce((acc, p) => acc + p.price, 1255*2),
   //     [constructorIngredients]);
 
+  const getIngredientList = () => {
+    dispatch(createOrder([
+      selectedBun._id,
+      ...constructorIngredients.map(item => item._id),
+      selectedBun._id
+    ]));
+    const orderObj = { "ingredients": orderList };
+    return orderObj;
+  }
+
   // const ingredientArr = [];
-  // const orderList = { "ingredients": ingredientArr };
+  // const orderObj = { "ingredients": orderList };
 
   // const getOrderIds = React.useMemo(() =>{
-  //   ingredientsData.forEach((ingredient) => {
-  //     ingredientArr.push(ingredient._id);
-  //   });
-  //   console.log(orderList);
-  // },[ingredientsData, isOrderDetailsOpened])
+  //   getIngredientList();
+  //   console.log(orderObj);
+  // },[constructorIngredients, isOrderDetailsOpened])
 
   const closeAllModals = () => {
     setIsOrderDetailsOpened(false);
   };
 
-  // const getOrderInfo = async () => {
-  //   try {
-  //     await getOrderNumber(orderList)
-  //     .then((data)=> {
-  //       setOrderNumber(data.order.number)
-  //     console.log(data)})
-  //     console.log('Данные по заказу загружены')
-  //   }
-  //   catch (e) {
-  //     console.log(`При загрузке данных с сервера по заказу что-то пошло не так: ${e}`)
-  //   }
-  // }
+  const getOrderInfo = () => {
+    dispatch(getOrder(getIngredientList()))
+    // try {
+    //   await getOrderNumber(getIngredientList())
+    //   .then((data)=> {
+    //     setOrderNumber(data.order.number)
+    //   console.log(data)})
+    //   console.log('Данные по заказу загружены')
+    // }
+    // catch (e) {
+    //   console.log(`При загрузке данных с сервера по заказу что-то пошло не так: ${e}`)
+    // }
+  }
 
   const handleClose = (id, price) => {
     dispatch(deleteItem(id));
@@ -68,8 +74,8 @@ export default function BurgerConstructor () {
   }
 
   const handleClick = () => {
-    //getOrderInfo()
-    //.then(() => setIsOrderDetailsOpened(true))
+    getOrderInfo();
+    setIsOrderDetailsOpened(true)
     console.log('CLICK')
   };  
 

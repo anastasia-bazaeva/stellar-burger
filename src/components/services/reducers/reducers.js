@@ -1,15 +1,24 @@
 //import { combineReducers } from 'redux';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { getOrderNumber } from '../../utils';
 
 const initialStateConstructor = {
     constructorIngredients: [],
-    orderList: {},
-    orderNumber: null,
+    orderList: [],
+    orderNumber: 0,
     priceState: 1255*2,
     //вообще никак кроме написать 1255 цифрами не могла получить корректное монтирование компонента конструктора. Либо
     //тотал был NaN, либо не собирался проект с ошибкой, что нет .price у undefined(
-    selectedBun: []
+    selectedBun: [],
+    isLoading: false
 }
+
+export const getOrder = createAsyncThunk(
+    'reducerConstructor/getOrder',
+    async (data, thunkAPI) => {
+      const res = getOrderNumber(data);
+    return res
+  })
 
 export const reducerConstructor = createSlice({
     name: 'reducerConstructor',
@@ -36,17 +45,30 @@ export const reducerConstructor = createSlice({
         createOrder: (state, action) => {
             state.orderList = action.payload
         },
-        getOrderNumber: (state, action) => {
-            state.orderNumber = action.payload;
-            state.orderList = {}
-        },
+        // setOrderNumber: (state, action) => {
+        //     state.orderNumber = action.payload;
+        //     state.orderList = []
+        // },
         setBun: (state, action) => {
             state.selectedBun = action.payload;
+        }
+    },
+    extraReducers: {
+        [getOrder.pending]: (state) => {
+            state.isLoading = true
+        },
+        [getOrder.fulfilled]: (state, action) => {
+            state.isLoading = false;
+            state.orderNumber = action.payload.order.number;
+            state.orderList = []
+        },
+        [getOrder.rejected]: (state) => {
+            state.isLoading = false
         }
     }
 })
 
 export const { addItem, addItemPrice, deleteItem, removeItemPrice, 
-    addBunPrice, removeBunPrice, createOrder, getOrderNumber, setBun } = reducerConstructor.actions
+    addBunPrice, removeBunPrice, createOrder, setOrderNumber, setBun } = reducerConstructor.actions
 
 export default reducerConstructor.reducer;
