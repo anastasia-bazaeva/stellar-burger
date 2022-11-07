@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import { useDrag } from "react-dnd";
 
 import menuStyles from '../burger-ingredients/burger-ingredients.module.css';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -7,14 +8,25 @@ import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from "../modal/modal";
 import IngredientInfo from "../ingredient-info/ingredient-info";
 import { useSelector, useDispatch } from 'react-redux';
-import { addBunPrice, addItem, addItemPrice, removeBunPrice, setBun } from "../services/reducers/reducers";
+import { addBunPrice, addItem, addItemPrice, deleteItem, removeBunCount, removeBunPrice, setBun } from "../services/reducers/reducers";
 
 export default function Ingredient ({productInfo}) {
 
   const [isOrderDetailsOpened, setIsOrderDetailsOpened] = React.useState(false);
-  const { priceState, constructorIngredients, selectedBun } = useSelector( state => state.reducerConstructor);
+  const { priceState, constructorIngredients, selectedBun, count } = useSelector( state => state.reducerConstructor);
   const dispatch = useDispatch();
   const [counter, setCounter] = React.useState(null);
+  //const id = productInfo._id; 
+
+  const [{isDrag}, dragRef] = useDrag({
+    type: "ingredient",
+    item: productInfo,
+    collect: monitor => ({
+      isDrag: monitor.isDragging()
+    })
+  });
+
+  let number = 0;
 
   // React.useEffect(()=>{
   //   return ()=>{
@@ -23,8 +35,14 @@ export default function Ingredient ({productInfo}) {
   // })
 
   const showCounter = (productInfo) => {
-    const isInList = [constructorIngredients.filter(item => item._id === productInfo._id)];
-    return isInList.length;
+    if (selectedBun && productInfo === selectedBun) {
+      number = 2;
+    } 
+    number = count.filter(item => item === productInfo._id).length;
+    // if (productInfo.type === "bun"){
+    //   return number + 1;
+    // }
+    return number;
   }
 
   const closeAllModals = () => {
@@ -33,15 +51,14 @@ export default function Ingredient ({productInfo}) {
 
   const handleClick = (productInfo, price) => {
     if (productInfo.type === "bun") {
-      dispatch(removeBunPrice(selectedBun.price))
       dispatch(setBun(productInfo));
-      dispatch(addBunPrice(productInfo.price))
-      setCounter(showCounter(productInfo))
+      //dispatch(addBunPrice(productInfo.price))
+      //showCounter(productInfo)
     } else {
       setIsOrderDetailsOpened(true);
       dispatch(addItem(productInfo));
       dispatch(addItemPrice(price));
-      setCounter(showCounter(productInfo))
+      //showCounter(productInfo);
       // if (counter) {
       //   setCounter(counter + 1);
       // }
@@ -49,14 +66,21 @@ export default function Ingredient ({productInfo}) {
       //   setCounter(1);
     // }
     }
-    console.log(counter)
+    // console.log(counter)
   };
+
+  // React.useEffect(()=>{
+  //   showCounter(productInfo)
+  // },[])
     
     return (
+      !isDrag &&
         <>
-        <li className={menuStyles.card} id='card' onClick={() => handleClick(productInfo, productInfo.price, productInfo._id)}>
+        <li ref={dragRef} className={menuStyles.card} id='card' onClick={() => handleClick(productInfo, productInfo.price, productInfo._id)}>
             <div>
-            {counter && <Counter count={counter} size="default" />}
+            {(showCounter(productInfo) > 0)?
+            <Counter count={showCounter(productInfo)} size="default" />
+            :<></>}
             </div>
             <img src={productInfo.image} alt={productInfo.name}/>
             <div className={menuStyles.span_area}>

@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import { useDrop } from "react-dnd";
 
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -14,26 +15,40 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addBunPrice, createOrder, deleteItem, getOrder, removeItemPrice, setBun, setOrderNumber } from "../services/reducers/reducers";
 
 
-export default function BurgerConstructor () {
+export default function BurgerConstructor ({onDropHandler}) {
   const { priceState, constructorIngredients, orderList, orderNumber, selectedBun } = useSelector(state => state.reducerConstructor);
   const ingredients = useSelector(state => state.reducerIngredients.ingredientsData);
-  const defaultBun = useSelector(state => state.reducerIngredients.defaultBun);
+  //const defaultBun = useSelector(state => state.reducerIngredients.defaultBun);
   const dispatch = useDispatch();
   //const ingredientsData = React.useContext(BurgerIngredientsContext);
   const [isOrderDetailsOpened, setIsOrderDetailsOpened] = React.useState(false);
   //const [orderNumber, setOrderNumber] = React.useState(0);
   //const {priceState, priceDispatcher} = React.useContext(PriceContext);
 
+  const [{isHover}, dropTarget] = useDrop({
+    accept: "ingredient",
+    drop(item) {
+        onDropHandler(item);
+    },
+    collect: monitor => ({
+      isHover: monitor.isOver()
+    })
+  });
+
+  const borderColor = isHover ? constructStyles.order__box : constructStyles.order;
+
   const saucesAndFillingsData = React.useMemo(() => 
   constructorIngredients?.filter((e) => e.type !== 'bun'),
      [constructorIngredients]); 
+     //посмотреть потом, зачем я тут фильтрую. Во второй части проекта там уже вроде есть логика и нет булочек
 
   const getIngredientList = () => {
     const orderObj = { "ingredients": orderList };
+    const bunId = selectedBun?._id; 
       dispatch(createOrder([
-        selectedBun._id, 
+        bunId, 
         ...constructorIngredients.map(item => item._id),
-        selectedBun._id]))
+        bunId]))
     console.log(orderList);
       return orderObj
   }
@@ -42,6 +57,10 @@ export default function BurgerConstructor () {
   //     getIngredientList();
   //     console.log(getIngredientList());
   //   },[ingredients])
+
+  const getTotal = React.useMemo(() =>{
+      return priceState + selectedBun?.price*2;
+    },[priceState, selectedBun])
 
   // const ingredientArr = [];
   // const orderObj = { "ingredients": orderList };
@@ -57,6 +76,10 @@ export default function BurgerConstructor () {
 
   const getOrderInfo = () => {
     dispatch(getOrder(getIngredientList()))
+    .then(res => {
+      res.payload.success && setIsOrderDetailsOpened(true)
+    })
+    .catch(e => console.log(`При загрузке данных по заказу что-то пошло не так: ${e}`))
     // try {
     //   await getOrderNumber(getIngredientList())
     //   .then((data)=> {
@@ -65,7 +88,7 @@ export default function BurgerConstructor () {
     //   console.log('Данные по заказу загружены')
     // }
     // catch (e) {
-    //   console.log(`При загрузке данных с сервера по заказу что-то пошло не так: ${e}`)
+    //   console.log(`При загрузке данных по заказу что-то пошло не так: ${e}`)
     // }
   }
 
@@ -76,29 +99,29 @@ export default function BurgerConstructor () {
 
   const handleClick = () => {
     getOrderInfo();
-    setIsOrderDetailsOpened(true)
-    console.log('CLICK')
+    //setIsOrderDetailsOpened(true)
   };  
 
-  React.useEffect(()=>{
-    dispatch(setBun(defaultBun))
-  },[])
+  // React.useEffect(()=>{
+  //   dispatch(setBun(defaultBun))
+  // },[])
 
       return (
-        <>
-        <section className={`${constructStyles.order}`}>
-          <div className={`${constructStyles.order__window} mt-25 pr-2`}>
+        <>{(!selectedBun && priceState === 0)? 
+        <div className={`${constructStyles.order__content} text text_type_main-large mt-25 pt-20`}>Добавьте что-нибудь в заказ</div>
+        :<section className={borderColor}>
+          <div ref={dropTarget} className={`${constructStyles.order__window} mt-25 pr-2`}>
             <div className={constructStyles.order__content}>
-              <ConstructorElement
+            {selectedBun && <ConstructorElement
                 type="top"
                 isLocked={true}
                 text={selectedBun?.name}
                 price={selectedBun?.price}
                 thumbnail={selectedBun?.image}
                 key="top-constr"
-              />{constructorIngredients && saucesAndFillingsData.map((ingredient)=> (
-                <div key={ingredient._id} className={constructStyles.drag}>
-                <DragIcon key={`${ingredient._id}-icon`} type="primary"/>
+              />}{constructorIngredients && saucesAndFillingsData.map((ingredient)=> (
+                <div key={Math.random().toString(36).slice(2)} className={constructStyles.drag}>
+                <DragIcon key={`${Math.random().toString(36).slice(2)}-icon`} type="primary"/>
                 <ConstructorElement
                 text={ingredient.name}
                 price={ingredient.price}
@@ -106,24 +129,25 @@ export default function BurgerConstructor () {
                 handleClose={()=> handleClose(ingredient._id, ingredient.price)}/>
                 </div>
               ))}
-              <ConstructorElement
+              {selectedBun && <ConstructorElement
                 type="bottom"
                 isLocked={true}
                 text={selectedBun?.name}
                 price={selectedBun?.price}
                 thumbnail={selectedBun?.image}
                 key="bottom-constr"
-              />
+              />}
             </div>
           </div>
           <div className={`${constructStyles.order__panel} mb-5`}>
             <div className={constructStyles.order__info}>
-              <h2 className="text text_type_digits-medium">{priceState}</h2>
+              <h2 className="text text_type_digits-medium">{selectedBun? getTotal : priceState}</h2>
               <CurrencyIcon type="primary" />
             </div>
-            <Button type="primary" size="large" onClick={handleClick} htmlType={"submit"}>Оформить заказ</Button>
+            {selectedBun? <Button type="primary" size="large" onClick={handleClick} htmlType={"submit"}>Оформить заказ</Button>
+            :<div className={`${constructStyles.order__panel} text text_type_main-default`}>Как только вы выберете булочку,<br></br> заказ можно будет оформить</div>}
           </div>
-        </section>
+        </section>}
         {isOrderDetailsOpened &&
             <Modal
              onOverlayClick={closeAllModals}

@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import './App.css';
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 import { getInfo } from '../utils';
 
@@ -15,7 +17,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import store from '../..';
 import { getData } from '../services/reducers/ingredient-reducers';
-import { addBunPrice, setBun } from '../services/reducers/reducers';
+import { addBunPrice, addItem, addItemPrice, setBun } from '../services/reducers/reducers';
 
 // const initialIngredientsPrice = { totalPrice: 0 };
 
@@ -53,6 +55,11 @@ function App () {
   //   }
   // }
 
+  const handleDrop = (item) => {
+    dispatch(addItem(item));
+    dispatch(addItemPrice(item.price));
+  };
+
   React.useEffect(()=>{
     dispatch(getData());
   }, [])
@@ -65,8 +72,10 @@ function App () {
       : <div className='App'>
         <AppHeader/>
           <main className='content' id='modals'>
-            <BurgerIngredients/>
-            <BurgerConstructor/>
+            <DndProvider backend={HTML5Backend}>
+              <BurgerIngredients/>
+              <BurgerConstructor onDropHandler={handleDrop}/>
+            </DndProvider>
           </main>
       </div>
     )
