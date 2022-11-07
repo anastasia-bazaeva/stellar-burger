@@ -4,12 +4,12 @@ import { getOrderNumber } from '../../utils';
 
 const initialStateConstructor = {
     constructorIngredients: [],
-    orderList: [],
+    orderList: null,
     orderNumber: 0,
     priceState: 1255*2,
     //вообще никак кроме написать 1255 цифрами не могла получить корректное монтирование компонента конструктора. Либо
     //тотал был NaN, либо не собирался проект с ошибкой, что нет .price у undefined(
-    selectedBun: [],
+    selectedBun: null,
     isLoading: false
 }
 
@@ -31,7 +31,8 @@ export const reducerConstructor = createSlice({
             state.priceState = state.priceState + action.payload
         },
         deleteItem: (state, action) => {
-            state.constructorIngredients = state.constructorIngredients.filter(item => item._id !== action.payload)
+            state.constructorIngredients = state.constructorIngredients.filter(item => item._id !== action.payload);
+            state.orderList = state.orderList?.filter(item => item._id !== action.payload)
         },
         removeItemPrice: (state, action) => {
             state.priceState = state.priceState - action.payload
@@ -59,8 +60,7 @@ export const reducerConstructor = createSlice({
         },
         [getOrder.fulfilled]: (state, action) => {
             state.isLoading = false;
-            state.orderNumber = action.payload.order.number;
-            state.orderList = []
+            state.orderNumber = action.payload.order.number
         },
         [getOrder.rejected]: (state) => {
             state.isLoading = false

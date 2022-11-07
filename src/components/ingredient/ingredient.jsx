@@ -22,26 +22,34 @@ export default function Ingredient ({productInfo}) {
   //   }
   // })
 
+  const showCounter = (productInfo) => {
+    const isInList = [constructorIngredients.filter(item => item._id === productInfo._id)];
+    return isInList.length;
+  }
+
   const closeAllModals = () => {
     setIsOrderDetailsOpened(false);
   };
 
-  const handleClick = (productInfo, price, id) => {
+  const handleClick = (productInfo, price) => {
     if (productInfo.type === "bun") {
       dispatch(removeBunPrice(selectedBun.price))
       dispatch(setBun(productInfo));
       dispatch(addBunPrice(productInfo.price))
+      setCounter(showCounter(productInfo))
     } else {
       setIsOrderDetailsOpened(true);
       dispatch(addItem(productInfo));
       dispatch(addItemPrice(price));
-      if (counter) {
-        setCounter(counter + 1);
-      }
-      else {
-        setCounter(1);
+      setCounter(showCounter(productInfo))
+      // if (counter) {
+      //   setCounter(counter + 1);
+      // }
+      // else {
+      //   setCounter(1);
+    // }
     }
-    }
+    console.log(counter)
   };
     
     return (

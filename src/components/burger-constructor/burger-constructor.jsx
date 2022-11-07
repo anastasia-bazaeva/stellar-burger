@@ -28,19 +28,20 @@ export default function BurgerConstructor () {
   constructorIngredients?.filter((e) => e.type !== 'bun'),
      [constructorIngredients]); 
 
-  // const total = React.useMemo(()=> 
-  // constructorIngredients.reduce((acc, p) => acc + p.price, 1255*2),
-  //     [constructorIngredients]);
-
   const getIngredientList = () => {
-    dispatch(createOrder([
-      selectedBun._id,
-      ...constructorIngredients.map(item => item._id),
-      selectedBun._id
-    ]));
     const orderObj = { "ingredients": orderList };
-    return orderObj;
+      dispatch(createOrder([
+        selectedBun._id, 
+        ...constructorIngredients.map(item => item._id),
+        selectedBun._id]))
+    console.log(orderList);
+      return orderObj
   }
+
+  // const getOrderIds = React.useMemo(() =>{
+  //     getIngredientList();
+  //     console.log(getIngredientList());
+  //   },[ingredients])
 
   // const ingredientArr = [];
   // const orderObj = { "ingredients": orderList };
@@ -80,7 +81,7 @@ export default function BurgerConstructor () {
   };  
 
   React.useEffect(()=>{
-    dispatch(setBun(defaultBun));
+    dispatch(setBun(defaultBun))
   },[])
 
       return (

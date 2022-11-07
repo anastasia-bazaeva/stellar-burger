@@ -33,7 +33,7 @@ import { addBunPrice, setBun } from '../services/reducers/reducers';
 
 function App () {
   //const [ingredientsData, setIngredientsData] = React.useState([null]);
-  const { isLoading, ingredientsData } = useSelector (state => state.reducerIngredients);
+  const { isLoading, ingredientsData, defaultBun } = useSelector (state => state.reducerIngredients);
   const  selectedBun  = useSelector(state => state.reducerConstructor);
   //const [priceState, priceDispatcher] = React.useReducer(reducer, initialIngredientsPrice, undefined);
   const dispatch = useDispatch();
@@ -64,11 +64,10 @@ function App () {
       </div>
       : <div className='App'>
         <AppHeader/>
-          {ingredientsData && 
           <main className='content' id='modals'>
             <BurgerIngredients/>
             <BurgerConstructor/>
-          </main>}
+          </main>
       </div>
     )
   }
