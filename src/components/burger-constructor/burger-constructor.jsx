@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import { useDrop } from "react-dnd";
+import { nanoid } from "@reduxjs/toolkit";
 
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -125,8 +126,8 @@ export default function BurgerConstructor ({onDropHandler}) {
                 thumbnail={selectedBun?.image}
                 key="top-constr"
               />}{constructorIngredients && saucesAndFillingsData.map((ingredient)=> (
-                <div key={Math.random().toString(36).slice(2)} className={constructStyles.drag}>
-                <DragIcon key={`${Math.random().toString(36).slice(2)}-icon`} type="primary"/>
+                <div key={nanoid()} className={constructStyles.drag}>
+                <DragIcon key={`${nanoid()}-icon`} type="primary"/>
                 <ConstructorElement
                 text={ingredient.name}
                 price={ingredient.price}

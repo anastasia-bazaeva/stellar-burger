@@ -95,6 +95,6 @@ export const reducerConstructor = createSlice({
 })
 
 export const { addItem, addItemPrice, deleteItem, removeItemPrice, 
-    addBunPrice, removeBunPrice, setOrderNumber, setBun, removeBunCount, setBunCount, clearOrder } = reducerConstructor.actions
+ setOrderNumber, setBun, clearOrder } = reducerConstructor.actions
 
 export default reducerConstructor.reducer;
