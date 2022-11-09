@@ -12,7 +12,7 @@ import orderStyles from '../../components/order-details/order-details.module.css
 import donePic from '../../images/done.svg';
 import {getOrderNumber} from '../utils';
 import { useSelector, useDispatch } from 'react-redux';
-import { addBunPrice, createOrder, deleteItem, getOrder, removeItemPrice, setBun, setOrderNumber } from "../services/reducers/reducers";
+import { addBunPrice, clearOrder, createOrder, deleteItem, getOrder, removeItemPrice, setBun, setOrderNumber } from "../services/reducers/reducers";
 
 
 export default function BurgerConstructor ({onDropHandler}) {
@@ -42,16 +42,16 @@ export default function BurgerConstructor ({onDropHandler}) {
      [constructorIngredients]); 
      //посмотреть потом, зачем я тут фильтрую. Во второй части проекта там уже вроде есть логика и нет булочек
 
-  const getIngredientList = () => {
-    const orderObj = { "ingredients": orderList };
-    const bunId = selectedBun?._id; 
-      dispatch(createOrder([
-        bunId, 
-        ...constructorIngredients.map(item => item._id),
-        bunId]))
-    console.log(orderList);
-      return orderObj
-  }
+  // const getIngredientList = () => {
+  //   const orderObj = { "ingredients": orderList };
+  //   const bunId = selectedBun?._id; 
+  //     dispatch(createOrder([
+  //       bunId, 
+  //       ...constructorIngredients.map(item => item._id),
+  //       bunId]))
+  //   console.log(orderList);
+  //     return orderObj
+  // }
 
   // const getOrderIds = React.useMemo(() =>{
   //     getIngredientList();
@@ -75,9 +75,14 @@ export default function BurgerConstructor ({onDropHandler}) {
   };
 
   const getOrderInfo = () => {
-    dispatch(getOrder(getIngredientList()))
+    dispatch(getOrder(
+            selectedBun._id, 
+            ...constructorIngredients.map(item => item._id),
+            selectedBun._id 
+            ))
     .then(res => {
-      res.payload.success && setIsOrderDetailsOpened(true)
+      res.payload.success && setIsOrderDetailsOpened(true);
+      dispatch(clearOrder())
     })
     .catch(e => console.log(`При загрузке данных по заказу что-то пошло не так: ${e}`))
     // try {
@@ -92,8 +97,8 @@ export default function BurgerConstructor ({onDropHandler}) {
     // }
   }
 
-  const handleClose = (id, price) => {
-    dispatch(deleteItem(id));
+  const handleClose = (uid, price) => {
+    dispatch(deleteItem(uid));
     dispatch(removeItemPrice(price))
   }
 
@@ -126,7 +131,7 @@ export default function BurgerConstructor ({onDropHandler}) {
                 text={ingredient.name}
                 price={ingredient.price}
                 thumbnail={ingredient.image}
-                handleClose={()=> handleClose(ingredient._id, ingredient.price)}/>
+                handleClose={()=> handleClose(ingredient.uid, ingredient.price)}/>
                 </div>
               ))}
               {selectedBun && <ConstructorElement

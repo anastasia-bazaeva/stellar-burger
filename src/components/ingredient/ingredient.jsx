@@ -8,12 +8,12 @@ import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from "../modal/modal";
 import IngredientInfo from "../ingredient-info/ingredient-info";
 import { useSelector, useDispatch } from 'react-redux';
-import { addBunPrice, addItem, addItemPrice, deleteItem, removeBunCount, removeBunPrice, setBun } from "../services/reducers/reducers";
+import { addBunPrice, addItem, addItemPrice, deleteItem, removeBunCount, removeBunPrice, setBun, setBunCount } from "../services/reducers/reducers";
 
 export default function Ingredient ({productInfo}) {
 
   const [isOrderDetailsOpened, setIsOrderDetailsOpened] = React.useState(false);
-  const { priceState, constructorIngredients, selectedBun, count } = useSelector( state => state.reducerConstructor);
+  const { priceState, constructorIngredients, selectedBun, count, bunCount } = useSelector( state => state.reducerConstructor);
   const dispatch = useDispatch();
   const [counter, setCounter] = React.useState(null);
   //const id = productInfo._id; 
@@ -26,22 +26,14 @@ export default function Ingredient ({productInfo}) {
     })
   });
 
-  let number = 0;
-
-  // React.useEffect(()=>{
-  //   return ()=>{
-  //       document.removeEventListener('click', handleClick);
-  //   }
-  // })
+  let number = productInfo._id === selectedBun?._id ? 2: constructorIngredients.filter(item => item._id === productInfo._id).length;
 
   const showCounter = (productInfo) => {
-    if (selectedBun && productInfo === selectedBun) {
+    if (productInfo.type === 'bun') {
       number = 2;
     } 
-    number = count.filter(item => item === productInfo._id).length;
-    // if (productInfo.type === "bun"){
-    //   return number + 1;
-    // }
+    number = constructorIngredients.filter(item => item._id === productInfo._id).length;
+    console.log(productInfo.type);
     return number;
   }
 
@@ -52,6 +44,9 @@ export default function Ingredient ({productInfo}) {
   const handleClick = (productInfo, price) => {
     if (productInfo.type === "bun") {
       dispatch(setBun(productInfo));
+      showCounter(productInfo);
+      console.log(showCounter(productInfo))
+      //dispatch(setBunCount(productInfo));
       //dispatch(addBunPrice(productInfo.price))
       //showCounter(productInfo)
     } else {
@@ -71,15 +66,15 @@ export default function Ingredient ({productInfo}) {
 
   // React.useEffect(()=>{
   //   showCounter(productInfo)
-  // },[])
+  // },[constructorIngredients, ])
     
     return (
       !isDrag &&
         <>
         <li ref={dragRef} className={menuStyles.card} id='card' onClick={() => handleClick(productInfo, productInfo.price, productInfo._id)}>
             <div>
-            {(showCounter(productInfo) > 0)?
-            <Counter count={showCounter(productInfo)} size="default" />
+            {(number > 0)?
+            <Counter count={number} size="default" />
             :<></>}
             </div>
             <img src={productInfo.image} alt={productInfo.name}/>
