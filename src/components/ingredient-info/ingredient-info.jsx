@@ -1,4 +1,3 @@
-import React from "react";
 import nutritionStyles from './ingredient-info.module.css';
 
 export default function IngredientInfo ({productInfo}) {

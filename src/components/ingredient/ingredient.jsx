@@ -8,7 +8,7 @@ import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from "../modal/modal";
 import IngredientInfo from "../ingredient-info/ingredient-info";
 import { useSelector, useDispatch } from 'react-redux';
-import { addItem, setBun} from "../services/reducers/reducers";
+import { addItem, setBun} from "../services/reducers/constructor-reducers";
 import { clearDetails, setDetails } from "../services/reducers/ingredient-details-reducers";
 
 export default function Ingredient ({productInfo}) {
@@ -76,4 +76,5 @@ Ingredient.propTypes = ({
   src: PropTypes.any,
   onOverlayClick: PropTypes.func,
   isOrder: PropTypes.bool,
+  productInfo: PropTypes.object
 })

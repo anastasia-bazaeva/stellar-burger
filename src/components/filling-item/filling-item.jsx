@@ -1,15 +1,14 @@
-import React, { useMemo, useRef } from 'react';
-import { useDispatch, useSelect } from 'react-redux';
+import React, { useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import { useDrag, useDrop } from 'react-dnd';
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import constructStyles from '../../components/burger-constructor/burger-constructor.module.css';
-import { moveCard } from '../services/reducers/reducers';
+import { sort } from '../services/reducers/constructor-reducers';
 
-const ConstructorItem = ({ingredient, handleClose, index}) => { 
+const FillingItem = ({ingredient, handleClose, index}) => { 
 
 const dispatch = useDispatch();    
 const ref = useRef(null);
-
 const id = ingredient._id;
 
 const [{ handlerId }, drop] = useDrop({
@@ -42,7 +41,7 @@ const [{ handlerId }, drop] = useDrop({
       return;
     }
 
-    dispatch(moveCard({ dragIndex, hoverIndex }));
+    dispatch(sort({ dragIndex, hoverIndex }));
 
     item.index = hoverIndex;
   },
@@ -61,7 +60,7 @@ const opacity = isDragging ? 0 : 1;
 drag(drop(ref));
 
 return (
-    <div ref={ref} className={constructStyles.drag}>
+    <div ref={ref} className={constructStyles.drag} style={{ opacity }}>
         <DragIcon type="primary"/>
         <ConstructorElement
         text={ingredient.name}
@@ -75,4 +74,4 @@ return (
 
 }
 
-export default ConstructorItem
+export default FillingItem
