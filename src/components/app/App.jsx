@@ -55,10 +55,13 @@ function App () {
   //   }
   // }
 
-  const handleDrop = (item) => {
-    dispatch(addItem(item));
-    dispatch(addItemPrice(item.price));
-  };
+  // const handleDrop = (item) => {
+  //   if (item.type === "bun") {
+  //     dispatch(setBun(item))
+  //   }
+  //   dispatch(addItem(item));
+  //   dispatch(addItemPrice(item.price))
+  // };
 
   React.useEffect(()=>{
     dispatch(getData());
@@ -74,7 +77,7 @@ function App () {
           <main className='content' id='modals'>
             <DndProvider backend={HTML5Backend}>
               <BurgerIngredients/>
-              <BurgerConstructor onDropHandler={handleDrop}/>
+              <BurgerConstructor/>
             </DndProvider>
           </main>
       </div>

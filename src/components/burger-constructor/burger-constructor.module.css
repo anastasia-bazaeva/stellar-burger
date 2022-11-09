@@ -20,7 +20,6 @@
 
 .order__window::-webkit-scrollbar-thumb {
     background: #8585AD;
-
 }
 
 .order__panel {
@@ -49,6 +48,12 @@
     gap: 10px;
     align-items: flex-end;
 }
+
+.order__note {
+    display: flex;
+    align-items: flex-end;
+}
+
 
 .order__box {
     composes: order;

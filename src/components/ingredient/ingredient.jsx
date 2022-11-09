@@ -8,15 +8,15 @@ import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from "../modal/modal";
 import IngredientInfo from "../ingredient-info/ingredient-info";
 import { useSelector, useDispatch } from 'react-redux';
-import { addBunPrice, addItem, addItemPrice, deleteItem, removeBunCount, removeBunPrice, setBun, setBunCount } from "../services/reducers/reducers";
+import { addItem, setBun} from "../services/reducers/reducers";
+import { clearDetails, setDetails } from "../services/reducers/ingredient-details-reducers";
 
 export default function Ingredient ({productInfo}) {
 
   const [isOrderDetailsOpened, setIsOrderDetailsOpened] = React.useState(false);
-  const { priceState, constructorIngredients, selectedBun, count, bunCount } = useSelector( state => state.reducerConstructor);
+  const { constructorIngredients, selectedBun } = useSelector( state => state.reducerConstructor);
+  const productDetails = useSelector (state => state.reducerDetails.productDetails);
   const dispatch = useDispatch();
-  const [counter, setCounter] = React.useState(null);
-  //const id = productInfo._id; 
 
   const [{isDrag}, dragRef] = useDrag({
     type: "ingredient",
@@ -28,50 +28,26 @@ export default function Ingredient ({productInfo}) {
 
   let number = productInfo._id === selectedBun?._id ? 2: constructorIngredients.filter(item => item._id === productInfo._id).length;
 
-  const showCounter = (productInfo) => {
-    if (productInfo.type === 'bun') {
-      number = 2;
-    } 
-    number = constructorIngredients.filter(item => item._id === productInfo._id).length;
-    console.log(productInfo.type);
-    return number;
-  }
-
   const closeAllModals = () => {
     setIsOrderDetailsOpened(false);
+    dispatch(clearDetails())
+
   };
 
-  const handleClick = (productInfo, price) => {
+  const handleClick = (productInfo) => {
+    dispatch(setDetails(productInfo));
+    setIsOrderDetailsOpened(true);
     if (productInfo.type === "bun") {
       dispatch(setBun(productInfo));
-      showCounter(productInfo);
-      console.log(showCounter(productInfo))
-      //dispatch(setBunCount(productInfo));
-      //dispatch(addBunPrice(productInfo.price))
-      //showCounter(productInfo)
     } else {
-      setIsOrderDetailsOpened(true);
       dispatch(addItem(productInfo));
-      dispatch(addItemPrice(price));
-      //showCounter(productInfo);
-      // if (counter) {
-      //   setCounter(counter + 1);
-      // }
-      // else {
-      //   setCounter(1);
-    // }
     }
-    // console.log(counter)
   };
-
-  // React.useEffect(()=>{
-  //   showCounter(productInfo)
-  // },[constructorIngredients, ])
     
     return (
       !isDrag &&
         <>
-        <li ref={dragRef} className={menuStyles.card} id='card' onClick={() => handleClick(productInfo, productInfo.price, productInfo._id)}>
+        <li ref={dragRef} className={menuStyles.card} id='card' onClick={() => handleClick(productInfo)}>
             <div>
             {(number > 0)?
             <Counter count={number} size="default" />
@@ -89,7 +65,7 @@ export default function Ingredient ({productInfo}) {
              onOverlayClick={closeAllModals}
              isOrder={false}
            >
-             <IngredientInfo productInfo={productInfo}/>
+             <IngredientInfo productInfo={productDetails}/>
              </Modal>}
              </>
     )

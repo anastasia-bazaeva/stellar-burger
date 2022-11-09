@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import PropTypes from 'prop-types';
 import { useDrop } from "react-dnd";
 import { nanoid } from "@reduxjs/toolkit";
@@ -13,7 +13,8 @@ import orderStyles from '../../components/order-details/order-details.module.css
 import donePic from '../../images/done.svg';
 import {getOrderNumber} from '../utils';
 import { useSelector, useDispatch } from 'react-redux';
-import { addBunPrice, clearOrder, createOrder, deleteItem, getOrder, removeItemPrice, setBun, setOrderNumber } from "../services/reducers/reducers";
+import { addItem, addItemPrice, clearOrder, createOrder, deleteItem, getOrder, removeItemPrice, setBun, setOrderNumber } from "../services/reducers/reducers";
+import ConstructorItem from "../constructor-item/constructor-item";
 
 
 export default function BurgerConstructor ({onDropHandler}) {
@@ -26,17 +27,30 @@ export default function BurgerConstructor ({onDropHandler}) {
   //const [orderNumber, setOrderNumber] = React.useState(0);
   //const {priceState, priceDispatcher} = React.useContext(PriceContext);
 
-  const [{isHover}, dropTarget] = useDrop({
+  //  const handleDrop = (item) => {
+  //   if (item.type === "bun") {
+  //     dispatch(setBun(item))
+  //   }
+  //   dispatch(addItem(item));
+  //   dispatch(addItemPrice(item.price))
+  // };
+
+  const [{isHover, canDrop}, dropTarget] = useDrop({
     accept: "ingredient",
     drop(item) {
-        onDropHandler(item);
+      dispatch(
+        item.type !== "bun"?
+        addItem(item)
+        :setBun(item)
+      );
     },
     collect: monitor => ({
-      isHover: monitor.isOver()
+      isHover: monitor.isOver(),
+      canDrop: monitor.canDrop()
     })
   });
 
-  const borderColor = isHover ? constructStyles.order__box : constructStyles.order;
+  const borderColor = (isHover && canDrop) ? constructStyles.order__box : constructStyles.order;
 
   const saucesAndFillingsData = React.useMemo(() => 
   constructorIngredients?.filter((e) => e.type !== 'bun'),
@@ -108,16 +122,19 @@ export default function BurgerConstructor ({onDropHandler}) {
     //setIsOrderDetailsOpened(true)
   };  
 
+  const isScroll = (!selectedBun && priceState === 0) ? constructStyles.order : constructStyles.order__window;
+
   // React.useEffect(()=>{
   //   dispatch(setBun(defaultBun))
   // },[])
 
+
       return (
-        <>{(!selectedBun && priceState === 0)? 
-        <div className={`${constructStyles.order__content} text text_type_main-large mt-25 pt-20`}>Добавьте что-нибудь в заказ</div>
-        :<section className={borderColor}>
-          <div ref={dropTarget} className={`${constructStyles.order__window} mt-25 pr-2`}>
-            <div className={constructStyles.order__content}>
+        <>
+        <section className={borderColor}>
+          <div ref={dropTarget} className={`${isScroll} mt-25 pr-2`}>
+            {(!selectedBun && priceState === 0)? <div className={`${constructStyles.order__note} text text_type_main-large mt-25`}>Добавьте что-нибудь в заказ</div>
+            :<div className={constructStyles.order__content}>
             {selectedBun && <ConstructorElement
                 type="top"
                 isLocked={true}
@@ -125,15 +142,13 @@ export default function BurgerConstructor ({onDropHandler}) {
                 price={selectedBun?.price}
                 thumbnail={selectedBun?.image}
                 key="top-constr"
-              />}{constructorIngredients && saucesAndFillingsData.map((ingredient)=> (
-                <div key={nanoid()} className={constructStyles.drag}>
-                <DragIcon key={`${nanoid()}-icon`} type="primary"/>
-                <ConstructorElement
-                text={ingredient.name}
-                price={ingredient.price}
-                thumbnail={ingredient.image}
-                handleClose={()=> handleClose(ingredient.uid, ingredient.price)}/>
-                </div>
+              />}{constructorIngredients && saucesAndFillingsData?.map((item, index)=> (
+                <ConstructorItem
+                key={item.uid}
+                ingredient={item}
+                index={index}
+                handleClose={handleClose}
+                />
               ))}
               {selectedBun && <ConstructorElement
                 type="bottom"
@@ -143,7 +158,7 @@ export default function BurgerConstructor ({onDropHandler}) {
                 thumbnail={selectedBun?.image}
                 key="bottom-constr"
               />}
-            </div>
+            </div>}
           </div>
           <div className={`${constructStyles.order__panel} mb-5`}>
             <div className={constructStyles.order__info}>
@@ -153,7 +168,7 @@ export default function BurgerConstructor ({onDropHandler}) {
             {selectedBun? <Button type="primary" size="large" onClick={handleClick} htmlType={"submit"}>Оформить заказ</Button>
             :<div className={`${constructStyles.order__panel} text text_type_main-default`}>Как только вы выберете булочку,<br></br> заказ можно будет оформить</div>}
           </div>
-        </section>}
+        </section>
         {isOrderDetailsOpened &&
             <Modal
              onOverlayClick={closeAllModals}

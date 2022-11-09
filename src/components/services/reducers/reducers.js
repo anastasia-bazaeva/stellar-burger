@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getOrderNumber } from '../../utils';
 import { nanoid } from 'nanoid';
+import update from 'immutability-helper';
 
 const initialStateConstructor = {
     constructorIngredients: [],
@@ -10,17 +11,17 @@ const initialStateConstructor = {
     selectedBun: null,
     isLoading: false,
 }
-export const getOrder = createAsyncThunk(
-        'reducerConstructor/getOrder',
-        getOrderNumber
-      )
-
 // export const getOrder = createAsyncThunk(
-//     'reducerConstructor/getOrder',
-//     async (data, thunkAPI) => {
-//       const res = getOrderNumber(data);
-//     return res
-//   })
+//         'reducerConstructor/getOrder',
+//         getOrderNumber
+//       )
+
+export const getOrder = createAsyncThunk(
+    'reducerConstructor/getOrder',
+    async (data, thunkAPI) => {
+      const res = getOrderNumber(data);
+    return res
+  })
 
 export const reducerConstructor = createSlice({
     name: 'reducerConstructor',
@@ -30,15 +31,16 @@ export const reducerConstructor = createSlice({
         reducer: (state, action) => {
             state.constructorIngredients.push(action.payload);
             //state.count = [...state.count, action.payload._id]
+            state.priceState = state.priceState + action.payload.price;
         },
         prepare: ingredient => {
             const uid = nanoid();
             return { payload: {...ingredient, uid}}
         }},
 
-        addItemPrice: (state, action) => {
-            state.priceState = state.priceState + action.payload
-        },
+        // addItemPrice: (state, action) => {
+        //     state.priceState = state.priceState + action.payload
+        // },
         deleteItem: (state, action) => {
             state.constructorIngredients = state.constructorIngredients.filter(item => item.uid !== action.payload);
             //state.orderList = state.orderList?.filter(item => item._id !== action.payload)
@@ -78,7 +80,20 @@ export const reducerConstructor = createSlice({
             state.selectedBun = null;
             state.priceState = 0;
             state.constructorIngredients = [];
-        }
+        },
+
+        moveCard(state, action) {
+            const dragIndex = action.payload.dragIndex;
+            const hoverIndex = action.payload.hoverIndex;
+            const array = [...state.constructorIngredients];
+            const draggingItem = array[dragIndex];
+            state.constructorIngredients = update(array, {
+              $splice: [
+                [dragIndex, 1],
+                [hoverIndex, 0, draggingItem],
+              ],
+            });
+          },
     },
     extraReducers: {
         [getOrder.pending]: (state) => {
@@ -95,6 +110,6 @@ export const reducerConstructor = createSlice({
 })
 
 export const { addItem, addItemPrice, deleteItem, removeItemPrice, 
- setOrderNumber, setBun, clearOrder } = reducerConstructor.actions
+ setOrderNumber, setBun, clearOrder, moveCard } = reducerConstructor.actions
 
 export default reducerConstructor.reducer;

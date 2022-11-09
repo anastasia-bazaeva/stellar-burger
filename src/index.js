@@ -10,6 +10,7 @@ import App from './components/app/App';
 import { configureStore } from '@reduxjs/toolkit';
 import reducerConstructor from './components/services/reducers/reducers.js';
 import reducerIngredients from './components/services/reducers/ingredient-reducers.js';
+import reducerDetails from './components/services/reducers/ingredient-details-reducers.js'
 import { Provider } from 'react-redux';
 
 // const composeEnhancers =
@@ -24,7 +25,8 @@ import { Provider } from 'react-redux';
 const store = new configureStore({
   reducer: {
     reducerIngredients,
-    reducerConstructor
+    reducerConstructor,
+    reducerDetails
   },
 });
 
