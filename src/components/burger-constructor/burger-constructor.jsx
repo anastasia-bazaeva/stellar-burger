@@ -1,16 +1,14 @@
 import React, { useRef } from "react";
-import PropTypes from 'prop-types';
 import { useDrop } from "react-dnd";
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import constructStyles from './burger-constructor.module.css';
 import Modal from "../modal/modal";
-import orderStyles from '../../components/order-details/order-details.module.css';
-import donePic from '../../images/done.svg';
 import { useSelector, useDispatch } from 'react-redux';
-import { addItem, clearOrder, deleteItem, getOrder, removeItemPrice, setBun } from "../services/reducers/constructor-reducers";
+import { addItem, clearOrder, deleteItem, getOrder, removeItemPrice, setBun } from "../../services/reducers/constructor-reducers";
 import FillingItem from "../filling-item/filling-item";
+import OrderDetails from "../order-details/order-details";
 
 
 export default function BurgerConstructor () {
@@ -76,7 +74,7 @@ export default function BurgerConstructor () {
             {selectedBun && <ConstructorElement
                 type="top"
                 isLocked={true}
-                text={selectedBun?.name}
+                text={`${selectedBun?.name} (верх)`}
                 price={selectedBun?.price}
                 thumbnail={selectedBun?.image}
                 key="top-constr"
@@ -91,7 +89,7 @@ export default function BurgerConstructor () {
               {selectedBun && <ConstructorElement
                 type="bottom"
                 isLocked={true}
-                text={selectedBun?.name}
+                text={`${selectedBun?.name} (низ)`}
                 price={selectedBun?.price}
                 thumbnail={selectedBun?.image}
                 key="bottom-constr"
@@ -109,7 +107,7 @@ export default function BurgerConstructor () {
         </section>
         {isLoading && 
             <Modal
-            onOverlayClick={closeAllModals}
+            onClose={closeAllModals}
              isOrder={true}
            ><div className={constructStyles.order__spinner}>
             <div className={`spinner ${constructStyles.order__spinnerItem}`}></div>
@@ -117,33 +115,12 @@ export default function BurgerConstructor () {
             </Modal>}
         {isOrderDetailsOpened &&
             <Modal
-             onOverlayClick={closeAllModals}
+            onClose={closeAllModals}
              isOrder={true}
            >
-            <div className={orderStyles.order}>
-              <div className={orderStyles.info}>
-                  <h2 className={`${orderStyles.digits} text text_type_digits-large`}>{orderNumber}</h2>
-                  <p className={`${orderStyles.text} text text_type_main-medium`}>Идентификатор заказа</p>
-              </div>
-              <img src={donePic} alt='Галочка'/>
-              <div className={orderStyles.spanArea}>
-                  <span className={`${orderStyles.text} text text_type_main-default`}>Ваш заказ уже начали готовить</span>
-                  <span className={`${orderStyles.text} text text_type_main-default text_color_inactive`}>Дождитесь готовности на орбитальной станции</span>
-              </div>
-            </div>
+            <OrderDetails orderNumber={orderNumber}/>
              </Modal>}
         </>
       );
     }
 
-BurgerConstructor.propTypes = ({
-  type: PropTypes.string,
-  isLocked: PropTypes.bool,
-  text: PropTypes.string, 
-  price: PropTypes.number,
-  thumbnail: PropTypes.any,
-  key: PropTypes.any,
-  onOverlayClick: PropTypes.func,
-  isOrder: PropTypes.bool,
-  src: PropTypes.any
-})

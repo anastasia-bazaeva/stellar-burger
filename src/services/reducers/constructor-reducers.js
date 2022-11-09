@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getOrderNumber } from '../../utils';
+import { getOrderNumber } from '../../utils/utils';
 import { nanoid } from 'nanoid';
 import update from 'immutability-helper';
 

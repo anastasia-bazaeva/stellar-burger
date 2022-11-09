@@ -5,11 +5,11 @@ import ModalOverlay from "../modal-overlay/modal-overlay";
 import modalStyles from './modal.module.css';
 
 
-export default function Modal ({ onOverlayClick, children, isOrder }) {
+export default function Modal ({ onClose, children, isOrder }) {
   const modalsContainer = document.querySelector('#modals');
 
   const handleEscKeydown = (event) => {
-      event.key === "Escape" && onOverlayClick();
+      event.key === "Escape" && onClose();
     }
 
   React.useEffect(() => {
@@ -23,15 +23,17 @@ export default function Modal ({ onOverlayClick, children, isOrder }) {
   return ReactDOM.createPortal(
     <>
       <div className={modalStyles.window}>
-      <button className={`${isOrder? `${modalStyles.button__order}` : `${modalStyles.button__product}`}`} onClick={onOverlayClick}></button>
+      <button className={`${isOrder? `${modalStyles.button__order}` : `${modalStyles.button__product}`}`} onClick={onClose}></button>
         {children}
       </div>
-      <ModalOverlay onClick={onOverlayClick} />
+      <ModalOverlay onClick={onClose} />
     </>,
     modalsContainer
   );
 }
 
-Modal.propsTypes = {
-  onClick: PropTypes.func
+Modal.propTypes = {
+  onClose: PropTypes.func,
+  children: PropTypes.any,
+  isOrder: PropTypes.bool
 }

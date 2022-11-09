@@ -8,7 +8,7 @@ import BurgerConstructor from '../burger-constructor/burger-constructor';
 import { useSelector, useDispatch } from 'react-redux';
 
 import store from '../..';
-import { getData } from '../services/reducers/ingredient-reducers';
+import { getData } from '../../services/reducers/ingredient-reducers';
 
 function App () {
   const { isLoading } = useSelector (state => state.reducerIngredients);

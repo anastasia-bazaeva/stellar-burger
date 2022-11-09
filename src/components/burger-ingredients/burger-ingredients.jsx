@@ -25,7 +25,7 @@ function BurgerIngredients () {
         menuZone.current.addEventListener('scroll', putScroll);
 
         return ()=>{
-          document.removeEventListener('scroll', putScroll);
+          menuZone.current?.removeEventListener('scroll', putScroll);
         }
     }, [])
 
@@ -38,7 +38,7 @@ function BurgerIngredients () {
         <section>
             <div className="pt-10 pb-10">
                 <h1 className={`${menuStyles.title} text text_type_main-large pb-5`}>Соберите бургер</h1>
-                <div style={{ display: 'flex' }}>
+                <div className={menuStyles.tabBox}>
                   <Tab value='bun' active={current === 'bun'} onClick={putView}>
                     Булки
                   </Tab>
@@ -64,13 +64,5 @@ function BurgerIngredients () {
         </section>
       )
     }
-    
-  BurgerIngredients.propsTypes = ({
-    active: PropTypes.bool,
-    onClick: PropTypes.func,
-    list: PropTypes.array,
-    type: PropTypes.string,
-    id: PropTypes.string
-  })
   
   export default BurgerIngredients

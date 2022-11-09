@@ -1,4 +1,5 @@
 import nutritionStyles from './ingredient-info.module.css';
+import PropTypes from 'prop-types';
 
 export default function IngredientInfo ({productInfo}) {
 
@@ -15,4 +16,8 @@ export default function IngredientInfo ({productInfo}) {
             </div>
         </div>
     )
+}
+
+IngredientInfo.propTypes = {
+    productInfo: PropTypes.object
 }

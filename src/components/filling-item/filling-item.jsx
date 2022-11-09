@@ -1,11 +1,12 @@
 import React, { useRef } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { useDrag, useDrop } from 'react-dnd';
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import constructStyles from '../../components/burger-constructor/burger-constructor.module.css';
-import { sort } from '../services/reducers/constructor-reducers';
+import { sort } from '../../services/reducers/constructor-reducers';
 
-const FillingItem = ({ingredient, handleClose, index}) => { 
+export default function FillingItem ({ingredient, handleClose, index}) { 
 
 const dispatch = useDispatch();    
 const ref = useRef(null);
@@ -59,19 +60,22 @@ const [{ isDragging }, drag] = useDrag({
 const opacity = isDragging ? 0 : 1;
 drag(drop(ref));
 
-return (
-    <div ref={ref} className={constructStyles.drag} style={{ opacity }}>
-        <DragIcon type="primary"/>
-        <ConstructorElement
-        text={ingredient.name}
-        price={ingredient.price}
-        thumbnail={ingredient.image}
-        data-handler-id={handlerId}
-        index={index}
-        handleClose={()=> handleClose(ingredient.uid, ingredient.price)}/>
-    </div>
-)
-
+  return (
+      <div ref={ref} className={constructStyles.drag} style={{ opacity }}>
+          <DragIcon type="primary"/>
+          <ConstructorElement
+          text={ingredient.name}
+          price={ingredient.price}
+          thumbnail={ingredient.image}
+          data-handler-id={handlerId}
+          index={index}
+          handleClose={()=> handleClose(ingredient.uid, ingredient.price)}/>
+      </div>
+  )
 }
 
-export default FillingItem
+FillingItem.propTypes = {
+  ingredient: PropTypes.object,
+  handleClose: PropTypes.func,
+  index: PropTypes.number
+}

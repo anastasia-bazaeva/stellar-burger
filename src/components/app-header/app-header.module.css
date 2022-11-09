@@ -1,6 +1,21 @@
 .header {
-    width: 100%;
+    min-width: 1600px;
+    max-width: 1880px;
+    box-sizing: border-box;
     background-color: #1C1C21;
+}
+
+@media screen and (max-width: 1600px) {
+    .header {
+        min-width: 1480px;
+    }
+}
+
+@media screen and (max-width: 1480px) {
+    .header {
+        min-width: none;
+        width: 100%;
+    }
 }
 
 .nav { 
@@ -10,6 +25,7 @@
     justify-content: center;
     align-items: center;
     gap: 112px;
+    overflow-x: hidden;
 }
 
 

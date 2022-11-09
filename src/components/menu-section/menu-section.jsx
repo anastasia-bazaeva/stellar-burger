@@ -20,8 +20,8 @@ export default function MenuSection ({list, type, handleClick}) {
     )
 }
 
-MenuSection.propsTypes = ({
-    productInfo: PropTypes.object,
-    key: PropTypes.any,
-    onClick: PropTypes.func
+MenuSection.propTypes = ({
+    list: PropTypes.array,
+    type: PropTypes.any,
+    handleClick: PropTypes.func
   })

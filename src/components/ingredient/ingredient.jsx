@@ -8,8 +8,7 @@ import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from "../modal/modal";
 import IngredientInfo from "../ingredient-info/ingredient-info";
 import { useSelector, useDispatch } from 'react-redux';
-import { addItem, setBun} from "../services/reducers/constructor-reducers";
-import { clearDetails, setDetails } from "../services/reducers/ingredient-details-reducers";
+import { clearDetails, setDetails } from "../../services/reducers/ingredient-details-reducers";
 
 export default function Ingredient ({productInfo}) {
 
@@ -36,12 +35,7 @@ export default function Ingredient ({productInfo}) {
 
   const handleClick = (productInfo) => {
     dispatch(setDetails(productInfo));
-    setIsOrderDetailsOpened(true);
-    if (productInfo.type === "bun") {
-      dispatch(setBun(productInfo));
-    } else {
-      dispatch(addItem(productInfo));
-    }
+    setIsOrderDetailsOpened(true)
   };
     
     return (
@@ -62,7 +56,7 @@ export default function Ingredient ({productInfo}) {
         </li>
         {isOrderDetailsOpened &&
             <Modal
-             onOverlayClick={closeAllModals}
+             onClose={closeAllModals}
              isOrder={false}
            >
              <IngredientInfo productInfo={productDetails}/>
@@ -72,9 +66,5 @@ export default function Ingredient ({productInfo}) {
 }
 
 Ingredient.propTypes = ({
-  count: PropTypes.number,
-  src: PropTypes.any,
-  onOverlayClick: PropTypes.func,
-  isOrder: PropTypes.bool,
   productInfo: PropTypes.object
 })
