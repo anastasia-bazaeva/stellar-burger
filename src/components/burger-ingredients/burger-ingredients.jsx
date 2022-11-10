@@ -11,6 +11,10 @@ function BurgerIngredients() {
   const menuZone = React.useRef();
   const ingredients = useSelector(state => state.reducerIngredients.ingredientsData);
 
+  const bunZone = React.useRef();
+  const sauceZone = React.useRef();
+  const mainZone = React.useRef();
+
   React.useEffect(() => {
     const putScroll = () => {
       if (menuZone.current.scrollTop <= 270) {
@@ -31,7 +35,13 @@ function BurgerIngredients() {
 
   const putView = (value) => {
     setCurrent(value);
-    document.querySelector(`#${value}`).scrollIntoView({ behavior: 'smooth' });
+    if (value === "bun") {
+      bunZone.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (value === "sauce") {
+      sauceZone.current.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      mainZone.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   return (
@@ -51,13 +61,13 @@ function BurgerIngredients() {
         </div>
       </div>
       <div className={`${menuStyles.scrollzone}`} ref={menuZone}>
-        <div id={'bun'}>
+        <div ref={bunZone} id={'bun'}>
           <MenuSection list={ingredients?.filter(e => e.type === "bun")} type="Булки" />
         </div>
-        <div id={'sauce'}>
+        <div ref={sauceZone} id={'sauce'}>
           <MenuSection list={ingredients?.filter(e => e.type === "sauce")} type="Соусы" />
         </div>
-        <div id={'main'}>
+        <div ref={mainZone} id={'main'}>
           <MenuSection list={ingredients?.filter(e => e.type === "main")} type="Начинки" />
         </div>
       </div>
