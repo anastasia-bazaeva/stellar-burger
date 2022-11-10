@@ -45,7 +45,7 @@ function BurgerIngredients() {
   }
 
   return (
-    <section>
+    <section className={menuStyles.section}>
       <div className="pt-10 pb-10">
         <h1 className={`${menuStyles.title} text text_type_main-large pb-5`}>Соберите бургер</h1>
         <div className={menuStyles.tabBox}>

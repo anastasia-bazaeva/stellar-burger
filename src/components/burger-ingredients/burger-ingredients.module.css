@@ -1,4 +1,8 @@
 
+.section {
+    height: calc(100%-135px);
+}
+
 .title {
     margin: 0;
 }
