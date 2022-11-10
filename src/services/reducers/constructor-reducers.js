@@ -14,23 +14,24 @@ const initialStateConstructor = {
 export const getOrder = createAsyncThunk(
     'reducerConstructor/getOrder',
     async (data, thunkAPI) => {
-      const res = getOrderNumber(data);
-    return res
-  })
+        const res = getOrderNumber(data);
+        return res
+    })
 
 export const reducerConstructor = createSlice({
     name: 'reducerConstructor',
     initialState: initialStateConstructor,
     reducers: {
         addItem: {
-        reducer: (state, action) => {
-            state.constructorIngredients.push(action.payload);
-            state.priceState = state.priceState + action.payload.price;
+            reducer: (state, action) => {
+                state.constructorIngredients.push(action.payload);
+                state.priceState = state.priceState + action.payload.price;
+            },
+            prepare: ingredient => {
+                const uid = nanoid();
+                return { payload: { ...ingredient, uid } }
+            }
         },
-        prepare: ingredient => {
-            const uid = nanoid();
-            return { payload: {...ingredient, uid}}
-        }},
 
         deleteItem: (state, action) => {
             state.constructorIngredients = state.constructorIngredients.filter(item => item.uid !== action.payload);
@@ -56,12 +57,12 @@ export const reducerConstructor = createSlice({
             const array = [...state.constructorIngredients];
             const draggingItem = array[dragIndex];
             state.constructorIngredients = update(array, {
-              $splice: [
-                [dragIndex, 1],
-                [hoverIndex, 0, draggingItem],
-              ],
+                $splice: [
+                    [dragIndex, 1],
+                    [hoverIndex, 0, draggingItem],
+                ],
             });
-          },
+        },
     },
     extraReducers: {
         [getOrder.pending]: (state) => {
@@ -77,7 +78,7 @@ export const reducerConstructor = createSlice({
     }
 })
 
-export const { addItem, addItemPrice, deleteItem, removeItemPrice, 
- setOrderNumber, setBun, clearOrder, sort } = reducerConstructor.actions
+export const { addItem, addItemPrice, deleteItem, removeItemPrice,
+    setOrderNumber, setBun, clearOrder, sort } = reducerConstructor.actions
 
 export default reducerConstructor.reducer;

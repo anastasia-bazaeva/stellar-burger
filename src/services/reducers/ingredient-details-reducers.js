@@ -18,5 +18,5 @@ export const reducerDetails = createSlice({
 })
 
 export const { setDetails, clearDetails } = reducerDetails.actions
-   
+
 export default reducerDetails.reducer;

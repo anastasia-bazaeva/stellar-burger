@@ -11,18 +11,18 @@ import FillingItem from "../filling-item/filling-item";
 import OrderDetails from "../order-details/order-details";
 
 
-export default function BurgerConstructor () {
+export default function BurgerConstructor() {
   const { priceState, constructorIngredients, orderNumber, selectedBun, isLoading } = useSelector(state => state.reducerConstructor);
   const dispatch = useDispatch();
   const [isOrderDetailsOpened, setIsOrderDetailsOpened] = React.useState(false);
 
-  const [{isHover, canDrop}, dropTarget] = useDrop({
+  const [{ isHover, canDrop }, dropTarget] = useDrop({
     accept: "ingredient",
     drop(item) {
       dispatch(
-        item.type !== "bun"?
-        addItem(item)
-        :setBun(item)
+        item.type !== "bun" ?
+          addItem(item)
+          : setBun(item)
       );
     },
     collect: monitor => ({
@@ -33,9 +33,9 @@ export default function BurgerConstructor () {
 
   const borderColor = (isHover && canDrop) ? constructStyles.order__box : constructStyles.order;
 
-  const getTotal = React.useMemo(() =>{
-      return priceState + selectedBun?.price*2;
-    },[priceState, selectedBun])
+  const getTotal = React.useMemo(() => {
+    return priceState + selectedBun?.price * 2;
+  }, [priceState, selectedBun])
 
   const closeAllModals = () => {
     setIsOrderDetailsOpened(false);
@@ -43,15 +43,15 @@ export default function BurgerConstructor () {
 
   const getOrderInfo = () => {
     dispatch(getOrder(
-            selectedBun._id, 
-            ...constructorIngredients.map(item => item._id),
-            selectedBun._id 
-            ))
-    .then(res => {
-      res.payload.success && setIsOrderDetailsOpened(true);
-      dispatch(clearOrder())
-    })
-    .catch(e => console.log(`При загрузке данных по заказу что-то пошло не так: ${e}`))
+      selectedBun._id,
+      ...constructorIngredients.map(item => item._id),
+      selectedBun._id
+    ))
+      .then(res => {
+        res.payload.success && setIsOrderDetailsOpened(true);
+        dispatch(clearOrder())
+      })
+      .catch(e => console.log(`При загрузке данных по заказу что-то пошло не так: ${e}`))
   }
 
   const handleClose = (uid, price) => {
@@ -61,29 +61,29 @@ export default function BurgerConstructor () {
 
   const handleClick = () => {
     getOrderInfo();
-  };  
+  };
 
   const isScroll = (!selectedBun && priceState === 0) ? constructStyles.order : constructStyles.order__window;
 
-      return (
-        <>
-        <section className={borderColor}>
-          <div ref={dropTarget} className={`${isScroll} mt-25 pr-2`}>
-            {(!selectedBun && priceState === 0)? <div className={`${constructStyles.order__note} text text_type_main-large mt-25`}>Добавьте что-нибудь в заказ</div>
-            :<div className={constructStyles.order__content}>
-            {selectedBun && <ConstructorElement
+  return (
+    <>
+      <section className={borderColor}>
+        <div ref={dropTarget} className={`${isScroll} mt-25 pr-2`}>
+          {(!selectedBun && priceState === 0) ? <div className={`${constructStyles.order__note} text text_type_main-large mt-25`}>Добавьте что-нибудь в заказ</div>
+            : <div className={constructStyles.order__content}>
+              {selectedBun && <ConstructorElement
                 type="top"
                 isLocked={true}
                 text={`${selectedBun?.name} (верх)`}
                 price={selectedBun?.price}
                 thumbnail={selectedBun?.image}
                 key="top-constr"
-              />}{constructorIngredients && constructorIngredients.map((item, index)=> (
+              />}{constructorIngredients && constructorIngredients.map((item, index) => (
                 <FillingItem
-                key={item.uid}
-                ingredient={item}
-                index={index}
-                handleClose={handleClose}
+                  key={item.uid}
+                  ingredient={item}
+                  index={index}
+                  handleClose={handleClose}
                 />
               ))}
               {selectedBun && <ConstructorElement
@@ -95,32 +95,32 @@ export default function BurgerConstructor () {
                 key="bottom-constr"
               />}
             </div>}
+        </div>
+        <div className={`${constructStyles.order__panel} mb-5`}>
+          <div className={constructStyles.order__info}>
+            <h2 className="text text_type_digits-medium">{selectedBun ? getTotal : priceState}</h2>
+            <CurrencyIcon type="primary" />
           </div>
-          <div className={`${constructStyles.order__panel} mb-5`}>
-            <div className={constructStyles.order__info}>
-              <h2 className="text text_type_digits-medium">{selectedBun? getTotal : priceState}</h2>
-              <CurrencyIcon type="primary" />
-            </div>
-            {selectedBun? <Button type="primary" size="large" onClick={handleClick} htmlType={"submit"}>Оформить заказ</Button>
-            :<div className={`${constructStyles.order__panel} text text_type_main-default`}>Как только вы выберете булочку,<br></br> заказ можно будет оформить</div>}
-          </div>
-        </section>
-        {isLoading && 
-            <Modal
-            onClose={closeAllModals}
-             isOrder={true}
-           ><div className={constructStyles.order__spinner}>
+          {selectedBun ? <Button type="primary" size="large" onClick={handleClick} htmlType={"submit"}>Оформить заказ</Button>
+            : <div className={`${constructStyles.order__panel} text text_type_main-default`}>Как только вы выберете булочку,<br></br> заказ можно будет оформить</div>}
+        </div>
+      </section>
+      {isLoading &&
+        <Modal
+          onClose={closeAllModals}
+          isOrder={true}
+        ><div className={constructStyles.order__spinner}>
             <div className={`spinner ${constructStyles.order__spinnerItem}`}></div>
-         </div>
-            </Modal>}
-        {isOrderDetailsOpened &&
-            <Modal
-            onClose={closeAllModals}
-             isOrder={true}
-           >
-            <OrderDetails orderNumber={orderNumber}/>
-             </Modal>}
-        </>
-      );
-    }
+          </div>
+        </Modal>}
+      {isOrderDetailsOpened &&
+        <Modal
+          onClose={closeAllModals}
+          isOrder={true}
+        >
+          <OrderDetails orderNumber={orderNumber} />
+        </Modal>}
+    </>
+  );
+}
 

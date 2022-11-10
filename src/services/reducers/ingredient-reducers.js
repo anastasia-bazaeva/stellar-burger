@@ -12,9 +12,9 @@ const initialStateIngredients = {
 export const getData = createAsyncThunk(
     'reducerIngredients/getData',
     async (thunkAPI) => {
-      const res = getInfo();
-    return res
-  })
+        const res = getInfo();
+        return res
+    })
 
 const reducerIngredients = createSlice({
     name: 'reducerIngredients',
