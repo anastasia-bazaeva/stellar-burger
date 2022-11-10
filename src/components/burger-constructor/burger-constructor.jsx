@@ -1,105 +1,126 @@
-import React from "react";
-import PropTypes from 'prop-types';
-
+import React, { useRef } from "react";
+import { useDrop } from "react-dnd";
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import constructStyles from './burger-constructor.module.css';
-import kraterBun from '../../images/kratorbulka.svg'
 import Modal from "../modal/modal";
-import orderStyles from '../../components/order-details/order-details.module.css';
-import donePic from '../../images/done.svg';
+import { useSelector, useDispatch } from 'react-redux';
+import { addItem, clearOrder, deleteItem, getOrder, removeItemPrice, setBun } from "../../services/reducers/constructor-reducers";
+import FillingItem from "../filling-item/filling-item";
+import OrderDetails from "../order-details/order-details";
 
 
-export default function BurgerConstructor ({ingredientsData}) {
+export default function BurgerConstructor() {
+  const { priceState, constructorIngredients, orderNumber, selectedBun, isLoading } = useSelector(state => state.reducerConstructor);
+  const dispatch = useDispatch();
   const [isOrderDetailsOpened, setIsOrderDetailsOpened] = React.useState(false);
-  const [orderNumber, setOrderNumber] = React.useState(0);
 
-  const saucesAndFillingsData = React.useMemo(() => 
-    ingredientsData?.filter((e) => e.type !== 'bun'),
-     [ingredientsData]); 
+  const [{ isHover, canDrop }, dropTarget] = useDrop({
+    accept: "ingredient",
+    drop(item) {
+      dispatch(
+        item.type !== "bun" ?
+          addItem(item)
+          : setBun(item)
+      );
+    },
+    collect: monitor => ({
+      isHover: monitor.isOver(),
+      canDrop: monitor.canDrop()
+    })
+  });
 
-  const total = React.useMemo(()=> 
-    saucesAndFillingsData.reduce((acc, p) => acc + p.price, 400),
-      [saucesAndFillingsData]);
+  const borderColor = (isHover && canDrop) ? constructStyles.order__box : constructStyles.order;
+
+  const getTotal = React.useMemo(() => {
+    return priceState + selectedBun?.price * 2;
+  }, [priceState, selectedBun])
 
   const closeAllModals = () => {
     setIsOrderDetailsOpened(false);
   };
 
+  const getOrderInfo = () => {
+    dispatch(getOrder(
+      selectedBun._id,
+      ...constructorIngredients.map(item => item._id),
+      selectedBun._id
+    ))
+      .then(res => {
+        res.payload.success && setIsOrderDetailsOpened(true);
+        dispatch(clearOrder())
+      })
+      .catch(e => console.log(`При загрузке данных по заказу что-то пошло не так: ${e}`))
+  }
+
+  const handleClose = (uid, price) => {
+    dispatch(deleteItem(uid));
+    dispatch(removeItemPrice(price))
+  }
+
   const handleClick = () => {
-    setIsOrderDetailsOpened(true);
-    setOrderNumber(Math.floor(Math.random() * 999999));
+    getOrderInfo();
   };
 
-      return (
-        <>
-        <section className={`${constructStyles.order}`}>
-          <div className={`${constructStyles.order__window} mt-25 pr-2`}>
-            <div className={constructStyles.order__content}>
-              <ConstructorElement
+  const isScroll = (!selectedBun && priceState === 0) ? constructStyles.order : constructStyles.order__window;
+
+  return (
+    <>
+      <section className={borderColor}>
+        <div ref={dropTarget} className={`${isScroll} mt-25 pr-2`}>
+          {(!selectedBun && priceState === 0) ? <div className={`${constructStyles.order__note} text text_type_main-large mt-25`}>Добавьте что-нибудь в заказ</div>
+            : <div className={constructStyles.order__content}>
+              {selectedBun && <ConstructorElement
                 type="top"
                 isLocked={true}
-                text="Краторная булка N-200i (верх)"
-                price={200}
-                thumbnail={kraterBun}
+                text={`${selectedBun?.name} (верх)`}
+                price={selectedBun?.price}
+                thumbnail={selectedBun?.image}
                 key="top-constr"
-              />{ingredientsData && saucesAndFillingsData.map((ingredient)=> (
-                <div key={ingredient._id} className={constructStyles.drag}>
-                <DragIcon key={`${ingredient._id}-icon`} type="primary"/>
-                <ConstructorElement
-                text={ingredient.name}
-                price={ingredient.price}
-                thumbnail={ingredient.image}/>
-                </div>
+              />}{constructorIngredients && constructorIngredients.map((item, index) => (
+                <FillingItem
+                  key={item.uid}
+                  ingredient={item}
+                  index={index}
+                  handleClose={handleClose}
+                />
               ))}
-              <ConstructorElement
+              {selectedBun && <ConstructorElement
                 type="bottom"
                 isLocked={true}
-                text="Краторная булка N-200i (низ)"
-                price={200}
-                thumbnail={kraterBun}
+                text={`${selectedBun?.name} (низ)`}
+                price={selectedBun?.price}
+                thumbnail={selectedBun?.image}
                 key="bottom-constr"
-              />
-            </div>
+              />}
+            </div>}
+        </div>
+        <div className={`${constructStyles.order__panel} mb-5`}>
+          <div className={constructStyles.order__info}>
+            <h2 className="text text_type_digits-medium">{selectedBun ? getTotal : priceState}</h2>
+            <CurrencyIcon type="primary" />
           </div>
-          <div className={`${constructStyles.order__panel} mb-5`}>
-            <div className={constructStyles.order__info}>
-              <h2 className="text text_type_digits-medium">{total}</h2>
-              <CurrencyIcon type="primary" />
-            </div>
-            <Button type="primary" size="large" onClick={handleClick} htmlType={"submit"}>Оформить заказ</Button>
+          {selectedBun ? <Button type="primary" size="large" onClick={handleClick} htmlType={"submit"}>Оформить заказ</Button>
+            : <div className={`${constructStyles.order__panel} text text_type_main-default`}>Как только вы выберете булочку,<br></br> заказ можно будет оформить</div>}
+        </div>
+      </section>
+      {isLoading &&
+        <Modal
+          onClose={closeAllModals}
+          isOrder={true}
+        ><div className={constructStyles.order__spinner}>
+            <div className={`spinner ${constructStyles.order__spinnerItem}`}></div>
           </div>
-        </section>
-        {isOrderDetailsOpened &&
-            <Modal
-             onOverlayClick={closeAllModals}
-             isOrder={true}
-           >
-            <div className={orderStyles.order}>
-              <div className={orderStyles.info}>
-                  <h2 className={`${orderStyles.digits} text text_type_digits-large`}>{orderNumber}</h2>
-                  <p className={`${orderStyles.text} text text_type_main-medium`}>Идентификатор заказа</p>
-              </div>
-              <img src={donePic} alt='Галочка'/>
-              <div className={orderStyles.spanArea}>
-                  <span className={`${orderStyles.text} text text_type_main-default`}>Ваш заказ уже начали готовить</span>
-                  <span className={`${orderStyles.text} text text_type_main-default text_color_inactive`}>Дождитесь готовности на орбитальной станции</span>
-              </div>
-            </div>
-             </Modal>}
-             </>
-      );
-    }
-BurgerConstructor.propTypes = ({
-  type: PropTypes.string,
-  isLocked: PropTypes.bool,
-  text: PropTypes.string, 
-  price: PropTypes.number,
-  thumbnail: PropTypes.any,
-  key: PropTypes.any,
-  onOverlayClick: PropTypes.func,
-  isOrder: PropTypes.bool,
-  src: PropTypes.any
-})
+        </Modal>}
+      {isOrderDetailsOpened &&
+        <Modal
+          onClose={closeAllModals}
+          isOrder={true}
+        >
+          <OrderDetails orderNumber={orderNumber} />
+        </Modal>}
+    </>
+  );
+}
+

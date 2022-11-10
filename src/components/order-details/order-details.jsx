@@ -1,20 +1,25 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import orderStyles from './order-details.module.css';
+import donePic from '../../images/done.svg'
 
-export default function OrderDetails ({total}) {
-    <div className={orderStyles.order}>
-        <div>
-            <h2>{total}</h2>
-            <p>Идентификатор заказа</p>
+export default function OrderDetails({ orderNumber }) {
+    return (
+        <div className={orderStyles.order}>
+            <div className={orderStyles.info}>
+                <h2 className={`${orderStyles.digits} text text_type_digits-large`}>{orderNumber}</h2>
+                <p className={`${orderStyles.text} text text_type_main-medium`}>Идентификатор заказа</p>
+            </div>
+            <img src={donePic} alt='Галочка' />
+            <div className={orderStyles.spanArea}>
+                <span className={`${orderStyles.text} text text_type_main-default`}>Ваш заказ уже начали готовить</span>
+                <span className={`${orderStyles.text} text text_type_main-default text_color_inactive`}>Дождитесь готовности на орбитальной станции</span>
+            </div>
         </div>
-        <img/>
-        <div>
-            <span>Ваш заказ уже начали готовить</span>
-            <span>Дождитесь готовности на орбитальной станции</span>
-        </div>
-    </div>
+    )
 }
-// никак не получилось использовать как children в модальном окне, 
-// не работало содержимое, только пустая модалка и оверлей, хотя в
-// том же модальном спокойно работал IngredientInfo
-// оставлено на случай, если наставник подскажет почему так и как починить 
+
+OrderDetails.propTypes = ({
+    orderNumber: PropTypes.number
+})
+// ОГО, столько человек раньше не заметили такую простую ошибку) СПАСИБО!!! <3

@@ -20,7 +20,6 @@
 
 .order__window::-webkit-scrollbar-thumb {
     background: #8585AD;
-
 }
 
 .order__panel {
@@ -43,9 +42,42 @@
     width: 100%;
 }
 
+.drag:hover {
+    cursor: grab;
+}
+
 .order__content {
     display: flex;
     flex-direction: column;
     gap: 10px;
     align-items: flex-end;
+}
+
+.order__note {
+    display: flex;
+    align-items: flex-end;
+}
+
+
+.order__box {
+    composes: order;
+    box-shadow: 0px 0px 16px rgba(105, 51, 255, 0.15), 
+     0px 0px 8px rgba(105, 51, 255, 0.15), 
+     0px 4px 32px rgba(105, 51, 255, 0.15);
+}
+
+.order__spinner {
+    width: 720px;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.order__spinnerItem {
+    margin: 0;
+    padding: 0;
+    text-shadow: 0px 0px 16px rgb(51 51 255 / 25%), 
+    0px 0px 8px rgb(51 51 255 / 25%), 
+    0px 4px 32px rgb(51 51 255 / 50%);
 }

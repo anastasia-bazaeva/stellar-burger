@@ -1,4 +1,8 @@
 
+.section {
+    height: calc(100%-135px);
+}
+
 .title {
     margin: 0;
 }
@@ -64,4 +68,8 @@
     composes: title;
     text-align: center;
     min-height: 48px;
+}
+
+.tabBox {
+    display: flex;
 }
