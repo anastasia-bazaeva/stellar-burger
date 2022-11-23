@@ -10,9 +10,16 @@ import appStyles from '../app/app.module.css';
 import store from '../..';
 import { getData } from '../../services/reducers/ingredient-reducers';
 
+import {Login} from '../../pages/login';
+import {Register} from '../../pages/register';
+import { ForgotPassword } from '../../pages/forgot-password';
+import { ResetPassword } from '../../pages/reset-password';
+
 function App() {
   const { isLoading } = useSelector(state => state.reducerIngredients);
   const dispatch = useDispatch();
+
+  const inProgress = true;
 
   React.useEffect(() => {
     dispatch(getData());
@@ -26,10 +33,12 @@ function App() {
     : <div className={appStyles.app}>
       <AppHeader />
       <main className={appStyles.content} id='modals'>
-        <DndProvider backend={HTML5Backend}>
+        {inProgress ? 
+        (<ResetPassword />)
+        : (<DndProvider backend={HTML5Backend}>
           <BurgerIngredients />
           <BurgerConstructor />
-        </DndProvider>
+        </DndProvider>)}
       </main>
     </div>
   )

@@ -1,0 +1,25 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding-top: 80px;
+}
+
+.title {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.spanZone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding-top: 56px;
+}
+
+.span {
+    margin: 0;
+}
