@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, EmailInput, PasswordInput, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import Form from '../components/form/form';
 import formStyles from '../components/form/form.module.css';
+import { Link } from 'react-router-dom';
 
 export function Register () {
     const [loginData, setLoginData] = React.useState({name: '', email: '', password: ''});
@@ -17,7 +18,7 @@ export function Register () {
 
     function navigate () {
         return (
-            <p className={`${formStyles.span} text text_type_main-default text_color_inactive`}>Уже зарегистрированы? <a>Войти</a></p>
+            <p className={`${formStyles.span} text text_type_main-default text_color_inactive`}>Уже зарегистрированы? <Link className={formStyles.link} to='/login'>Войти</Link></p>
         )
     }
 

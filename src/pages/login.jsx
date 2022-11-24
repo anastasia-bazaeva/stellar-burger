@@ -14,8 +14,8 @@ export function Login() {
     function navigate () {
         return (
             <>
-                <p className={`${formStyles.span} text text_type_main-default text_color_inactive`}>Вы новый пользователь? <a>Зарегистрироваться</a></p>
-                <p className={`${formStyles.span} text text_type_main-default text_color_inactive`}>Забыли пароль? <a>Восстановить пароль</a></p>
+                <p className={`${formStyles.span} text text_type_main-default text_color_inactive`}>Вы новый пользователь? <Link to='/register' className={formStyles.link}>Зарегистрироваться</Link></p>
+                <p className={`${formStyles.span} text text_type_main-default text_color_inactive`}>Забыли пароль? <Link to='/forgot-password' className={formStyles.link}>Восстановить пароль</Link></p>
             </>
         )
     }
