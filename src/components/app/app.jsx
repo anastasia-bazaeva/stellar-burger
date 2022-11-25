@@ -16,6 +16,7 @@ import {Register} from '../../pages/register';
 import { ForgotPassword } from '../../pages/forgot-password';
 import { ResetPassword } from '../../pages/reset-password';
 import { Page404 } from '../../pages/page404';
+import { Profile } from '../../pages/profile';
 
 function App() {
   const { isLoading } = useSelector(state => state.reducerIngredients);
@@ -31,9 +32,9 @@ function App() {
       <div className={appStyles.spinner}></div>
     </div>
     : <div className={appStyles.app}>
+      <Router>
       <AppHeader />
       <main className={appStyles.content} id='modals'>
-        <Router>
           <Switch>
             <Route path='/login'>
               <Login/>
@@ -47,6 +48,9 @@ function App() {
             <Route path='/reset-password'>
               <ResetPassword/>
             </Route>
+            <Route path='/profile'>
+              <Profile/>
+            </Route>
             <Route exact path='/'>
               <DndProvider backend={HTML5Backend}>
                 <BurgerIngredients />
@@ -57,8 +61,8 @@ function App() {
               <Page404/>
             </Route>
           </Switch>
-        </Router>
       </main>
+      </Router>
     </div>
   )
 }
