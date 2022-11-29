@@ -18,28 +18,28 @@ function AppHeader () {
   const setPage = (e, value) => {
     e.preventDefault();
     setActiveButton(value);
-    history.replace({ pathname: `/${value}`});
+    history.push({ pathname: value});
   }
   
     return (
       <header className={`${headerStyles.header}`}>
         <nav className={`${headerStyles.nav} p-4`}>
           <div className={headerStyles.iconblock}>
-            <Link to='/' href="#" className={`${headerStyles.iconbox} p-5`} onClick={(e)=>setPage(e, '/')}>
+            <Link to='/' className={`${headerStyles.iconbox} p-5`} onClick={(e)=>setPage(e, '/')}>
               <BurgerIcon type={checkIconType('/')} />
               <p className={textStyle('/')}>Конструктор</p>
             </Link>
-            <a href="#" className={`${headerStyles.iconbox} p-5`} onClick={(e)=>setPage(e, 'feed')}>
-              <ListIcon type={checkIconType('feed')} />
-              <p className={textStyle('feed')}>Лента заказов</p>
+            <a href="#" className={`${headerStyles.iconbox} p-5`} onClick={(e)=>setPage(e, '/feed')}>
+              <ListIcon type={checkIconType('/feed')} />
+              <p className={textStyle('/feed')}>Лента заказов</p>
             </a>
           </div>
           <div>
             <Logo />
           </div>
-          <Link to='/profile' className={`${headerStyles.iconbox_profile} p-5`} onClick={(e)=>setPage(e, 'profile')}>
-            <ProfileIcon type={checkIconType('profile')} />
-            <p className={textStyle('profile')}>Личный кабинет</p>
+          <Link to='/profile' className={`${headerStyles.iconbox_profile} p-5`} onClick={(e)=>setPage(e, '/profile')}>
+            <ProfileIcon type={checkIconType('/profile')} />
+            <p className={textStyle('/profile')}>Личный кабинет</p>
           </Link>
         </nav>
       </header>

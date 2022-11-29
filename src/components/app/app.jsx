@@ -1,7 +1,7 @@
 import React from 'react';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Switch, Route, useHistory, useLocation } from 'react-router-dom';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
@@ -17,25 +17,38 @@ import { ForgotPassword } from '../../pages/forgot-password';
 import { ResetPassword } from '../../pages/reset-password';
 import { Page404 } from '../../pages/page404';
 import { Profile } from '../../pages/profile';
+import IngredientInfo from '../ingredient-info/ingredient-info';
+import Modal from '../modal/modal';
 
 function App() {
   const { isLoading } = useSelector(state => state.reducerIngredients);
+  const productDetails = useSelector(state => state.reducerDetails.productDetails);
   const dispatch = useDispatch();
+  const history = useHistory();
+  const location = useLocation();
+
+  const background = location.state?.background;
+
+  const closeAllModals = () => {
+    //setIsOrderDetailsOpened(false);
+    //dispatch(clearDetails());
+    history.goBack();
+  };
 
   React.useEffect(() => {
     dispatch(getData());
   }, [])
 
-  return (isLoading ?
+  return (
+    isLoading ?
     <div className={appStyles.loaderBox}>
       <div className={`${appStyles.loading} text text_type_main-large`}>Загрузка</div>
       <div className={appStyles.spinner}></div>
     </div>
     : <div className={appStyles.app}>
-      <Router>
       <AppHeader />
       <main className={appStyles.content} id='modals'>
-          <Switch>
+          <Switch location={background || location}>
             <Route path='/login'>
               <Login/>
             </Route>
@@ -51,6 +64,9 @@ function App() {
             <Route path='/profile'>
               <Profile/>
             </Route>
+            <Route path='/ingredients/:id' >
+             {productDetails && <IngredientInfo productInfo={productDetails}/>}
+            </Route>
             <Route exact path='/'>
               <DndProvider backend={HTML5Backend}>
                 <BurgerIngredients />
@@ -61,8 +77,13 @@ function App() {
               <Page404/>
             </Route>
           </Switch>
+          {background && (
+          <Route path='/ingredients/:id' >
+              <Modal onClose={closeAllModals}>
+                {productDetails && <IngredientInfo productInfo={productDetails}/>}
+              </Modal>
+          </Route>)}
       </main>
-      </Router>
     </div>
   )
 }
