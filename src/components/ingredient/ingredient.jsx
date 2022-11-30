@@ -44,7 +44,7 @@ export default function Ingredient({ productInfo }) {
     !isDrag &&
     <>
       <li ref={dragRef} className={menuStyles.card} id='card' onClick={() => handleClick(productInfo)}>
-      <Link to={{
+      <Link className={menuStyles.link} to={{
         pathname: `/ingredients/${productInfo._id}`,
         state: {background: location}
         }}>

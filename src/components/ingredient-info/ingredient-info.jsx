@@ -1,12 +1,24 @@
 import nutritionStyles from './ingredient-info.module.css';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-export default function IngredientInfo({ productInfo }) {
+export default function IngredientInfo() {
+    const ingredients = useSelector(state => state.reducerIngredients.ingredientsData);
     const { id } = useParams();
-    console.log(productInfo);
-    //const product = productInfo?.find((item) => item._id === id);
-    const { name, image, calories, proteins, fat, carbohydrates } = productInfo;
+    let product = null;
+    console.log(ingredients);
+
+    if (ingredients.length < 1) {
+        return (
+            <div className='text text_type_main-medium'>Зaгрузка</div>
+        )
+    }
+
+    if (ingredients.length > 0) {
+    product = ingredients?.find((item) => item._id.toString() === id);
+    }
+    const { name, image, calories, proteins, fat, carbohydrates } = product;
 
     return (
         <div className={nutritionStyles.container}>
@@ -21,8 +33,4 @@ export default function IngredientInfo({ productInfo }) {
             </div>
         </div>
     )
-}
-
-IngredientInfo.propTypes = {
-    productInfo: PropTypes.object
 }

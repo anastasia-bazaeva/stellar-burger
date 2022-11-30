@@ -19,21 +19,32 @@ import { Page404 } from '../../pages/page404';
 import { Profile } from '../../pages/profile';
 import IngredientInfo from '../ingredient-info/ingredient-info';
 import Modal from '../modal/modal';
+import { ProtectedRoute } from '../protected-route/protected-route';
 
 function App() {
   const { isLoading } = useSelector(state => state.reducerIngredients);
   const productDetails = useSelector(state => state.reducerDetails.productDetails);
+  const ingredients = useSelector(state => state.reducerIngredients.ingredientsData);
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
 
   const background = location.state?.background;
+  const from = location.state?.from;
 
   const closeAllModals = () => {
     //setIsOrderDetailsOpened(false);
     //dispatch(clearDetails());
     history.goBack();
   };
+
+  const onLogin = () => {
+    if(from){
+      history.replace(from.pathname);
+    } else {
+      history.push('/');
+    }
+  }
 
   React.useEffect(() => {
     dispatch(getData());
@@ -45,27 +56,27 @@ function App() {
       <div className={`${appStyles.loading} text text_type_main-large`}>Загрузка</div>
       <div className={appStyles.spinner}></div>
     </div>
-    : <div className={appStyles.app}>
+    : (<div className={appStyles.app}>
       <AppHeader />
       <main className={appStyles.content} id='modals'>
           <Switch location={background || location}>
-            <Route path='/login'>
-              <Login/>
-            </Route>
-            <Route path='/register'>
+            <ProtectedRoute path='/login' onlyUnAuth>
+              <Login onLogin={onLogin}/>
+            </ProtectedRoute>
+            <ProtectedRoute path='/register' onlyUnAuth>
               <Register/>
-            </Route>
+            </ProtectedRoute>
             <Route path='/forgot-password'>
               <ForgotPassword/>
             </Route>
             <Route path='/reset-password'>
               <ResetPassword/>
             </Route>
-            <Route path='/profile'>
+            <ProtectedRoute path='/profile'>
               <Profile/>
-            </Route>
+            </ProtectedRoute>
             <Route path='/ingredients/:id' >
-             {productDetails && <IngredientInfo productInfo={productDetails}/>}
+             {ingredients && <IngredientInfo/>}
             </Route>
             <Route exact path='/'>
               <DndProvider backend={HTML5Backend}>
@@ -80,11 +91,11 @@ function App() {
           {background && (
           <Route path='/ingredients/:id' >
               <Modal onClose={closeAllModals}>
-                {productDetails && <IngredientInfo productInfo={productDetails}/>}
+                {ingredients && <IngredientInfo/>}
               </Modal>
           </Route>)}
       </main>
-    </div>
+    </div>)
   )
 }
 

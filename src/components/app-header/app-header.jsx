@@ -4,20 +4,21 @@ import { Logo } from '@ya.praktikum/react-developer-burger-ui-components';
 import { BurgerIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ListIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, Redirect, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 
 function AppHeader () {
-  const [activeButton, setActiveButton] = React.useState('/');
   const history = useHistory();
+  const location = useLocation();
+  const user = useSelector(state => state.reducerAuth.user);
 
-  const checkIconType = (value) => (activeButton === value)? 'primary' : 'secondary';
-  const textStyle = (value) => (activeButton === value) ? `${headerStyles.title} text text_type_main-default` 
+  const checkIconType = (value) => (location.pathname === value)? 'primary' : 'secondary';
+  const textStyle = (value) => (location.pathname === value) ? `${headerStyles.title} text text_type_main-default` 
   : `${headerStyles.title} text text_type_main-default text_color_inactive`;
 
   const setPage = (e, value) => {
     e.preventDefault();
-    setActiveButton(value);
     history.push({ pathname: value});
   }
   
@@ -29,17 +30,17 @@ function AppHeader () {
               <BurgerIcon type={checkIconType('/')} />
               <p className={textStyle('/')}>Конструктор</p>
             </Link>
-            <a href="#" className={`${headerStyles.iconbox} p-5`} onClick={(e)=>setPage(e, '/feed')}>
+            <Link to='/feed' className={`${headerStyles.iconbox} p-5`} onClick={(e)=>setPage(e, '/feed')}>
               <ListIcon type={checkIconType('/feed')} />
               <p className={textStyle('/feed')}>Лента заказов</p>
-            </a>
+            </Link>
           </div>
           <div>
             <Logo />
           </div>
           <Link to='/profile' className={`${headerStyles.iconbox_profile} p-5`} onClick={(e)=>setPage(e, '/profile')}>
             <ProfileIcon type={checkIconType('/profile')} />
-            <p className={textStyle('/profile')}>Личный кабинет</p>
+            <p className={textStyle('/profile')}>{user?.name || 'Личный кабинет'}</p>
           </Link>
         </nav>
       </header>

@@ -4,7 +4,7 @@ import Form from '../components/form/form';
 import formStyles from '../components/form/form.module.css';
 import { Link, Redirect, useHistory } from 'react-router-dom';
 
-export function Login() {
+export function Login(onLogin) {
     const [loginData, setLoginData] = React.useState({email: '', password: ''});
 
     const onChange = e => {
@@ -21,7 +21,7 @@ export function Login() {
     }
 
     return (
-        <Form title='Вход' span={navigate()} extraClass='mt-25'>
+        <Form onSumbit={onLogin} title='Вход' span={navigate()} extraClass='mt-25'>
             <EmailInput 
                 onChange={onChange} 
                 value={loginData.email} 

@@ -73,3 +73,11 @@
 .tabBox {
     display: flex;
 }
+
+.link {
+    text-decoration: none;
+    color: #F2F2F3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
