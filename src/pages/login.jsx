@@ -3,13 +3,23 @@ import { Button, EmailInput, PasswordInput } from '@ya.praktikum/react-developer
 import Form from '../components/form/form';
 import formStyles from '../components/form/form.module.css';
 import { Link, Redirect, useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../services/reducers/auth-reducers';
 
-export function Login(onLogin) {
+export function Login({from, redirectLogin}) {
     const [loginData, setLoginData] = React.useState({email: '', password: ''});
-
+    const dispatch = useDispatch();
+    const history = useHistory();
     const onChange = e => {
         setLoginData({...loginData, [e.target.name]: e.target.value});
     }
+
+    const onLogin = (e) => {
+        e.preventDefault();
+        dispatch(loginUser(loginData))
+        console.log(from);
+        redirectLogin();
+        }
 
     function navigate () {
         return (
@@ -21,7 +31,7 @@ export function Login(onLogin) {
     }
 
     return (
-        <Form onSumbit={onLogin} title='Вход' span={navigate()} extraClass='mt-25'>
+        <Form submitHandler={onLogin} title='Вход' span={navigate()} extraClass='mt-25'>
             <EmailInput 
                 onChange={onChange} 
                 value={loginData.email} 

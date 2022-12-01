@@ -2,10 +2,14 @@ import React from 'react';
 import { Button, EmailInput, PasswordInput, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import Form from '../components/form/form';
 import formStyles from '../components/form/form.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { registerUser } from '../services/reducers/auth-reducers';
+import { useDispatch } from 'react-redux';
 
-export function Register () {
-    const [loginData, setLoginData] = React.useState({name: '', email: '', password: ''});
+export function Register (from) {
+    const [loginData, setLoginData] = React.useState({email: '', password: '', name: ''});
+    const dispatch = useDispatch();
+    const history = useHistory();
     //const InputRef = React.useRef(null);
 
     // const onIconClick = ()=> {
@@ -22,8 +26,24 @@ export function Register () {
         )
     }
 
+    const onRegister = (e) => {
+        e.preventDefault();
+        console.log(loginData);
+        dispatch(registerUser({
+            email: loginData.email,
+            password: loginData.password,
+            name: loginData.name
+        }))
+        .then(res => console.log(res))
+          if(from){
+            history.replace(from.pathname);
+          } else {
+            history.push('/');
+          }
+        }
+
     return (
-        <Form title='Регистрация' span={navigate()} extraClass='mt-25'>
+        <Form submitHandler={onRegister} title='Регистрация' span={navigate()} extraClass='mt-25'>
             <Input
                 // ref={InputRef}
                 onChange={onChange}

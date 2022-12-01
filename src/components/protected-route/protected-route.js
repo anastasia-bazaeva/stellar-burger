@@ -6,9 +6,9 @@ export function ProtectedRoute ({onlyUnAuth, children, ...props}) {
     const location = useLocation();
     const isAuthChecked = useSelector(state => state.reducerAuth.isAuthChecked);
     const user = useSelector(state => state.reducerAuth.user);
-    if(!isAuthChecked) {
-        return <div>Загрузка</div>
-    }
+    // if(!isAuthChecked) {
+    //     return <div>Загрузка</div>
+    // }
 
 
     if (onlyUnAuth && user ) {

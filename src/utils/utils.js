@@ -6,10 +6,10 @@ export const checkResponse = (res) => {
     if (res.ok) {
         return res.json();
     }
-    return Promise.reject(`При загрузке данных с сервера что-то пошло не так: ${res.status}`)
+    return Promise.reject(`При загрузке данных с сервера что-то пошло не так. ${res.status}: ${res.message}`)
 }
 
-function request(url, options) {
+export function request(url, options) {
     return fetch(url, options).then(checkResponse)
 }
 
@@ -26,6 +26,16 @@ export const getOrderNumber = (data) => {
         body: JSON.stringify({ "ingredients": data })
     })
 }
+
+// export const getUserData = (data) => {
+//   return request(`${apiLink}auth/login`, {
+//     method: 'POST',
+//     headers: {
+//         "Content-Type": "application/json"
+//     },
+//     body: JSON.stringify({ data })
+// })
+// }
 
 export function getCookie(name) {
     const matches = document.cookie.match(
@@ -60,18 +70,7 @@ export function getCookie(name) {
     document.cookie = updatedCookie;
   }
   
-  export const checkAuth = () => (dispatch) => {
-    if (getCookie('accessToken')) {
-        dispatch(getUser().finally(() => {
-            dispatch(setAuthCheck())
-        }))
-    } else {
-        dispatch(setAuthCheck())
-    }
-  }
+  export function deleteCookie(name) {
+  setCookie(name, null, { expires: -1 });
+}
 
-  const getUser = () => (dispatch) => {
-    //запрос к серверу
-    //перенести в slice с авторизацией и сделать через асинк усилитель
-    return 
-  }

@@ -1,10 +1,54 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Form from '../components/form/form';
-import { EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import profileStyles from './profile.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearAuthCheck, getUserInfo, logoutUser, refreshToken, updateUserInfo } from '../services/reducers/auth-reducers';
 
 export function Profile() {
+    const dispatch = useDispatch();
+    const user = useSelector(state => state.reducerAuth.user);
+    const error = useSelector(state => state.reducerAuth.errorMessage);
+
+    const [loginData, setLoginData] = React.useState({
+        email: user.email, 
+        password: '', 
+        name: user.name});
+
+    const onChange = e => {
+        setLoginData({...loginData, [e.target.name]: e.target.value});
+    }
+
+    const logout = () => {
+        dispatch(logoutUser(localStorage.getItem('refreshToken')));
+        dispatch(clearAuthCheck())
+    }
+
+    const updateUser = (e) => {
+        e.preventDefault();
+        dispatch(updateUserInfo({
+            email: loginData.email, 
+            password: loginData.password, 
+            name: loginData.name
+        }))
+        console.log(user)
+    }
+
+    const clearUpdates = () => {
+        setLoginData({
+            email: user.email, 
+            password: '', 
+            name: user.name})
+    }
+
+    React.useEffect(()=>{
+        dispatch(getUserInfo())
+        if (error.includes('jwt expired')){
+            dispatch(refreshToken())
+        }
+    },[])
+
     return (
         <div className={profileStyles.profileBox}>
             <nav className={profileStyles.navmenu}>
@@ -19,7 +63,7 @@ export function Profile() {
                         История заказов
                         </Link>
                     </li>
-                    <li className={`${profileStyles.navItem} text text_type_main-medium text_color_inactive`}>
+                    <li onClick={logout} className={`${profileStyles.navItem} text text_type_main-medium text_color_inactive`}>
                         Выход
                     </li>
                 </ul>
@@ -27,28 +71,32 @@ export function Profile() {
                     В этом разделе вы можете изменить свои персональные данные
                 </p>
             </nav>
-            <Form>
+            <Form submitHandler={updateUser}>
                 <Input
-                    //value={null}
-                    //onChange={onChange} 
-                    name={'code'}
+                    value={loginData.name}
+                    onChange={onChange} 
+                    name={'name'}
                     placeholder='Имя'  
                     type='text'
                     icon={'EditIcon'} />
                 <EmailInput
-                    //onChange={onChange} 
-                    //value={loginData.email} 
+                    onChange={onChange} 
+                    value={loginData.email} 
                     name={'email'}
                     placeholder='Логин' 
                     isIcon={true} 
                     type='email'/>
                 <PasswordInput
-                    //onChange={onChange} 
-                    //value={loginData.password} 
+                    onChange={onChange} 
+                    value={loginData.password} 
                     placeholder='Пароль' 
                     icon={'EditIcon'} 
                     type='text'
                     name={'password'}/>
+                    <div>
+                        <div onClick={clearUpdates}>Отмена</div>
+                        <Button htmlType='submit'>Сохранить</Button>
+                    </div>
             </Form>
         </div>
     )

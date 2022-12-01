@@ -20,11 +20,13 @@ import { Profile } from '../../pages/profile';
 import IngredientInfo from '../ingredient-info/ingredient-info';
 import Modal from '../modal/modal';
 import { ProtectedRoute } from '../protected-route/protected-route';
+import { getUserInfo, refreshToken } from '../../services/reducers/auth-reducers';
 
 function App() {
   const { isLoading } = useSelector(state => state.reducerIngredients);
   const productDetails = useSelector(state => state.reducerDetails.productDetails);
   const ingredients = useSelector(state => state.reducerIngredients.ingredientsData);
+  const error = useSelector(state => state.reducerAuth.errorMessage);
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
@@ -38,7 +40,7 @@ function App() {
     history.goBack();
   };
 
-  const onLogin = () => {
+  const redirectLogin = () => {
     if(from){
       history.replace(from.pathname);
     } else {
@@ -48,6 +50,10 @@ function App() {
 
   React.useEffect(() => {
     dispatch(getData());
+    dispatch(getUserInfo())
+    if (error?.includes('jwt expired')){
+      dispatch(refreshToken())
+  }
   }, [])
 
   return (
@@ -61,10 +67,10 @@ function App() {
       <main className={appStyles.content} id='modals'>
           <Switch location={background || location}>
             <ProtectedRoute path='/login' onlyUnAuth>
-              <Login onLogin={onLogin}/>
+              <Login from={from} redirectLogin={redirectLogin}/>
             </ProtectedRoute>
             <ProtectedRoute path='/register' onlyUnAuth>
-              <Register/>
+              <Register from={from}/>
             </ProtectedRoute>
             <Route path='/forgot-password'>
               <ForgotPassword/>
