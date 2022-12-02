@@ -6,7 +6,8 @@ export const checkResponse = (res) => {
     if (res.ok) {
         return res.json();
     }
-    return Promise.reject(`При загрузке данных с сервера что-то пошло не так. ${res.status}: ${res.message}`)
+
+    return Promise.reject(res.status, res.error.message);
 }
 
 export function request(url, options) {
@@ -27,15 +28,6 @@ export const getOrderNumber = (data) => {
     })
 }
 
-// export const getUserData = (data) => {
-//   return request(`${apiLink}auth/login`, {
-//     method: 'POST',
-//     headers: {
-//         "Content-Type": "application/json"
-//     },
-//     body: JSON.stringify({ data })
-// })
-// }
 
 export function getCookie(name) {
     const matches = document.cookie.match(

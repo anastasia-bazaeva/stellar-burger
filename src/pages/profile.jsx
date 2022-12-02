@@ -44,7 +44,7 @@ export function Profile() {
 
     React.useEffect(()=>{
         dispatch(getUserInfo())
-        if (error.includes('jwt expired')){
+        if (error?.includes('Токен протух')){
             dispatch(refreshToken())
         }
     },[])
@@ -93,8 +93,8 @@ export function Profile() {
                     icon={'EditIcon'} 
                     type='text'
                     name={'password'}/>
-                    <div>
-                        <div onClick={clearUpdates}>Отмена</div>
+                    <div className={profileStyles.buttonBox}>
+                        <div className={profileStyles.button} onClick={clearUpdates}>Отмена</div>
                         <Button htmlType='submit'>Сохранить</Button>
                     </div>
             </Form>

@@ -34,3 +34,15 @@
     margin: 0;
     padding: 0;
 }
+
+.buttonBox {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    align-self: flex-end;
+}
+
+.button:hover {
+    cursor: pointer;
+}

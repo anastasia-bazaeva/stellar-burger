@@ -51,7 +51,7 @@ function App() {
   React.useEffect(() => {
     dispatch(getData());
     dispatch(getUserInfo())
-    if (error?.includes('jwt expired')){
+    if (error?.includes('Токен протух')){
       dispatch(refreshToken())
   }
   }, [])
@@ -72,10 +72,10 @@ function App() {
             <ProtectedRoute path='/register' onlyUnAuth>
               <Register from={from}/>
             </ProtectedRoute>
-            <Route path='/forgot-password'>
+            <Route path='/forgot-password' onlyUnAuth>
               <ForgotPassword/>
             </Route>
-            <Route path='/reset-password'>
+            <Route path='/reset-password' onlyUnAuth>
               <ResetPassword/>
             </Route>
             <ProtectedRoute path='/profile'>

@@ -55,7 +55,8 @@
 
 .order__note {
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;
+    text-align: end;
 }
 
 
