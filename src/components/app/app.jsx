@@ -10,6 +10,7 @@ import appStyles from '../app/app.module.css';
 
 import store from '../..';
 import { getData } from '../../services/reducers/ingredient-reducers';
+import { getCookie } from '../../utils/utils'
 
 import {Login} from '../../pages/login';
 import {Register} from '../../pages/register';
@@ -51,9 +52,12 @@ function App() {
   React.useEffect(() => {
     dispatch(getData());
     dispatch(getUserInfo())
-    if (error?.includes('Токен протух')){
-      dispatch(refreshToken())
-  }
+  //   if (error?.includes("jwt expired")){
+  //     dispatch(refreshToken())
+  // }
+    if(!getCookie('accessToken')) {
+      dispatch(refreshToken()).then(()=> dispatch(getUserInfo()))
+    }
   }, [])
 
   return (

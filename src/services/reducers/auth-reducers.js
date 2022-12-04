@@ -86,12 +86,13 @@ export const loginUser = createAsyncThunk(
     export const refreshToken = createAsyncThunk(
         'reducerAuth/refreshToken',
         async (thunkAPI) => {
-            const res = request(`${apiLink}token`, {
+            const res = request(`${apiLink}auth/token`, {
                 method: 'POST',
                    headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": 'application/json;charset=utf-8',
+                    // "Authorization": 'Bearer ' + getCookie('accessToken')
                 },
-                body: JSON.stringify({ "token": localStorage.getItem('refreshToken') })
+                body: JSON.stringify({ token: localStorage.getItem('refreshToken') })
             })
             return res
         });
@@ -121,7 +122,9 @@ export const loginUser = createAsyncThunk(
                 body: JSON.stringify(data)
             })
         return res 
-        })
+        });
+
+    // export const updateUserInfo = 
 
 const initialAuth = {
     isAuthChecked: null,
@@ -158,7 +161,8 @@ const reducerAuth = createSlice({
         [loginUser.rejected]: (state, action) => {
             state.isLoading = false;
             state.hasError = true;
-            state.errorMessage = action.error.message
+            state.errorMessage = action.error.message;
+            deleteCookie('accessToken');
         },
         [registerUser.pending]: (state) => {
             state.isLoading = true;
@@ -231,7 +235,8 @@ const reducerAuth = createSlice({
         [getUserInfo.rejected]: (state, action) => {
             state.isLoading = false;
             state.hasError = true;
-            state.errorMessage = action.error.message
+            state.errorMessage = action.error.message;
+            deleteCookie('accessToken');
         },
         [updateUserInfo.pending]: (state) => {
             state.isLoading = true;
@@ -244,6 +249,7 @@ const reducerAuth = createSlice({
         [updateUserInfo.rejected]: (state, action) => {
             state.isLoading = false;
             state.hasError = true;
+            state.user = null;
             state.errorMessage = action.error.message
         },
         [refreshToken.pending]: (state) => {
@@ -251,7 +257,8 @@ const reducerAuth = createSlice({
             state.hasError = false;
             state.errorMessage = null
         },
-        [refreshToken.fulfilled]: (action) => {
+        [refreshToken.fulfilled]: (state, action) => {
+            state.isLoading = false;
             setCookie('accessToken', action.payload.accessToken.split('Bearer ')[1]);
             localStorage.setItem('refreshToken', action.payload.refreshToken)
         },

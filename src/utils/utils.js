@@ -7,7 +7,7 @@ export const checkResponse = (res) => {
         return res.json();
     }
 
-    return Promise.reject(res.status, res.error.message);
+    return res.json().then((err) => Promise.reject(err));
 }
 
 export function request(url, options) {

@@ -46,3 +46,7 @@
 .button:hover {
     cursor: pointer;
 }
+.link {
+    text-decoration: none;
+    color: #4C4CFF;  
+}
