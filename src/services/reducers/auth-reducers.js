@@ -1,23 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getCookie, setCookie, request, apiLink, deleteCookie } from '../../utils/utils';
 
-// export const checkAuth = () => (dispatch) => {
-//     if (getCookie('accessToken')) {
-//         dispatch(getUser().finally(() => {
-//             dispatch(setAuthCheck())
-//         }))
-//     } else {
-//         dispatch(setAuthCheck())
-//     }
-//   }
-
-//   const loginUser = () => (dispatch) => {
-//     //запрос к серверу
-//     //перенести в slice с авторизацией и сделать через асинк усилитель
-//     return 
-//   }
-
-
 export const loginUser = createAsyncThunk(
     'reducerAuth/loginUser',
     async (data, thunkAPI) => {
@@ -83,48 +66,72 @@ export const loginUser = createAsyncThunk(
             return res
         });
     
-    export const refreshToken = createAsyncThunk(
-        'reducerAuth/refreshToken',
-        async (thunkAPI) => {
-            const res = request(`${apiLink}auth/token`, {
-                method: 'POST',
-                   headers: {
-                    "Content-Type": 'application/json;charset=utf-8',
-                    // "Authorization": 'Bearer ' + getCookie('accessToken')
-                },
-                body: JSON.stringify({ token: localStorage.getItem('refreshToken') })
-            })
-            return res
-        });
+    export const refreshToken = ()=> {
+        const res = request(`${apiLink}auth/token`, {
+            method: 'POST',
+               headers: {
+                "Content-Type": 'application/json;charset=utf-8',
+            },
+            body: JSON.stringify({ token: localStorage.getItem('refreshToken') })
+        })
+        return res
+    } 
 
     export const getUserInfo = createAsyncThunk (
         'reducerAuth/getUserInfo',
         async (thunkAPI) => {
-            const res = request(`${apiLink}auth/user`, {
-                method: 'GET',
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": 'Bearer ' + getCookie('accessToken')
-                }
-            })
+            if(getCookie('accessToken')){
+                 //я потратила на это 2 дня, боже, какая я тупица
+                const res = await request(`${apiLink}auth/user`, {
+                    method: 'GET',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + getCookie('accessToken')
+                    }
+                })
+                return res
+            }
+            const refreshRes = await refreshToken();
+                    setCookie('accessToken', refreshRes.accessToken.split('Bearer ')[1]);
+                    localStorage.setItem('refreshToken', refreshRes.refreshToken);
+            const res = await request(`${apiLink}auth/user`, {
+                        method: 'GET',
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": 'Bearer ' + getCookie('accessToken')
+                        }
+                    })
             return res
-        });
+    });
 
     export const updateUserInfo = createAsyncThunk(
         'reducerAuth/updateUserInfo',
         async (data, thunkAPI) => {
-            const res = request(`${apiLink}auth/user`, {
-                method: 'PATCH',
-                   headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": 'Bearer ' + getCookie('accessToken')
-                },
-                body: JSON.stringify(data)
-            })
-        return res 
-        });
+            if(getCookie('accessToken')) {
+                const res = await request(`${apiLink}auth/user`, {
+                    method: 'PATCH',
+                       headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": 'Bearer ' + getCookie('accessToken')
+                    },
+                    body: JSON.stringify(data)
+                })
+            return res 
+            }
+            const refreshRes = await refreshToken();
+                    setCookie('accessToken', refreshRes.accessToken.split('Bearer ')[1]);
+                    localStorage.setItem('refreshToken', refreshRes.refreshToken);
+            const res = await request(`${apiLink}auth/user`, {
+                        method: 'PATCH',
+                           headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": 'Bearer ' + getCookie('accessToken')
+                        },
+                        body: JSON.stringify(data)
+                    })
+                return res 
+            });
 
-    // export const updateUserInfo = 
 
 const initialAuth = {
     isAuthChecked: null,
@@ -252,21 +259,21 @@ const reducerAuth = createSlice({
             state.user = null;
             state.errorMessage = action.error.message
         },
-        [refreshToken.pending]: (state) => {
-            state.isLoading = true;
-            state.hasError = false;
-            state.errorMessage = null
-        },
-        [refreshToken.fulfilled]: (state, action) => {
-            state.isLoading = false;
-            setCookie('accessToken', action.payload.accessToken.split('Bearer ')[1]);
-            localStorage.setItem('refreshToken', action.payload.refreshToken)
-        },
-        [refreshToken.rejected]: (state, action) => {
-            state.isLoading = false;
-            state.hasError = true;
-            state.errorMessage = action.error.message
-        }
+        // [refreshToken.pending]: (state) => {
+        //     state.isLoading = true;
+        //     state.hasError = false;
+        //     state.errorMessage = null
+        // },
+        // [refreshToken.fulfilled]: (state, action) => {
+        //     state.isLoading = false;
+        //     setCookie('accessToken', action.payload.accessToken.split('Bearer ')[1]);
+        //     localStorage.setItem('refreshToken', action.payload.refreshToken)
+        // },
+        // [refreshToken.rejected]: (state, action) => {
+        //     state.isLoading = false;
+        //     state.hasError = true;
+        //     state.errorMessage = action.error.message
+        // }
     }
 })
 export const { updateUser, clearAuthCheck } = reducerAuth.actions;

@@ -55,10 +55,10 @@ function App() {
   //   if (error?.includes("jwt expired")){
   //     dispatch(refreshToken())
   // }
-    if(!getCookie('accessToken')) {
-      dispatch(refreshToken()).then(()=> dispatch(getUserInfo()))
-    }
-  }, [])
+    // if(!getCookie('accessToken')) {
+    //   dispatch(refreshToken()).then(()=> dispatch(getUserInfo()))
+    // }
+  }, [getCookie('accessToken')])
 
   return (
     isLoading ?
@@ -76,12 +76,12 @@ function App() {
             <ProtectedRoute path='/register' onlyUnAuth>
               <Register from={from}/>
             </ProtectedRoute>
-            <Route path='/forgot-password' onlyUnAuth>
+            <ProtectedRoute path='/forgot-password' onlyUnAuth>
               <ForgotPassword/>
-            </Route>
-            <Route path='/reset-password' onlyUnAuth>
+            </ProtectedRoute>
+            <ProtectedRoute path='/reset-password' onlyUnAuth>
               <ResetPassword/>
-            </Route>
+            </ProtectedRoute>
             <ProtectedRoute path='/profile'>
               <Profile/>
             </ProtectedRoute>

@@ -43,16 +43,16 @@ export function Profile() {
             name: user.name})
     }
 
-    React.useEffect(()=>{
-        console.log(localStorage.getItem('refreshToken'));
-        dispatch(getUserInfo())
-        // if (error?.includes("jwt expired")){
-        //     dispatch(refreshToken())
-        // }
-        if(!getCookie('accessToken')) {
-            dispatch(refreshToken()).then(() => dispatch(getUserInfo()))
-        }
-    },[])
+    // React.useEffect(()=>{
+    //     console.log(localStorage.getItem('refreshToken'));
+    //     dispatch(getUserInfo())
+    //     // if (error?.includes("jwt expired")){
+    //     //     dispatch(refreshToken())
+    //     // }
+    //     // if(!getCookie('accessToken')) {
+    //     //     dispatch(refreshToken()).then(() => dispatch(getUserInfo()))
+    //     // }
+    // },[getCookie('accessToken')])
 
     return (
         <div className={profileStyles.profileBox}>
