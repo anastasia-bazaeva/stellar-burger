@@ -4,8 +4,7 @@ import Form from '../components/form/form';
 import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import profileStyles from './profile.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCookie } from '../utils/utils';
-import { clearAuthCheck, getUserInfo, logoutUser, refreshToken, updateUserInfo } from '../services/reducers/auth-reducers';
+import { clearAuthCheck, logoutUser, updateUserInfo } from '../services/reducers/auth-reducers';
 
 export function Profile() {
     const dispatch = useDispatch();
@@ -42,17 +41,6 @@ export function Profile() {
             password: '', 
             name: user.name})
     }
-
-    // React.useEffect(()=>{
-    //     console.log(localStorage.getItem('refreshToken'));
-    //     dispatch(getUserInfo())
-    //     // if (error?.includes("jwt expired")){
-    //     //     dispatch(refreshToken())
-    //     // }
-    //     // if(!getCookie('accessToken')) {
-    //     //     dispatch(refreshToken()).then(() => dispatch(getUserInfo()))
-    //     // }
-    // },[getCookie('accessToken')])
 
     return (
         <div className={profileStyles.profileBox}>
@@ -97,11 +85,11 @@ export function Profile() {
                     placeholder='Пароль' 
                     icon={'EditIcon'} 
                     type='text'
-                    name={'password'}/>
-                    <div className={profileStyles.buttonBox}>
+                    name={'password'}/>{(loginData.name !== user.name) || (loginData.email !== user.email) || (loginData.password !== "") ?
+                    (<div className={profileStyles.buttonBox}>
                         <div className={`${profileStyles.button} ${profileStyles.link} text text_type_main-default`} onClick={clearUpdates}>Отмена</div>
                         <Button htmlType='submit'>Сохранить</Button>
-                    </div>
+                    </div>) : <></>}
             </Form>
         </div>
     )

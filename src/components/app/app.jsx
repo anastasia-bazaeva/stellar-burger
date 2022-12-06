@@ -52,12 +52,6 @@ function App() {
   React.useEffect(() => {
     dispatch(getData());
     dispatch(getUserInfo())
-  //   if (error?.includes("jwt expired")){
-  //     dispatch(refreshToken())
-  // }
-    // if(!getCookie('accessToken')) {
-    //   dispatch(refreshToken()).then(()=> dispatch(getUserInfo()))
-    // }
   }, [getCookie('accessToken')])
 
   return (
