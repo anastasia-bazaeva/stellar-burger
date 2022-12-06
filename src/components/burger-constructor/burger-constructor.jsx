@@ -69,7 +69,7 @@ export default function BurgerConstructor() {
     <>
       <section className={borderColor}>
         <div ref={dropTarget} className={`${isScroll} mt-25 pr-2`}>
-          {(!selectedBun && priceState === 0) ? <div className={`${constructStyles.order__note} text text_type_main-large mt-25`}>Добавьте что-нибудь в заказ</div>
+          {(!selectedBun && priceState === 0) ? <div className={`${constructStyles.order__note} text text_type_main-large`}><h3>Добавьте что-нибудь в заказ</h3><p className="text text_type_main-medium">Для этого перетащите понравившиеся ингридиенты сюда</p></div>
             : <div className={constructStyles.order__content}>
               {selectedBun && <ConstructorElement
                 type="top"

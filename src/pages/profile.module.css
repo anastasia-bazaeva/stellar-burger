@@ -1,0 +1,52 @@
+.profileBox {
+    padding-top: 40px;
+    display: flex;
+    gap: 60px;
+}
+
+.navmenu {
+    max-width: 320px;
+    padding-top: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+}
+
+.navlist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navItem {
+    text-decoration: none;
+    line-height: 64px;
+}
+.navItem:hover {
+    cursor: pointer;
+}
+
+.navItemActive {
+    color: #F2F2F3;
+}
+
+.text {
+    margin: 0;
+    padding: 0;
+}
+
+.buttonBox {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    align-self: flex-end;
+}
+
+.button:hover {
+    cursor: pointer;
+}
+.link {
+    text-decoration: none;
+    color: #4C4CFF;  
+}

@@ -1,0 +1,11 @@
+.window {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 52px;
+}
+
+.picture {
+    max-height: 200px;
+}
