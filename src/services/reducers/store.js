@@ -3,6 +3,7 @@ import reducerConstructor from './constructor-reducers.js';
 import reducerIngredients from './ingredient-reducers.js';
 import reducerDetails from './ingredient-details-reducers';
 import reducerAuth from './auth-reducers';
+import reducerWS from './ws-reducers.js';
 
 
 const store = new configureStore({
@@ -10,7 +11,8 @@ const store = new configureStore({
     reducerIngredients,
     reducerConstructor,
     reducerDetails,
-    reducerAuth
+    reducerAuth,
+    reducerWS
   },
 });
 

@@ -81,9 +81,9 @@ function App() {
             <ProtectedRoute path='/profile'>
               <Profile/>
             </ProtectedRoute>
-            <ProtectedRoute path='/feed'>
+            <Route path='/feed'>
               <Feed/>
-            </ProtectedRoute>
+            </Route>
             <Route path='/feed/:id'>
               <OrderCard/>
             </Route>

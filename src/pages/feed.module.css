@@ -43,7 +43,7 @@
     flex-direction: column;
     gap: 24px;
     width: 584px;
-    height: 214px;
+    min-height: 214px;
     padding: 24px;
     background: #1C1C21;
     border-radius: 40px;
@@ -96,4 +96,21 @@
     width: 60px;
     height: 60px;
     background-color: #1C1C21;
+}
+
+.status {
+    margin: 0;
+    padding: 0;
+    line-height: 32px;
+}
+
+.extra {
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    position: absolute;
 }
