@@ -18,10 +18,12 @@ import { ForgotPassword } from '../../pages/forgot-password';
 import { ResetPassword } from '../../pages/reset-password';
 import { Page404 } from '../../pages/page404';
 import { Profile } from '../../pages/profile';
+import { Feed } from '../../pages/feed';
 import IngredientInfo from '../ingredient-info/ingredient-info';
 import Modal from '../modal/modal';
 import { ProtectedRoute } from '../protected-route/protected-route';
 import { getUserInfo, refreshToken } from '../../services/reducers/auth-reducers';
+import { OrderCard } from '../order-card/order-card';
 
 function App() {
   const { isLoading } = useSelector(state => state.reducerIngredients);
@@ -79,6 +81,12 @@ function App() {
             <ProtectedRoute path='/profile'>
               <Profile/>
             </ProtectedRoute>
+            <ProtectedRoute path='/feed'>
+              <Feed/>
+            </ProtectedRoute>
+            <Route path='/feed/:id'>
+              <OrderCard/>
+            </Route>
             <Route path='/ingredients/:id' >
              {ingredients && <IngredientInfo/>}
             </Route>
@@ -98,6 +106,12 @@ function App() {
                 {ingredients && <IngredientInfo/>}
               </Modal>
           </Route>)}
+          {background && (
+            <Route path='/feed/:id' >
+                <Modal onClose={closeAllModals}>
+                  <OrderCard/>
+                </Modal>
+            </Route>)}
       </main>
     </div>)
   )
