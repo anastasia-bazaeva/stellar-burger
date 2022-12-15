@@ -1,54 +1,70 @@
-import { getCookie } from '../utils';
-//все примеры с огромными буквами, надо либо у себя везде сделать в ними, либо переделать на маленькие, как у меня везде
+export const socketMiddleware = (wsActions) => {
+  return (store) => {
+    let socket = null;
+    let isConnected = false;
+    let reconnectTimer = 0;
+    let url = '';
 
-export const socketMiddleware = (wsUrl, wsActions, authFlag) => {
-    return store => {
-      let socket = null;
-      return next => action => {
-        const { dispatch } = store;
-        const { type, payload } = action;
-        const { onInit, onOpen, onClose, onError, onMessage, wsClose } = wsActions;
-        const token = authFlag ? getCookie('accessToken') : null;
-  
-        if (type === onInit.toString()) {
-          socket = token ? new WebSocket(`${wsUrl}?token=${token}`) : new WebSocket(wsUrl);
-        }
-        
-        if (type === wsClose.toString()) {
-          socket && socket.close()
-        }
-        if (socket) {
-  
-          socket.onopen = event => {
-            dispatch({ type: onOpen, payload: event });
-          };
-  
-          socket.onerror = event => {
-            dispatch({ type: onError, payload: event });
-          };
-  
-          socket.onmessage = event => {
-            const { data } = event;
-            const parsedData = JSON.parse(data);
-            const { success, ...restParsedData} = parsedData
-            dispatch({ type: onMessage, payload: restParsedData });
-          };
-  
-          socket.onclose = event => {
-            dispatch({ type: onClose, payload: event });
-            socket.close()
-            
-          };
-  
-          if (type === 'WS_SEND_MESSAGE') {
-            const message = payload;
-            
-            socket.send(JSON.stringify(message));
+    return (next) => (action) => {
+      const { dispatch } = store;
+
+      const {
+        wsConnect,
+        wsDisconnect,
+        wsConnecting,
+        onOpen,
+        onClose,
+        onError,
+        onMessage,
+      } = wsActions;
+
+      if (wsConnect.match(action)) {
+        url = action.payload;
+        socket = new WebSocket(url);
+        console.log(socket)
+        isConnected = true;
+        dispatch(wsConnecting());
+      }
+
+      if (socket) {
+        socket.onopen = () => {
+          dispatch(onOpen());
+        };
+
+        socket.onerror = () => {
+          dispatch(onError());
+        };
+
+        socket.onclose = (event) => {
+          if (event.code !== 1000) {
+            console.log('socket.onclose', event);
+            dispatch(onError(event.code.toString()))
           }
-  
+
+          dispatch(onClose(event.code.toString()));
+
+          if(isConnected){
+            dispatch(wsConnecting())
+            reconnectTimer = window.setTimeout(() => {
+                dispatch(wsConnect(url))
+            }, 7000)
+          }
+
+        };
+
+        socket.onmessage = (event) => {
+          const { data } = event;
+          const parsedData = JSON.parse(data);
+          dispatch(onMessage(parsedData));
+        };
+
+        if (wsDisconnect.match(action)) {
+          socket.close(1000, 'Работа приложения закончена');
+          dispatch(onClose());
         }
-  
-        next(action);
-      };
-    }
-}
+      }
+
+      next(action);
+    };
+  };
+};

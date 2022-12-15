@@ -24,6 +24,7 @@ import Modal from '../modal/modal';
 import { ProtectedRoute } from '../protected-route/protected-route';
 import { getUserInfo, refreshToken } from '../../services/reducers/auth-reducers';
 import { OrderCard } from '../order-card/order-card';
+import { ProfileOrders } from '../../pages/profile-orders';
 
 function App() {
   const { isLoading } = useSelector(state => state.reducerIngredients);
@@ -78,9 +79,12 @@ function App() {
             <ProtectedRoute path='/reset-password' onlyUnAuth>
               <ResetPassword/>
             </ProtectedRoute>
-            <ProtectedRoute path='/profile'>
+            <ProtectedRoute exact path='/profile'>
               <Profile/>
             </ProtectedRoute>
+            <ProtectedRoute exact path='/profile/orders'>
+                <ProfileOrders/>
+              </ProtectedRoute>
             <Route path='/feed'>
               <Feed/>
             </Route>

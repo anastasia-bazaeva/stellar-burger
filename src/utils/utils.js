@@ -1,6 +1,7 @@
 import { textChangeRangeIsUnchanged } from "typescript";
 
 export const apiLink = 'https://norma.nomoreparties.space/api/';
+export const wsLink = 'wss://norma.nomoreparties.space/orders';
 
 export const checkResponse = (res) => {
     if (res.ok) {
@@ -66,3 +67,8 @@ export function getCookie(name) {
   setCookie(name, null, { expires: -1 });
 }
 
+export const WebsocketStatus = {
+  CONNECTING : 'CONNECTING',
+  ONLINE : 'ONLINE',
+  OFFLINE : 'OFFLINE'
+}
