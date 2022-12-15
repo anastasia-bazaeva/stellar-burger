@@ -19,6 +19,8 @@ export const socketMiddleware = (wsActions) => {
       } = wsActions;
 
       if (wsConnect.match(action)) {
+        console.dir(wsConnect)
+        console.log(action)
         url = action.payload;
         socket = new WebSocket(url);
         console.log(socket)
@@ -59,6 +61,7 @@ export const socketMiddleware = (wsActions) => {
         };
 
         if (wsDisconnect.match(action)) {
+          isConnected = false;
           socket.close(1000, 'Работа приложения закончена');
           dispatch(onClose());
         }

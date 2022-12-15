@@ -7,7 +7,7 @@ import Sauce from '../images/spicyx.svg';
 import { OrderCard } from "../components/order-card/order-card";
 import { Dashboard } from "../components/dashboard/dashboard";
 import { useDispatch } from "react-redux";
-import { wsConnect } from "../services/actions/middleware-actions";
+import { wsConnect, wsDisconnect } from "../services/actions/middleware-actions";
 import { wsLink } from "../utils/utils";
 
 export function Feed () {
@@ -24,7 +24,9 @@ export function Feed () {
         Kolca,
         Sauce
     ]
-
+    const disconnect = () => {
+        return dispatch(wsDisconnect())
+    }
 
     React.useEffect(()=>{
         dispatch(wsConnect(`${wsLink}/all`))
@@ -41,7 +43,8 @@ export function Feed () {
                 </div>
             </div>
             <div>
-                    <Dashboard/>
+                <div onClick={disconnect}>ВЫКЛ СОКЕТ</div>
+                <Dashboard/>
             </div>
         </section>
     )
