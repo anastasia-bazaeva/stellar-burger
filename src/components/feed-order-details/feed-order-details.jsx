@@ -67,7 +67,7 @@ export function FeedOrderDetails () {
                 <ul className={orderStyles.ingredientsInfo}>
                     {uniqueIngredients.map(ingredient => {
                 return (
-                    <li className={orderStyles.list}>
+                    <li key={ingredient} className={orderStyles.list}>
                         <div className={orderStyles.listGroup}>
                             <div className={orderStyles.iconItem}>
                                 <img className={FeedStyles.icon} src={ingredientsData.filter(storeIngredient => storeIngredient._id === ingredient)[0].image}/>

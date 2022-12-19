@@ -18,11 +18,22 @@ export function OrderCard({ images, status, name, price, number, date }) {
 
     let moreIngredients = images.length - 5;
 
+    const pickAddress = () => {
+        if (location.pathname.startsWith('/feed')) {
+            return {
+                pathname: `/feed/${number}`,
+                state: {background: location}
+                }
+        } else {
+            return {
+                pathname: `/profile/orders/${number}`,
+                state: {background: location}
+                }
+        }
+    }
+
     return (
-        <Link className={FeedStyles.link} to={{
-            pathname: `/feed/${number}`,
-            state: {background: location}
-            }}>
+        <Link className={FeedStyles.link} to={pickAddress}>
             <div className={FeedStyles.orderCard}>
                 <div className={FeedStyles.orderCardBox}>
                     <h4 className={`${FeedStyles.textBlock} text text_type_digits-default`}>

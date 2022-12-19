@@ -111,14 +111,19 @@ function App() {
           </Switch>
           {background && (
             <Switch>
-              <Route path='/ingredients/:id' >
+              <Route exact path='/ingredients/:id' >
                   <Modal onClose={closeAllModals}>
                     {ingredients && <IngredientInfo/>}
                   </Modal>
               </Route>
-              <Route path='/feed/:number' >
+              <Route exact path='/feed/:number' >
                   <Modal onClose={closeAllModals}>
-                    {feedOrders && <FeedOrderDetails />}
+                    <FeedOrderDetails />
+                  </Modal>
+              </Route>
+              <Route exact path='/profile/orders/:number' >
+                  <Modal onClose={closeAllModals}>
+                    <FeedOrderDetails />
                   </Modal>
               </Route>
               </Switch>)}
