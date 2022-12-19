@@ -114,3 +114,8 @@
     border-radius: 50%;
     position: absolute;
 }
+
+.link {
+    text-decoration: none;
+    color: #F2F2F3;
+}

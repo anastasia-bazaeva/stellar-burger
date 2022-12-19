@@ -1,31 +1,24 @@
 import React from 'react';
 import { OrderCard } from '../order-card/order-card';
-
-import Cheese from '../../images/Сыр.svg';
-import Kolca from '../../images/Kольца.svg';
-import Sauce from '../../images/spicyx.svg';
-
 import FeedStyles from '../../pages/feed.module.css';
 
-export function ProfileFeed () {
+export function ProfileFeed ({orderList}) {
 
-    const images = [
-        Cheese,
-        Kolca,
-        Sauce,
-        Kolca,
-        Sauce,
-        Kolca,
-        Sauce,
-        Kolca,
-        Sauce
-    ]
+    const myOrders = orderList?.reverse();
+    
 
     return (
         <div className={FeedStyles.feed}>
                 <div className={FeedStyles.scrollzone}>
-                    {images.map((image) => {
-                        return (<OrderCard images={images} status='done'/>)
+                    {myOrders?.map((order) => {
+                        return (<OrderCard 
+                            date={order.date}
+                            number={order.number} 
+                            name={order.name} 
+                            images={order.ingredientsPictures} 
+                            price={order.price} 
+                            key={order.number}
+                            status={order.status}/>)
                     })}
                 </div>
             </div>

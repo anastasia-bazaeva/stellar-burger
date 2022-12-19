@@ -1,37 +1,48 @@
 import React from "react";
 import DashStyles from './dashboard.module.css'
 
-export function Dashboard () {
+export function Dashboard ({wsData, orderStat}) {
+
+    const ready = wsData.orders?.map((order) => {
+        if (order.status === 'done') {
+            return (
+                <li className={`${DashStyles.readyNumbers} text_type_digits-default`} key={order.number}>
+                    {order.number}
+                </li>)
+        }
+    })
+    const inProgress = wsData.orders?.map((order) => {
+        if (order.status !== 'done' && order.status !== 'cancelled') {
+            return (
+                <li className={`${DashStyles.readyNumbers} text_type_digits-default`} key={order.number}>
+                    {order.number}
+                </li>)
+        }
+    })
+
     return (
         <div className={`${DashStyles.infoZone} mt-25`}>
             <div className={DashStyles.ordersInfo}>
                 <div className={DashStyles.ordersWindows}>
                     <h3 className={`${DashStyles.text} text text_type_main-medium`}>Готовы:</h3>
                     <ul className={DashStyles.orders}>
-                        <li className={`${DashStyles.readyNumbers} text_type_digits-default`}>
-                            00009090
-                        </li>
-                        <li className={`${DashStyles.readyNumbers} text_type_digits-default`}>
-                            00009090
-                        </li>
+                        {ready}
                     </ul>
                 </div>
                 <div className={DashStyles.ordersWindows}>
                     <h3 className={`${DashStyles.text} text text_type_main-medium`}>В работе:</h3>
                     <ul className={DashStyles.orders}>
-                        <li className='text text_type_digits-default'>
-                            00009090
-                        </li>
+                        {inProgress}
                     </ul>
                 </div>
             </div>
             <div>
                 <h4 className={`${DashStyles.text} text text_type_main-medium`}>Выполнено за все время:</h4>
-                <p className={`${DashStyles.numbers} text text_type_digits-large`}>21045</p>
+                <p className={`${DashStyles.numbers} text text_type_digits-large`}>{orderStat.total}</p>
             </div>
             <div>
                 <h4 className={`${DashStyles.text} text text_type_main-medium`}>Выполнено за сегодня:</h4>
-                <p className={`${DashStyles.numbers} text text_type_digits-large`}>210</p>
+                <p className={`${DashStyles.numbers} text text_type_digits-large`}>{orderStat.todayTotal}</p>
             </div>
         </div>
     )

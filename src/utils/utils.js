@@ -23,10 +23,20 @@ export const getOrderNumber = (data) => {
     return request(`${apiLink}orders`, {
         method: 'POST',
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + getCookie('accessToken')
         },
         body: JSON.stringify({ "ingredients": data })
     })
+}
+
+export const getOrderDetails = (order) => {
+  return request(`${apiLink}orders/${order}`,{
+    method: 'GET',
+    headers: {
+      "Content-Type": "application/json",
+    }
+  })
 }
 
 
@@ -71,4 +81,25 @@ export const WebsocketStatus = {
   CONNECTING : 'CONNECTING',
   ONLINE : 'ONLINE',
   OFFLINE : 'OFFLINE'
+}
+
+export const enrichOrder = (wsOrders, ingredientsData) => {
+  const fullOrder = [];
+
+  fullOrder.push(wsOrders?.map(order => {
+    //console.log(wsOrders)
+    // console.log(ingredientsData[0]._id)
+    // console.log(order.ingredients.map(ingredient => ingredientsData.filter(storeIngredient => storeIngredient._id === ingredient)[0].price).reduce((acc, current) => { return acc + current},0))
+    fullOrder.push({
+      'number': order.number,
+      'status': order.status,
+      'name': order.name,
+      'date': order.createdAt,
+      'ingredients': order.ingredients,
+      'ingredientsPictures': order.ingredients.map(ingredient => ingredientsData.filter(storeIngredient => storeIngredient._id === ingredient)[0].image),
+      'price': order.ingredients.map(ingredient => ingredientsData.filter(storeIngredient => storeIngredient._id === ingredient)[0].price).reduce((acc, current) => { return acc + current},0)
+      })
+  }));
+  fullOrder.pop();
+  return fullOrder;
 }

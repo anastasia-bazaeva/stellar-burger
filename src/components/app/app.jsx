@@ -25,12 +25,14 @@ import { ProtectedRoute } from '../protected-route/protected-route';
 import { getUserInfo, refreshToken } from '../../services/reducers/auth-reducers';
 import { OrderCard } from '../order-card/order-card';
 import { ProfileOrders } from '../../pages/profile-orders';
+import { FeedOrderDetails } from '../feed-order-details/feed-order-details';
 
 function App() {
   const { isLoading } = useSelector(state => state.reducerIngredients);
   const productDetails = useSelector(state => state.reducerDetails.productDetails);
   const ingredients = useSelector(state => state.reducerIngredients.ingredientsData);
   const error = useSelector(state => state.reducerAuth.errorMessage);
+  const feedOrders = useSelector(state => state.WSReducer.orders);
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
@@ -85,11 +87,14 @@ function App() {
             <ProtectedRoute exact path='/profile/orders'>
                 <ProfileOrders/>
               </ProtectedRoute>
-            <Route path='/feed'>
+              <ProtectedRoute exact path='/profile/orders/:number'>
+                {<FeedOrderDetails />}
+              </ProtectedRoute>
+            <Route exact path='/feed'>
               <Feed/>
             </Route>
-            <Route path='/feed/:id'>
-              <OrderCard/>
+            <Route exact path='/feed/:number'>
+              {<FeedOrderDetails />}
             </Route>
             <Route path='/ingredients/:id' >
              {ingredients && <IngredientInfo/>}
@@ -105,17 +110,18 @@ function App() {
             </Route>
           </Switch>
           {background && (
-          <Route path='/ingredients/:id' >
-              <Modal onClose={closeAllModals}>
-                {ingredients && <IngredientInfo/>}
-              </Modal>
-          </Route>)}
-          {background && (
-            <Route path='/feed/:id' >
-                <Modal onClose={closeAllModals}>
-                  <OrderCard/>
-                </Modal>
-            </Route>)}
+            <Switch>
+              <Route path='/ingredients/:id' >
+                  <Modal onClose={closeAllModals}>
+                    {ingredients && <IngredientInfo/>}
+                  </Modal>
+              </Route>
+              <Route path='/feed/:number' >
+                  <Modal onClose={closeAllModals}>
+                    {feedOrders && <FeedOrderDetails />}
+                  </Modal>
+              </Route>
+              </Switch>)}
       </main>
     </div>)
   )

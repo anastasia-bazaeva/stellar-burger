@@ -42,10 +42,11 @@ export default function BurgerConstructor() {
   };
 
   const getOrderInfo = () => {
-    dispatch(getOrder(
+    dispatch(getOrder([
       selectedBun._id,
       ...constructorIngredients.map(item => item._id),
       selectedBun._id
+    ]
     ))
       .then(res => {
         res.payload.success && setIsOrderDetailsOpened(true);

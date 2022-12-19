@@ -19,11 +19,8 @@ export const socketMiddleware = (wsActions) => {
       } = wsActions;
 
       if (wsConnect.match(action)) {
-        console.dir(wsConnect)
-        console.log(action)
         url = action.payload;
         socket = new WebSocket(url);
-        console.log(socket)
         isConnected = true;
         dispatch(wsConnecting());
       }
