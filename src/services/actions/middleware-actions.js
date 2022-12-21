@@ -7,3 +7,4 @@ export const wsOpen = createAction('WS_OPEN');
 export const wsClose = createAction('WS_CLOSE');
 export const wsMessage = createAction('WS_MESSAGE');
 export const wsError = createAction('WS_ERROR');
+export const clearFetchedOrder = createAction('CLEAR_ORDER');

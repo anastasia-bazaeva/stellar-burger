@@ -45,7 +45,7 @@ export function OrderCard({ images, status, name, price, number, date }) {
                     {name}
                 </h3>
                 {status ?
-                    <span className={`${FeedStyles.status} text text_type_main-small`}>{text}</span>
+                    <span className={status === 'done'? `${FeedStyles.status} text text_type_main-small ${FeedStyles.statusDone}` : `${FeedStyles.status} text text_type_main-small`}>{text}</span>
                     : <></>}
                 <div className={FeedStyles.orderCardBox}>
                     <ul className={FeedStyles.iconList}>

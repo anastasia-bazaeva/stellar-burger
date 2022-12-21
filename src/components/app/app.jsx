@@ -41,8 +41,6 @@ function App() {
   const from = location.state?.from;
 
   const closeAllModals = () => {
-    //setIsOrderDetailsOpened(false);
-    //dispatch(clearDetails());
     history.goBack();
   };
 
@@ -87,9 +85,9 @@ function App() {
             <ProtectedRoute exact path='/profile/orders'>
                 <ProfileOrders/>
               </ProtectedRoute>
-              <ProtectedRoute exact path='/profile/orders/:number'>
+              <Route exact path='/profile/orders/:number'>
                 {<FeedOrderDetails />}
-              </ProtectedRoute>
+              </Route>
             <Route exact path='/feed'>
               <Feed/>
             </Route>
@@ -118,12 +116,12 @@ function App() {
               </Route>
               <Route exact path='/feed/:number' >
                   <Modal onClose={closeAllModals}>
-                    <FeedOrderDetails />
+                    <FeedOrderDetails isModal={true} />
                   </Modal>
               </Route>
               <Route exact path='/profile/orders/:number' >
                   <Modal onClose={closeAllModals}>
-                    <FeedOrderDetails />
+                    <FeedOrderDetails isModal={true} />
                   </Modal>
               </Route>
               </Switch>)}

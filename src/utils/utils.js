@@ -30,14 +30,15 @@ export const getOrderNumber = (data) => {
     })
 }
 
-export const getOrderDetails = (order) => {
-  return request(`${apiLink}orders/${order}`,{
-    method: 'GET',
-    headers: {
-      "Content-Type": "application/json",
-    }
-  })
-}
+//убрать в createAsyncThunk
+// export const getOrderDetails = (order) => {
+//   return request(`${apiLink}orders/${order}`,{
+//     method: 'GET',
+//     headers: {
+//       "Content-Type": "application/json",
+//     }
+//   })
+// }
 
 
 export function getCookie(name) {
