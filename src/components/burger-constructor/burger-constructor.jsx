@@ -9,12 +9,16 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addItem, clearOrder, deleteItem, getOrder, removeItemPrice, setBun } from "../../services/reducers/constructor-reducers";
 import FillingItem from "../filling-item/filling-item";
 import OrderDetails from "../order-details/order-details";
+import { Redirect, useLocation, useHistory } from 'react-router-dom';
 
 
 export default function BurgerConstructor() {
   const { priceState, constructorIngredients, orderNumber, selectedBun, isLoading } = useSelector(state => state.reducerConstructor);
   const dispatch = useDispatch();
   const [isOrderDetailsOpened, setIsOrderDetailsOpened] = React.useState(false);
+  const user = useSelector(state => state.reducerAuth.user);
+  const location = useLocation();
+  const history = useHistory();
 
   const [{ isHover, canDrop }, dropTarget] = useDrop({
     accept: "ingredient",
@@ -61,7 +65,11 @@ export default function BurgerConstructor() {
   }
 
   const handleClick = () => {
-    getOrderInfo();
+    if(!user) {
+      return history.replace('/login')
+    } else {
+      return getOrderInfo()
+    }
   };
 
   const isScroll = (!selectedBun && priceState === 0) ? constructStyles.order : constructStyles.order__window;
@@ -102,7 +110,7 @@ export default function BurgerConstructor() {
             <h2 className="text text_type_digits-medium">{selectedBun ? getTotal : priceState}</h2>
             <CurrencyIcon type="primary" />
           </div>
-          {selectedBun ? <Button type="primary" size="large" onClick={handleClick} htmlType={"submit"}>Оформить заказ</Button>
+          {selectedBun ? <Button type="primary" size="large" onClick={handleClick} htmlType={"submit"}>{user ? 'Оформить заказ' : 'Войти'}</Button>
             : <div className={`${constructStyles.order__panel} text text_type_main-default`}>Как только вы выберете булочку,<br></br> заказ можно будет оформить</div>}
         </div>
       </section>
@@ -111,7 +119,7 @@ export default function BurgerConstructor() {
           onClose={closeAllModals}
           isOrder={true}
         ><div className={constructStyles.order__spinner}>
-            <div className={`spinner ${constructStyles.order__spinnerItem}`}></div>
+            <div className={`${constructStyles.spinner} ${constructStyles.order__spinnerItem}`}></div>
           </div>
         </Modal>}
       {isOrderDetailsOpened &&

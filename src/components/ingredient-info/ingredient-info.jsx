@@ -18,12 +18,12 @@ export default function IngredientInfo() {
     if (ingredients.length > 0) {
     product = ingredients?.find((item) => item._id.toString() === id);
     }
-    const { name, image, calories, proteins, fat, carbohydrates } = product;
+    const { name, image_large, calories, proteins, fat, carbohydrates } = product;
 
     return (
         <div className={nutritionStyles.container}>
             <h2 className={`${nutritionStyles.title} text text_type_main-large`}>Детали ингридиента</h2>
-            <img className={nutritionStyles.image} src={image} alt={name} />
+            <img className={nutritionStyles.image} src={image_large} alt={name} />
             <h3 className="text text_type_main-medium mt-4">{name}</h3>
             <div className={`${nutritionStyles.nutrients} mt-8`}>
                 <p className="text text_type_main-default text_color_inactive">Калории,ккал<br />{calories}</p>

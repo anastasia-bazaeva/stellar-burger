@@ -1,11 +1,13 @@
 import { CurrencyIcon, FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import orderStyles from './feed-order-details.module.css';
 import FeedStyles from '../../pages/feed.module.css';
 import { fetchOrder } from '../../services/reducers/ws-reducers';
 import { clearFetchedOrder } from '../../services/actions/middleware-actions';
+
 
 export function FeedOrderDetails ({isModal}) {
     const dispatch = useDispatch();
@@ -15,7 +17,7 @@ export function FeedOrderDetails ({isModal}) {
     const { number } = useParams();  
 
     const myOrder = wsOrders?.find(order => order.number == number);
-    console.log(myOrder);
+    //console.log(myOrder);
 
     const totalPrice = myOrder?.ingredients?.map(ingredient => ingredientsData?.filter(storeIngredient => storeIngredient._id === ingredient)[0].price).reduce((acc, current) => { return acc + current},0);
     
@@ -28,7 +30,7 @@ export function FeedOrderDetails ({isModal}) {
     }
 
     uniqueIngredients = getUnique();
-    console.log(uniqueIngredients);
+    //console.log(uniqueIngredients);
     
     let text = '';
     if (myOrder?.status === 'cancelled') {
@@ -52,9 +54,10 @@ export function FeedOrderDetails ({isModal}) {
     }
 
     React.useEffect(()=>{
+
         if(!isModal) {
             dispatch(fetchOrder(number))
-        }
+        };
 
         return () => {
             if(!isModal){
@@ -70,7 +73,7 @@ export function FeedOrderDetails ({isModal}) {
             <h2 className={`${FeedStyles.textBlock} text text_type_main-medium`}>{myOrder?.name}</h2>
             <p className={myOrder?.status === 'done'? `${FeedStyles.status} text text_type_main-small ${FeedStyles.statusDone}` : `${FeedStyles.status} text text_type_main-small`}>{text}</p>
             <h3 className={`${FeedStyles.textBlock} text text_type_main-medium pt-15 pb-6`}>Состав:</h3>
-            <div className={uniqueIngredients.length > 3 ? FeedStyles.scrollzone : null}>
+            <div className={uniqueIngredients?.length > 3 ? FeedStyles.scrollzone : null}>
                 <ul className={orderStyles.ingredientsInfo}>
                     {uniqueIngredients?.map(ingredient => {
                 return (
@@ -100,3 +103,7 @@ export function FeedOrderDetails ({isModal}) {
         </div>
     )
 }
+
+FeedOrderDetails.propTypes = {
+    isModal: PropTypes.bool
+  }

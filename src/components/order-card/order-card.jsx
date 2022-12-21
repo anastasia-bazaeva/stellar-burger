@@ -51,15 +51,15 @@ export function OrderCard({ images, status, name, price, number, date }) {
                     <ul className={FeedStyles.iconList}>
                         {images.length < 6 && images.map((image, index) => {
                             return (
-                                <li key={nanoid()} className={FeedStyles.iconItem} style={{ zIndex: 6 - index }}>
+                                <li key={`${image}-${index}`} className={FeedStyles.iconItem} style={{ zIndex: 6 - index }}>
                                     <img className={FeedStyles.icon} src={image} /></li>)
                         })}
                         {images.length > 5 && images.slice(0, 5).map((image, index) => {
                             return (
-                                <li key={nanoid()} className={FeedStyles.iconItem} style={{ zIndex: 6 - index }}>
+                                <li key={`${image}-${index}`} className={FeedStyles.iconItem} style={{ zIndex: 6 - index }}>
                                     <img className={FeedStyles.icon} src={image} /></li>)
                         })}
-                        {images.length > 5 && <li key={nanoid()} className={FeedStyles.iconItem} style={{ zIndex: 0, position: 'relative' }}>
+                        {images.length > 5 && <li key={`${images[5]}-extra`} className={FeedStyles.iconItem} style={{ zIndex: 0, position: 'relative' }}>
                             <img className={FeedStyles.icon} src={images[5]} />
                             <div className={`${FeedStyles.extra} text text_type_digits-default`} style={{ zIndex: 1 }}>
                                 {`+${moreIngredients}`}

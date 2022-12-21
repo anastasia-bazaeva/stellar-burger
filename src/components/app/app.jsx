@@ -22,8 +22,7 @@ import { Feed } from '../../pages/feed';
 import IngredientInfo from '../ingredient-info/ingredient-info';
 import Modal from '../modal/modal';
 import { ProtectedRoute } from '../protected-route/protected-route';
-import { getUserInfo, refreshToken } from '../../services/reducers/auth-reducers';
-import { OrderCard } from '../order-card/order-card';
+import { getUserInfo } from '../../services/reducers/auth-reducers';
 import { ProfileOrders } from '../../pages/profile-orders';
 import { FeedOrderDetails } from '../feed-order-details/feed-order-details';
 
@@ -51,6 +50,11 @@ function App() {
       history.push('/');
     }
   }
+
+  React.useEffect(() => {
+    dispatch(getData());
+    dispatch(getUserInfo())
+  }, [])
 
   React.useEffect(() => {
     dispatch(getData());
@@ -110,7 +114,7 @@ function App() {
           {background && (
             <Switch>
               <Route exact path='/ingredients/:id' >
-                  <Modal onClose={closeAllModals}>
+              <Modal onClose={closeAllModals}>
                     {ingredients && <IngredientInfo/>}
                   </Modal>
               </Route>
