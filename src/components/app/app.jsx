@@ -7,8 +7,6 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import { useSelector, useDispatch } from 'react-redux';
 import appStyles from '../app/app.module.css';
-
-import store from '../..';
 import { getData } from '../../services/reducers/ingredient-reducers';
 import { getCookie } from '../../utils/utils'
 
@@ -28,16 +26,15 @@ import { FeedOrderDetails } from '../feed-order-details/feed-order-details';
 
 function App() {
   const { isLoading } = useSelector(state => state.reducerIngredients);
-  const productDetails = useSelector(state => state.reducerDetails.productDetails);
   const ingredients = useSelector(state => state.reducerIngredients.ingredientsData);
-  const error = useSelector(state => state.reducerAuth.errorMessage);
-  const feedOrders = useSelector(state => state.WSReducer.orders);
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
 
   const background = location.state?.background;
   const from = location.state?.from;
+
+  const token = getCookie('accessToken');
 
   const closeAllModals = () => {
     history.goBack();
@@ -54,12 +51,7 @@ function App() {
   React.useEffect(() => {
     dispatch(getData());
     dispatch(getUserInfo())
-  }, [])
-
-  React.useEffect(() => {
-    dispatch(getData());
-    dispatch(getUserInfo())
-  }, [getCookie('accessToken')])
+  }, [token])
 
   return (
     isLoading ?
@@ -69,7 +61,7 @@ function App() {
     </div>
     : (<div className={appStyles.app}>
       <AppHeader />
-      <main className={appStyles.content} id='modals'>
+      <main className={appStyles.content}>
           <Switch location={background || location}>
             <ProtectedRoute path='/login' onlyUnAuth>
               <Login from={from} redirectLogin={redirectLogin}/>
