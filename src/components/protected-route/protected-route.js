@@ -8,7 +8,7 @@ export function ProtectedRoute ({onlyUnAuth, children, ...props}) {
     const user = useSelector(state => state.reducerAuth.user);
 
     if (onlyUnAuth && user ) {
-        return <Redirect to='/'/>
+        return <Redirect to={location?.state?.from || '/'}/>
     }
 
     if(!onlyUnAuth && !user){

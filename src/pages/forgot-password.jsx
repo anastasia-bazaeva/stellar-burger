@@ -31,7 +31,8 @@ export function ForgotPassword() {
     if (resetSent) {
         return <Redirect to='/reset-password'></Redirect>
      }
-
+//не получается указать иначе имя для пропса isIcon, кроме такого названия компонент из библиотеки не хочет ничего принимать(
+//https://yandex-practicum.github.io/react-developer-burger-ui-components/docs/email-input
     return (
         <Form submitHandler={onSubmit} title='Восстановление пароля' span={navigate()} extraClass='mt-25'>
             <EmailInput 

@@ -2,14 +2,19 @@ import React from 'react';
 import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import Form from '../components/form/form';
 import formStyles from '../components/form/form.module.css';
-import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { Link, Redirect } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { setNewPassword } from '../services/reducers/auth-reducers';
 
 export function ResetPassword () {
     const [InputData, setInputData] = React.useState({password: '', token: '' });
     const [status, setStatus] = React.useState(false);
+    const resetSent = useSelector(state => state.reducerAuth.resetSent);
     const dispatch = useDispatch();
+
+    if(!resetSent) {
+        return <Redirect to='/forgot-password'></Redirect>
+    }
 
     const onChange = e => {
         setInputData({...InputData, [e.target.name]: e.target.value});

@@ -29,15 +29,8 @@ export default function Ingredient({ productInfo }) {
 
   let number = productInfo._id === selectedBun?._id ? 2 : constructorIngredients.filter(item => item._id === productInfo._id).length;
 
-  // const closeAllModals = () => {
-  //   setIsOrderDetailsOpened(false);
-  //   dispatch(clearDetails())
-
-  // };
-
   const handleClick = (productInfo) => {
     dispatch(setDetails(productInfo));
-    //setIsOrderDetailsOpened(true)
   };
 
   return (

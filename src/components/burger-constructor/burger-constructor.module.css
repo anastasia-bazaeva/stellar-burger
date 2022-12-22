@@ -82,3 +82,31 @@
     0px 0px 8px rgb(51 51 255 / 25%), 
     0px 4px 32px rgb(51 51 255 / 50%);
 }
+
+.spinner {
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: center;
+    align-self: center;
+  }
+  
+  .spinner:after {
+    animation: changeContent .8s linear infinite;
+    display: block;
+    content: "⠋";
+    font-size: 140px;
+  }
+  
+  @keyframes changeContent {
+    10% { content: "⠙"; }
+    20% { content: "⠹"; }
+    30% { content: "⠸"; }
+    40% { content: "⠼"; }
+    50% { content: "⠴"; }
+    60% { content: "⠦"; }
+    70% { content: "⠧"; }
+    80% { content: "⠇"; }
+    90% { content: "⠏"; }
+  }

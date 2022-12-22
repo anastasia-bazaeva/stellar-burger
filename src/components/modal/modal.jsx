@@ -3,9 +3,11 @@ import React from "react";
 import PropTypes from 'prop-types';
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import modalStyles from './modal.module.css';
+import { useLocation } from 'react-router-dom';
 
 
 export default function Modal({ onClose, children, isOrder }) {
+  const location = useLocation();
   const modalsContainer = document.querySelector('#modals');
 
   const handleEscKeydown = (event) => {
