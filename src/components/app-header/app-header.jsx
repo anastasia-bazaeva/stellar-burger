@@ -38,7 +38,9 @@ function AppHeader () {
             </Link>
           </div>
           <div>
-            <Logo />
+            <Link to='/'>
+              <Logo />
+            </Link>
           </div>
           <Link to='/profile' className={`${headerStyles.iconbox_profile} p-5`} onClick={(e)=>setPage(e, '/profile')}>
             <ProfileIcon type={checkIconType('/profile')} />

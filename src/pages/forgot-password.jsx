@@ -5,21 +5,23 @@ import formStyles from '../components/form/form.module.css';
 import { Link, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetPassword } from '../services/reducers/auth-reducers';
+import { useForm } from '../hooks/useForm';
 
 
 export function ForgotPassword() {
-    const [InputData, setInputData] = React.useState({email: ''});
+    const {values, handleChange, setValues} = useForm({email: ''});
+    // const [InputData, setInputData] = React.useState({email: ''});
     const dispatch = useDispatch();
     const resetSent = useSelector(state => state.reducerAuth.resetSent);
 
-    const onChange = e => {
-        setInputData({email: e.target.value});
-    }
+    // const onChange = e => {
+    //     setInputData({email: e.target.value});
+    // }
 
     const onSubmit = (e) => {
         e.preventDefault();
-        dispatch(resetPassword(InputData));
-        setInputData({email: ''})
+        dispatch(resetPassword(values));
+        setValues({email: ''})
     }
 
     function navigate() {
@@ -36,8 +38,8 @@ export function ForgotPassword() {
     return (
         <Form submitHandler={onSubmit} title='Восстановление пароля' span={navigate()} extraClass='mt-25'>
             <EmailInput 
-                onChange={onChange} 
-                value={InputData.email || ''} 
+                onChange={handleChange} 
+                value={values.email || ''} 
                 name={'email'}
                 placeholder='Укажите e-mail' 
                 isIcon={true} 

@@ -2,21 +2,23 @@ import React from 'react';
 import { Button, EmailInput, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import Form from '../components/form/form';
 import formStyles from '../components/form/form.module.css';
-import { Link, Redirect, useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../services/reducers/auth-reducers';
+import { useForm } from '../hooks/useForm';
 
 export function Login({from, redirectLogin}) {
-    const [loginData, setLoginData] = React.useState({email: '', password: ''});
+    const {values, handleChange, setValues} = useForm({email: '', password: ''});
+    //const [loginData, setLoginData] = React.useState({email: '', password: ''});
     const dispatch = useDispatch();
     const history = useHistory();
-    const onChange = e => {
-        setLoginData({...loginData, [e.target.name]: e.target.value});
-    }
+    // const onChange = e => {
+    //     setLoginData({...loginData, [e.target.name]: e.target.value});
+    // }
 
     const onLogin = (e) => {
         e.preventDefault();
-        dispatch(loginUser(loginData))
+        dispatch(loginUser(values))
         console.log(from);
         redirectLogin();
         }
@@ -33,15 +35,15 @@ export function Login({from, redirectLogin}) {
     return (
         <Form submitHandler={onLogin} title='Вход' span={navigate()} extraClass='mt-25'>
             <EmailInput 
-                onChange={onChange} 
-                value={loginData.email} 
+                onChange={handleChange} 
+                value={values.email} 
                 name={'email'}
                 placeholder='E-mail' 
                 isIcon={true} 
                 type='email'/>
             <PasswordInput 
-                onChange={onChange} 
-                value={loginData.password} 
+                onChange={handleChange} 
+                value={values.password} 
                 placeholder='Пароль' 
                 icon={'ShowIcon'} 
                 type='text'

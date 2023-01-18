@@ -6,33 +6,38 @@ import profileStyles from './profile.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearAuthCheck, logoutUser, updateUserInfo } from '../services/reducers/auth-reducers';
 import { ProfileNav } from '../components/profile-nav/profile-nav';
+import { useForm } from '../hooks/useForm';
 
 export function Profile() {
     const dispatch = useDispatch();
     const user = useSelector(state => state.reducerAuth.user);
     const error = useSelector(state => state.reducerAuth.errorMessage);
-
-    const [loginData, setLoginData] = React.useState({
+    const {values, handleChange, setValues} = useForm({
         email: user.email, 
         password: '', 
         name: user.name});
 
-    const onChange = e => {
-        setLoginData({...loginData, [e.target.name]: e.target.value});
-    }
+    // const [loginData, setLoginData] = React.useState({
+    //     email: user.email, 
+    //     password: '', 
+    //     name: user.name});
+
+    // const onChange = e => {
+    //     setLoginData({...loginData, [e.target.name]: e.target.value});
+    // }
 
     const updateUser = (e) => {
         e.preventDefault();
-        dispatch(updateUserInfo({
-            email: loginData.email, 
-            password: loginData.password, 
-            name: loginData.name
+        dispatch(setValues({
+            email: values.email, 
+            password: values.password, 
+            name: values.name
         }))
         console.log(user)
     }
 
     const clearUpdates = () => {
-        setLoginData({
+        setValues({
             email: user.email, 
             password: '', 
             name: user.name})
@@ -43,26 +48,26 @@ export function Profile() {
             <ProfileNav activeClass='profile'/>
             <Form submitHandler={updateUser}>
                 <Input
-                    value={loginData.name}
-                    onChange={onChange} 
+                    value={values.name}
+                    onChange={handleChange} 
                     name={'name'}
                     placeholder='Имя'  
                     type='text'
                     icon={'EditIcon'} />
                 <EmailInput
-                    onChange={onChange} 
-                    value={loginData.email} 
+                    onChange={handleChange} 
+                    value={values.email} 
                     name={'email'}
                     placeholder='Логин' 
                     isIcon={true} 
                     type='email'/>
                 <PasswordInput
-                    onChange={onChange} 
-                    value={loginData.password} 
+                    onChange={handleChange} 
+                    value={values.password} 
                     placeholder='Пароль' 
                     icon={'EditIcon'} 
                     type='text'
-                    name={'password'}/>{(loginData.name !== user.name) || (loginData.email !== user.email) || (loginData.password !== "") ?
+                    name={'password'}/>{(values.name !== user.name) || (values.email !== user.email) || (values.password !== "") ?
                     (<div className={profileStyles.buttonBox}>
                         <div className={`${profileStyles.button} ${profileStyles.link} text text_type_main-default`} onClick={clearUpdates}>Отмена</div>
                         <Button htmlType='submit'>Сохранить</Button>

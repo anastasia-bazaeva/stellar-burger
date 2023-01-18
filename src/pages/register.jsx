@@ -5,9 +5,11 @@ import formStyles from '../components/form/form.module.css';
 import { Link, useHistory } from 'react-router-dom';
 import { registerUser } from '../services/reducers/auth-reducers';
 import { useDispatch } from 'react-redux';
+import { useForm } from '../hooks/useForm';
 
 export function Register (from) {
-    const [loginData, setLoginData] = React.useState({email: '', password: '', name: ''});
+    const {values, handleChange, setValues} = useForm({email: '', password: '', name: ''});
+    // const [loginData, setLoginData] = React.useState({email: '', password: '', name: ''});
     const dispatch = useDispatch();
     const history = useHistory();
     //const InputRef = React.useRef(null);
@@ -16,9 +18,9 @@ export function Register (from) {
     //     InputRef.current.focus();
     // }
 
-    const onChange = e => {
-        setLoginData({...loginData, [e.target.name]: e.target.value});
-    }
+    // const onChange = e => {
+    //     setLoginData({...loginData, [e.target.name]: e.target.value});
+    // }
 
     function navigate () {
         return (
@@ -28,11 +30,10 @@ export function Register (from) {
 
     const onRegister = (e) => {
         e.preventDefault();
-        console.log(loginData);
         dispatch(registerUser({
-            email: loginData.email,
-            password: loginData.password,
-            name: loginData.name
+            email: values.email,
+            password: values.password,
+            name: values.name
         }))
         .then(res => console.log(res))
           if(from){
@@ -46,21 +47,21 @@ export function Register (from) {
         <Form submitHandler={onRegister} title='Регистрация' span={navigate()} extraClass='mt-25'>
             <Input
                 // ref={InputRef}
-                onChange={onChange}
-                value={loginData.name}
+                onChange={handleChange}
+                value={values.name}
                 placeholder='Имя'
                 type='text'
                 name={'name'}/>
             <EmailInput 
-                onChange={onChange} 
-                value={loginData.email} 
+                onChange={handleChange} 
+                value={values.email} 
                 name={'email'}
                 placeholder='E-mail' 
                 isIcon={true} 
                 type='email'/>
             <PasswordInput 
-                onChange={onChange} 
-                value={loginData.password} 
+                onChange={handleChange} 
+                value={values.password} 
                 placeholder='Пароль' 
                 icon={'ShowIcon'} 
                 type='text'

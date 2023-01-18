@@ -5,9 +5,11 @@ import formStyles from '../components/form/form.module.css';
 import { Link, Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setNewPassword } from '../services/reducers/auth-reducers';
+import { useForm } from '../hooks/useForm';
 
 export function ResetPassword () {
-    const [InputData, setInputData] = React.useState({password: '', token: '' });
+    const {values, handleChange, setValues} = useForm({password: '', token: '' });
+    //const [InputData, setInputData] = React.useState({password: '', token: '' });
     const [status, setStatus] = React.useState(false);
     const resetSent = useSelector(state => state.reducerAuth.resetSent);
     const dispatch = useDispatch();
@@ -16,14 +18,14 @@ export function ResetPassword () {
         return <Redirect to='/forgot-password'></Redirect>
     }
 
-    const onChange = e => {
-        setInputData({...InputData, [e.target.name]: e.target.value});
-    }
+    // const onChange = e => {
+    //     setInputData({...InputData, [e.target.name]: e.target.value});
+    // }
 
     const onSubmit = (e) => {
         e.preventDefault();
-        dispatch(setNewPassword(InputData));
-        setInputData({password: '', token: '' });
+        dispatch(setNewPassword(values));
+        setValues({password: '', token: '' });
         setStatus(true)
     }
 
@@ -43,15 +45,15 @@ export function ResetPassword () {
     return (
         <Form submitHandler={onSubmit} title='Восстановление пароля' span={navigate()} extraClass='mt-25'>
         <PasswordInput 
-            onChange={onChange} 
-            value={InputData.password || ''} 
+            onChange={handleChange} 
+            value={values.password || ''} 
             name={'password'}
             placeholder='Введите новый пароль' 
             isIcon={true} 
             type='text'/>
             <Input 
-            onChange={onChange} 
-            value={InputData.token || ''} 
+            onChange={handleChange} 
+            value={values.token || ''} 
             name={'token'}
             placeholder='Введите код из письма'  
             type='text'/>

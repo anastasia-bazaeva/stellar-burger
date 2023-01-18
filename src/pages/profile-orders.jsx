@@ -14,8 +14,6 @@ export function ProfileOrders () {
     const wsOrders = wsData?.orders;
     const orderList = enrichOrder(wsOrders, ingredientsData);
 
-    console.log(orderList)
-
     const disconnect = () => {
         return dispatch(wsDisconnect())
     }

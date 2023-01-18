@@ -7,7 +7,6 @@ export default function IngredientInfo() {
     const ingredients = useSelector(state => state.reducerIngredients.ingredientsData);
     const { id } = useParams();
     let product = null;
-    console.log(ingredients);
 
     if (ingredients.length < 1) {
         return (
