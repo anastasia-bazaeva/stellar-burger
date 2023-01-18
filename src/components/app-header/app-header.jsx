@@ -13,9 +13,10 @@ function AppHeader () {
   const location = useLocation();
   const user = useSelector(state => state.reducerAuth.user);
 
-  const checkIconType = (value) => (location.pathname === value)? 'primary' : 'secondary';
+  const checkIconType = (value) => (location.pathname === value) ? 'primary' : (location.pathname.startsWith(value)) ? 'primary' : 'secondary';
   const textStyle = (value) => (location.pathname === value) ? `${headerStyles.title} text text_type_main-default` 
-  : `${headerStyles.title} text text_type_main-default text_color_inactive`;
+  : (location.pathname.startsWith(value)) ? `${headerStyles.title} text text_type_main-default` 
+    : `${headerStyles.title} text text_type_main-default text_color_inactive`;
 
   const setPage = (e, value) => {
     e.preventDefault();
@@ -27,8 +28,9 @@ function AppHeader () {
         <nav className={`${headerStyles.nav} p-4`}>
           <div className={headerStyles.iconblock}>
             <Link to='/' className={`${headerStyles.iconbox} p-5`} onClick={(e)=>setPage(e, '/')}>
-              <BurgerIcon type={checkIconType('/')} />
-              <p className={textStyle('/')}>Конструктор</p>
+              <BurgerIcon type={location.pathname === '/' ? 'primary' : 'secondary'} />
+              <p className={location.pathname === '/' ? `${headerStyles.title} text text_type_main-default` 
+  : `${headerStyles.title} text text_type_main-default text_color_inactive`}>Конструктор</p>
             </Link>
             <Link to='/feed' className={`${headerStyles.iconbox} p-5`} onClick={(e)=>setPage(e, '/feed')}>
               <ListIcon type={checkIconType('/feed')} />

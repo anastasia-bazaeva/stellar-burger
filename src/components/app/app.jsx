@@ -7,8 +7,6 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import { useSelector, useDispatch } from 'react-redux';
 import appStyles from '../app/app.module.css';
-
-import store from '../..';
 import { getData } from '../../services/reducers/ingredient-reducers';
 import { getCookie } from '../../utils/utils'
 
@@ -18,16 +16,17 @@ import { ForgotPassword } from '../../pages/forgot-password';
 import { ResetPassword } from '../../pages/reset-password';
 import { Page404 } from '../../pages/page404';
 import { Profile } from '../../pages/profile';
+import { Feed } from '../../pages/feed';
 import IngredientInfo from '../ingredient-info/ingredient-info';
 import Modal from '../modal/modal';
 import { ProtectedRoute } from '../protected-route/protected-route';
-import { getUserInfo, refreshToken } from '../../services/reducers/auth-reducers';
+import { getUserInfo } from '../../services/reducers/auth-reducers';
+import { ProfileOrders } from '../../pages/profile-orders';
+import { FeedOrderDetails } from '../feed-order-details/feed-order-details';
 
 function App() {
   const { isLoading } = useSelector(state => state.reducerIngredients);
-  const productDetails = useSelector(state => state.reducerDetails.productDetails);
   const ingredients = useSelector(state => state.reducerIngredients.ingredientsData);
-  const error = useSelector(state => state.reducerAuth.errorMessage);
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
@@ -35,9 +34,9 @@ function App() {
   const background = location.state?.background;
   const from = location.state?.from;
 
+  const token = getCookie('accessToken');
+
   const closeAllModals = () => {
-    //setIsOrderDetailsOpened(false);
-    //dispatch(clearDetails());
     history.goBack();
   };
 
@@ -52,7 +51,7 @@ function App() {
   React.useEffect(() => {
     dispatch(getData());
     dispatch(getUserInfo())
-  }, [getCookie('accessToken')])
+  }, [token])
 
   return (
     isLoading ?
@@ -62,7 +61,7 @@ function App() {
     </div>
     : (<div className={appStyles.app}>
       <AppHeader />
-      <main className={appStyles.content} id='modals'>
+      <main className={appStyles.content}>
           <Switch location={background || location}>
             <ProtectedRoute path='/login' onlyUnAuth>
               <Login from={from} redirectLogin={redirectLogin}/>
@@ -76,9 +75,21 @@ function App() {
             <ProtectedRoute path='/reset-password' onlyUnAuth>
               <ResetPassword/>
             </ProtectedRoute>
-            <ProtectedRoute path='/profile'>
+            <ProtectedRoute exact path='/profile'>
               <Profile/>
             </ProtectedRoute>
+            <ProtectedRoute exact path='/profile/orders'>
+                <ProfileOrders/>
+              </ProtectedRoute>
+              <Route exact path='/profile/orders/:number'>
+                {<FeedOrderDetails />}
+              </Route>
+            <Route exact path='/feed'>
+              <Feed/>
+            </Route>
+            <Route exact path='/feed/:number'>
+              {<FeedOrderDetails />}
+            </Route>
             <Route path='/ingredients/:id' >
              {ingredients && <IngredientInfo/>}
             </Route>
@@ -93,11 +104,23 @@ function App() {
             </Route>
           </Switch>
           {background && (
-          <Route path='/ingredients/:id' >
+            <Switch>
+              <Route exact path='/ingredients/:id' >
               <Modal onClose={closeAllModals}>
-                {ingredients && <IngredientInfo/>}
-              </Modal>
-          </Route>)}
+                    {ingredients && <IngredientInfo/>}
+                  </Modal>
+              </Route>
+              <Route exact path='/feed/:number' >
+                  <Modal onClose={closeAllModals}>
+                    <FeedOrderDetails isModal={true} />
+                  </Modal>
+              </Route>
+              <Route exact path='/profile/orders/:number' >
+                  <Modal onClose={closeAllModals}>
+                    <FeedOrderDetails isModal={true} />
+                  </Modal>
+              </Route>
+              </Switch>)}
       </main>
     </div>)
   )
