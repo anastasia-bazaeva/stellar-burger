@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Switch, Route, useHistory, useLocation } from 'react-router-dom';
@@ -24,12 +24,23 @@ import { getUserInfo } from '../../services/reducers/auth-reducers';
 import { ProfileOrders } from '../../pages/profile-orders';
 import { FeedOrderDetails } from '../feed-order-details/feed-order-details';
 
-function App() {
+export interface ILocationState {
+  from: {
+    pathname: string;
+  };
+  
+  background?: {
+    pathname: string;
+  }
+}
+
+const App: FC = () => {
+
   const { isLoading } = useSelector(state => state.reducerIngredients);
   const ingredients = useSelector(state => state.reducerIngredients.ingredientsData);
   const dispatch = useDispatch();
-  const history = useHistory();
-  const location = useLocation();
+  const history = useHistory<ILocationState>();
+  const location = useLocation<ILocationState>();
 
   const background = location.state?.background;
   const from = location.state?.from;
@@ -106,7 +117,7 @@ function App() {
           {background && (
             <Switch>
               <Route exact path='/ingredients/:id' >
-              <Modal onClose={closeAllModals}>
+                  <Modal onClose={closeAllModals}>
                     {ingredients && <IngredientInfo/>}
                   </Modal>
               </Route>
@@ -120,7 +131,7 @@ function App() {
                     <FeedOrderDetails isModal={true} />
                   </Modal>
               </Route>
-              </Switch>)}
+            </Switch>)}
       </main>
     </div>)
   )

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import headerStyles from './app-header.module.css';
 import { Logo } from '@ya.praktikum/react-developer-burger-ui-components';
 import { BurgerIcon } from '@ya.praktikum/react-developer-burger-ui-components';
@@ -6,19 +6,19 @@ import { ListIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
+import { ILocationState } from '../app/app';
 
 function AppHeader () {
-  const history = useHistory();
-  const location = useLocation();
+  const history = useHistory<ILocationState>();
+  const location = useLocation<ILocationState>();
   const user = useSelector(state => state.reducerAuth.user);
 
-  const checkIconType = (value) => (location.pathname === value) ? 'primary' : (location.pathname.startsWith(value)) ? 'primary' : 'secondary';
-  const textStyle = (value) => (location.pathname === value) ? `${headerStyles.title} text text_type_main-default` 
+  const checkIconType = (value: string) => (location.pathname === value) ? 'primary' : (location.pathname.startsWith(value)) ? 'primary' : 'secondary';
+  const textStyle = (value: string) => (location.pathname === value) ? `${headerStyles.title} text text_type_main-default` 
   : (location.pathname.startsWith(value)) ? `${headerStyles.title} text text_type_main-default` 
     : `${headerStyles.title} text text_type_main-default text_color_inactive`;
 
-  const setPage = (e, value) => {
+  const setPage = (e: MouseEvent, value: string) => {
     e.preventDefault();
     history.push({ pathname: value});
   }
