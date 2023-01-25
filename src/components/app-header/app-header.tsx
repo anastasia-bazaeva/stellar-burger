@@ -5,8 +5,8 @@ import { BurgerIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ListIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import { ILocationState } from '../app/app';
+import { useSelector } from '../../hooks/wrappers';
 
 function AppHeader () {
   const history = useHistory<ILocationState>();

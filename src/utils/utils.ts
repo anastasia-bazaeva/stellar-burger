@@ -1,9 +1,27 @@
-import { textChangeRangeIsUnchanged } from "typescript";
 
 export const apiLink = 'https://norma.nomoreparties.space/api/';
 export const wsLink = 'wss://norma.nomoreparties.space/orders';
 
-export const checkResponse = (res) => {
+type TOptions = {
+  method: 'POST'|'GET'|'DELETE'|'PATCH',
+        headers?: {
+            "Content-Type": string,
+            "Authorization"?: string,
+        },
+        body?: string,
+}
+
+// type TBodyResponse<T> = {
+//   success: boolean;
+//   data: T;
+// }
+
+// type TResponse<T> = {
+//   json: () => Promise<T>;
+//   ok: boolean;
+// }
+
+export function checkResponse(res) {
     if (res.ok) {
         return res.json();
     }
@@ -11,15 +29,49 @@ export const checkResponse = (res) => {
     return res.json().then((err) => Promise.reject(err));
 }
 
-export function request(url, options) {
+export function request(url: string, options: TOptions)  {
     return fetch(url, options).then(checkResponse)
 }
 
-export const getInfo = () => {
-    return request(`${apiLink}ingredients`)
+export function getInfo () {
+    return fetch(`${apiLink}ingredients`).then(checkResponse)
 }
 
-export const getOrderNumber = (data) => {
+// DATA
+// {"success":true,
+//"name":"Space экзо-плантаго флюоресцентный бургер",
+//"order":
+//{"ingredients":
+//[
+//   {"_id":"60d3b41abdacab0026a733c7",
+// "name":"Флюоресцентная булка R2-D3",
+// "type":"bun",
+// "proteins":44,
+// "fat":26,
+// "carbohydrates":85,
+// "calories":643,
+// "price":988,
+// "image":"https://code.s3.yandex.net/react/code/bun-01.png",
+// "image_mobile":"https://code.s3.yandex.net/react/code/bun-01-mobile.png",
+// "image_large":"https://code.s3.yandex.net/react/code/bun-01-large.png",
+// "__v":0},
+// ],
+// "_id":"63d12fb2936b17001be53816",
+// "owner":{
+//   "name":"Anastasia",
+//   "email":"genrich.croco@gmail.com",
+//   "createdAt":"2022-12-01T11:51:32.690Z",
+//   "updatedAt":"2022-12-06T10:53:39.160Z"},
+//   "status":"done",
+//   "name":"Space экзо-плантаго флюоресцентный бургер",
+//   "createdAt":"2023-01-25T13:33:38.513Z",
+//   "updatedAt":"2023-01-25T13:33:38.953Z",
+//   "number":37859,
+//   "price":15256}}
+
+type TOrderIngredients = Array<string>
+
+export const getOrderNumber = (data: TOrderIngredients) => {
     return request(`${apiLink}orders`, {
         method: 'POST',
         headers: {
@@ -40,15 +92,22 @@ export const getOrderNumber = (data) => {
 //   })
 // }
 
+type TMultiProperty = number | string | boolean | null;
 
-export function getCookie(name) {
+type TCookieProps = {
+  path?: string;
+  expires?: TMultiProperty | Date;
+} & { [name: string] : TMultiProperty }
+
+
+export function getCookie(name: string) {
     const matches = document.cookie.match(
       new RegExp('(?:^|; )' + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)')
     );
     return matches ? decodeURIComponent(matches[1]) : undefined;
   }
   
-  export function setCookie(name, value, props) {
+  export function setCookie(name: string, value: TMultiProperty, props?: TCookieProps): void {
     props = {
         path: '/',
         ...props
@@ -74,7 +133,7 @@ export function getCookie(name) {
     document.cookie = updatedCookie;
   }
   
-  export function deleteCookie(name) {
+  export function deleteCookie(name: string) {
   setCookie(name, null, { expires: -1 });
 }
 
@@ -84,8 +143,33 @@ export const WebsocketStatus = {
   OFFLINE : 'OFFLINE'
 }
 
+export type TIngredient = {
+_id: string;
+name: string;
+type: string;
+proteins: number;
+fat: number;
+carbohydrates: number;
+calories: number;
+price: number;
+image: string;
+image_mobile: string;
+image_large: string;
+__v: number;
+}
+
+type TFullOrder = {
+  number: number;
+  status: string;
+  name: string;
+  date: string;
+  ingredients: Array<TIngredient>;
+  ingredientsPictures: Array<string>;
+  price: number;
+}
+
 export const enrichOrder = (wsOrders, ingredientsData) => {
-  const fullOrder = [];
+  const fullOrder: Array<TFullOrder> = [];
 
   fullOrder.push(wsOrders?.map(order => {
     //console.log(wsOrders)

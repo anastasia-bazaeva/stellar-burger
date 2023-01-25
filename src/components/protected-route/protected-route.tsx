@@ -1,16 +1,18 @@
 import React, {FC, ReactNode} from 'react';
 import { Redirect, useLocation, Route  } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { LocationState } from '../app/app';
+import { useSelector } from '../../hooks/wrappers';
+import { ILocationState } from '../app/app';
 
 
 interface IProtectedProps {
-    onlyUnAuth?: string;
+    onlyUnAuth?: boolean;
     children: ReactNode;
+    exact?: boolean;
+    path: string;
 }
 
 export const ProtectedRoute: FC<IProtectedProps> = ({onlyUnAuth, children, ...props}) => {
-    const location = useLocation<LocationState>();
+    const location = useLocation<ILocationState>();
     const isAuthChecked = useSelector(state => state.reducerAuth.isAuthChecked);
     const user = useSelector(state => state.reducerAuth.user);
 

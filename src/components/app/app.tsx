@@ -5,7 +5,6 @@ import { Switch, Route, useHistory, useLocation } from 'react-router-dom';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
-import { useSelector, useDispatch } from 'react-redux';
 import appStyles from '../app/app.module.css';
 import { getData } from '../../services/reducers/ingredient-reducers';
 import { getCookie } from '../../utils/utils'
@@ -23,6 +22,7 @@ import { ProtectedRoute } from '../protected-route/protected-route';
 import { getUserInfo } from '../../services/reducers/auth-reducers';
 import { ProfileOrders } from '../../pages/profile-orders';
 import { FeedOrderDetails } from '../feed-order-details/feed-order-details';
+import { useDispatch, useSelector } from '../../hooks/wrappers';
 
 export interface ILocationState {
   from: {
@@ -36,9 +36,9 @@ export interface ILocationState {
 
 const App: FC = () => {
 
-  const { isLoading } = useSelector(state => state.reducerIngredients);
+  const { isLoading } = useSelector (state => state.reducerIngredients);
   const ingredients = useSelector(state => state.reducerIngredients.ingredientsData);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch ();
   const history = useHistory<ILocationState>();
   const location = useLocation<ILocationState>();
 

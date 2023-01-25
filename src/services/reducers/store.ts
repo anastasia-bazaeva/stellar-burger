@@ -1,11 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import reducerConstructor from './constructor-reducers.js';
-import reducerIngredients from './ingredient-reducers.js';
+import reducerIngredients from './ingredient-reducers';
 import reducerDetails from './ingredient-details-reducers';
 import reducerAuth from './auth-reducers';
 import { wsConnect, wsDisconnect, wsConnecting, wsOpen, wsClose, wsMessage, wsError } from '../actions/middleware-actions';
 import { socketMiddleware } from '../middleware.js';
 import WSReducer from './ws-reducers.js';
+
 
 const wsActions = {
   wsConnect,
@@ -20,7 +21,7 @@ const wsActions = {
 
 const burgerMiddleware = socketMiddleware(wsActions);
 
-const store = new configureStore({
+const store = configureStore({
   reducer: {
     reducerIngredients,
     reducerConstructor,
@@ -34,3 +35,6 @@ const store = new configureStore({
 });
 
 export default store;
+
+export type TRootState = ReturnType<typeof store.getState>
+export type TAppDispatch = typeof store.dispatch

@@ -56,4 +56,4 @@ export const WSReducer = createReducer(initialState, (builder) => {
     })
 })
 
-export default WSReducer
+export default WSReducer;
