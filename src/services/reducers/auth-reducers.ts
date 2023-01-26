@@ -1,9 +1,31 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getCookie, setCookie, request, apiLink, deleteCookie } from '../../utils/utils';
+import { getCookie, setCookie, request, apiLink, deleteCookie, TMethods } from '../../utils/utils';
+
+type TUser = {
+    email: string | undefined;
+    name: string | undefined;
+};
+
+type TUserRegisterData = TUser & { password: string | undefined };
+
+type TUserLoginData = Omit<TUser, 'name'> & { password: string | undefined };
+
+type TUserResponse = {
+    success: boolean;
+    user: TUser;
+    accessToken: string;
+    refreshToken: string;
+}
+
+type TTokenResponse = Omit<TUserResponse, "user">;
+type TTokenError = {
+    success: boolean;
+    message: string;
+}
 
 export const loginUser = createAsyncThunk(
     'reducerAuth/loginUser',
-    async (data, thunkAPI) => {
+    async (data: TUserLoginData):Promise<TUserResponse | undefined> => {
         const res = request(`${apiLink}auth/login`, {
             method: 'POST',
             headers: {
@@ -16,7 +38,7 @@ export const loginUser = createAsyncThunk(
 
     export const registerUser = createAsyncThunk(
         'reducerAuth/registerUser',
-        async (data, thunkAPI) => {
+        async (data: TUserRegisterData):Promise<TUserResponse | undefined> => {
             const res = request(`${apiLink}auth/register`, {
                 method: 'POST',
                 headers: {
@@ -29,7 +51,7 @@ export const loginUser = createAsyncThunk(
     
     export const logoutUser = createAsyncThunk(
         'reducerAuth/logoutUser',
-        async (refreshToken, thunkAPI) => {
+        async (refreshToken: string) => {
             const res = request(`${apiLink}auth/logout`, {
                 method: 'POST',
                 headers: {
@@ -42,7 +64,7 @@ export const loginUser = createAsyncThunk(
 
     export const resetPassword = createAsyncThunk(
         'reducerAuth/resetPassword',
-        async (email, thunkAPI) => {
+        async (email: string) => {
             const res = request(`${apiLink}password-reset`, {
                 method: 'POST',
                 headers: {
@@ -55,7 +77,7 @@ export const loginUser = createAsyncThunk(
 
     export const setNewPassword = createAsyncThunk(
         'reducerAuth/setNewPassword',
-        async (password, thunkAPI) => {
+        async (password: {password: string }):Promise<TUserResponse | undefined> => {
             const res = request(`${apiLink}password-reset/reset`, {
                 method: 'POST',
                    headers: {
@@ -66,7 +88,7 @@ export const loginUser = createAsyncThunk(
             return res
         });
     
-    export const refreshToken = ()=> {
+    export const refreshToken = ():Promise<TTokenResponse> => {
         const res = request(`${apiLink}auth/token`, {
             method: 'POST',
                headers: {
@@ -77,9 +99,9 @@ export const loginUser = createAsyncThunk(
         return res
     } 
 
-    const fetchUser = async (method, data) => {
+    const fetchUser = async (requestMethod: TMethods, data: string):Promise<TUserResponse | undefined> => {
         const res = await request(`${apiLink}auth/user`, {
-            method: method,
+            method: requestMethod,
             headers:
             {
                 "Content-Type": "application/json",
@@ -92,7 +114,7 @@ export const loginUser = createAsyncThunk(
 
     export const getUserInfo = createAsyncThunk (
         'reducerAuth/getUserInfo',
-        async (thunkAPI) => {
+        async (): Promise<TUserResponse | undefined> => {
             if(getCookie('accessToken')){
                 return await fetchUser('GET', null)
             }
@@ -104,7 +126,7 @@ export const loginUser = createAsyncThunk(
 
     export const updateUserInfo = createAsyncThunk(
         'reducerAuth/updateUserInfo',
-        async (data, thunkAPI) => {
+        async (data) => {
             if(getCookie('accessToken')) {
             return fetchUser('PATCH', JSON.stringify(data))
             }
@@ -115,7 +137,16 @@ export const loginUser = createAsyncThunk(
             });
 
 
-const initialAuth = {
+type TUserInitial = {
+    isAuthChecked: string | null,
+    user: TUser | null;
+    hasError: boolean;
+    isLoading: boolean;
+    resetSent: boolean;
+    errorMessage: string;
+}            
+
+const initialAuth : TUserInitial = {
     isAuthChecked: null,
     user: null,
     hasError: false,
@@ -135,112 +166,112 @@ const reducerAuth = createSlice({
             state.isAuthChecked = null
         }
     },
-    extraReducers: {
-        [loginUser.pending]: (state) => {
+    extraReducers: (builder) => {
+        builder.addCase(loginUser.pending, (state) => {
             state.isLoading = true;
             state.hasError = false
-        },
-        [loginUser.fulfilled]: (state, action) => {
+        }),
+        builder.addCase(loginUser.fulfilled, (state, action) => {
             state.isLoading = false;
             state.user = action.payload.user;
             state.isAuthChecked = "success";
             setCookie('accessToken', action.payload.accessToken.split('Bearer ')[1]);
             localStorage.setItem('refreshToken', action.payload.refreshToken)
-        },
-        [loginUser.rejected]: (state, action) => {
+        }),
+        builder.addCase(loginUser.rejected, (state, action) => {
             state.isLoading = false;
             state.hasError = true;
             state.errorMessage = action.error.message;
             deleteCookie('accessToken');
-        },
-        [registerUser.pending]: (state) => {
+        }),
+        builder.addCase(registerUser.pending, (state) => {
             state.isLoading = true;
             state.hasError = false;
             state.errorMessage = null
-        },
-        [registerUser.fulfilled]: (state, action) => {
+        }),
+        builder.addCase(registerUser.fulfilled, (state, action) => {
             state.isLoading = false;
             state.user = action.payload.user;
             state.isAuthChecked = 'success';
             setCookie('accessToken', action.payload.accessToken.split('Bearer ')[1]);
             localStorage.setItem('refreshToken', action.payload.refreshToken)
-        },
-        [registerUser.rejected]: (state, action) => {
+        }),
+        builder.addCase(registerUser.rejected, (state, action) => {
             state.isLoading = false;
             state.hasError = true;
             state.errorMessage = action.error.message
-        },
-        [logoutUser.pending]: (state) => {
+        }),
+        builder.addCase(logoutUser.pending, (state) => {
             state.isLoading = true;
             state.hasError = false;
             state.errorMessage = null
-        },
-        [logoutUser.fulfilled]: (state) => {
+        }),
+        builder.addCase(logoutUser.fulfilled, (state) => {
             state.isLoading = false;
             state.user = null;
             deleteCookie('accessToken');
             localStorage.removeItem('refreshToken')
-        },
-        [logoutUser.rejected]: (state, action) => {
+        }),
+        builder.addCase(logoutUser.rejected, (state, action) => {
             state.isLoading = false;
             state.hasError = true;
             state.errorMessage = action.error.message
-        },
-        [resetPassword.pending]: (state) => {
+        }),
+        builder.addCase(resetPassword.pending, (state) => {
             state.isLoading = true;
             state.hasError = false;
             state.errorMessage = null
-        },
-        [resetPassword.fulfilled]: (state, action) => {
+        }),
+        builder.addCase(resetPassword.fulfilled, (state, action) => {
             state.isLoading = false;
             state.resetSent = true
-        },
-        [resetPassword.rejected]: (state, action) => {
+        }),
+        builder.addCase(resetPassword.rejected, (state, action) => {
             state.isLoading = false;
             state.hasError = true;
             state.errorMessage = action.error.message
-        },
-        [setNewPassword.pending]: (state) => {
+        }),
+        builder.addCase(setNewPassword.pending, (state) => {
             state.isLoading = true;
             state.hasError = false;
             state.errorMessage = null
-        },
-        [setNewPassword.fulfilled]: (state) => {
+        }),
+        builder.addCase(setNewPassword.fulfilled, (state) => {
             state.isLoading = false;
-        },
-        [setNewPassword.rejected]: (state, action) => {
+        }),
+        builder.addCase(setNewPassword.rejected, (state, action) => {
             state.isLoading = false;
             state.hasError = true;
             state.errorMessage = action.error.message
-        },
-        [getUserInfo.pending]: (state) => {
+        }),
+        builder.addCase(getUserInfo.pending, (state) => {
             state.isLoading = true;
             state.hasError = false;
             state.errorMessage = null
-        },
-        [getUserInfo.fulfilled]: (state, action) => {
+        }),
+        builder.addCase(getUserInfo.fulfilled, (state, action) => {
             state.user = action.payload.user;
-        },
-        [getUserInfo.rejected]: (state, action) => {
+        }),
+        builder.addCase(getUserInfo.rejected, (state, action) => {
             state.isLoading = false;
             state.hasError = true;
             state.errorMessage = action.error.message;
             deleteCookie('accessToken');
-        },
-        [updateUserInfo.pending]: (state) => {
+        }),
+        builder.addCase(updateUserInfo.pending, (state) => {
             state.isLoading = true;
             state.hasError = false;
             state.errorMessage = null
-        },
-        [updateUserInfo.fulfilled]: (state, action) => {
+        }),
+        builder.addCase(updateUserInfo.fulfilled, (state, action) => {
             state.user = action.payload.user;
-        },
-        [updateUserInfo.rejected]: (state, action) => {
+        }),
+        builder.addCase(updateUserInfo.rejected, (state, action) => {
             state.isLoading = false;
             state.hasError = true;
             state.user = null;
             state.errorMessage = action.error.message
-        }
+        })
     }
 })
 export const { updateUser, clearAuthCheck } = reducerAuth.actions;

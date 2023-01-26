@@ -10,7 +10,7 @@ const initialState = {
 
 export const fetchOrder = createAsyncThunk(
     'WSReducer/fetchOrder',
-    async (order, thunkAPI) => {
+    async (order: number) => {
         const res = request(`${apiLink}orders/${order}`,{
             method: 'GET',
             headers: {

@@ -8,8 +8,9 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from "../modal/modal";
 import IngredientInfo from "../ingredient-info/ingredient-info";
-import { useSelector, useDispatch } from 'react-redux';
+
 import { clearDetails, setDetails } from "../../services/reducers/ingredient-details-reducers";
+import { useDispatch, useSelector } from "../../hooks/wrappers";
 
 export default function Ingredient({ productInfo }) {
 
@@ -27,7 +28,7 @@ export default function Ingredient({ productInfo }) {
     })
   });
 
-  let number = productInfo._id === selectedBun?._id ? 2 : constructorIngredients.filter(item => item._id === productInfo._id).length;
+  let number = productInfo?._id === selectedBun?._id ? 2 : constructorIngredients?.filter(item => item._id === productInfo._id).length;
 
   const handleClick = (productInfo) => {
     dispatch(setDetails(productInfo));

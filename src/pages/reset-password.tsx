@@ -3,13 +3,12 @@ import { Button, Input, PasswordInput } from '@ya.praktikum/react-developer-burg
 import Form from '../components/form/form';
 import formStyles from '../components/form/form.module.css';
 import { Link, Redirect } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { setNewPassword } from '../services/reducers/auth-reducers';
 import { useForm } from '../hooks/useForm';
+import { useDispatch, useSelector } from '../hooks/wrappers';
 
 export function ResetPassword () {
     const {values, handleChange, setValues} = useForm({password: '', token: '' });
-    //const [InputData, setInputData] = React.useState({password: '', token: '' });
     const [status, setStatus] = React.useState(false);
     const resetSent = useSelector(state => state.reducerAuth.resetSent);
     const dispatch = useDispatch();
@@ -18,13 +17,9 @@ export function ResetPassword () {
         return <Redirect to='/forgot-password'></Redirect>
     }
 
-    // const onChange = e => {
-    //     setInputData({...InputData, [e.target.name]: e.target.value});
-    // }
-
-    const onSubmit = (e) => {
+    const onSubmit = (e: SubmitEvent) => {
         e.preventDefault();
-        dispatch(setNewPassword(values));
+        dispatch(setNewPassword({password: values.password}));
         setValues({password: '', token: '' });
         setStatus(true)
     }
@@ -49,8 +44,8 @@ export function ResetPassword () {
             value={values.password || ''} 
             name={'password'}
             placeholder='Введите новый пароль' 
-            isIcon={true} 
-            type='text'/>
+            // isIcon={true} 
+            />
             <Input 
             onChange={handleChange} 
             value={values.token || ''} 

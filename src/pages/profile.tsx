@@ -1,12 +1,11 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
 import Form from '../components/form/form';
 import { Button, EmailInput, Input, PasswordInput } from '@ya.praktikum/react-developer-burger-ui-components';
 import profileStyles from './profile.module.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearAuthCheck, logoutUser, updateUserInfo } from '../services/reducers/auth-reducers';
+import { updateUserInfo } from '../services/reducers/auth-reducers';
 import { ProfileNav } from '../components/profile-nav/profile-nav';
 import { useForm } from '../hooks/useForm';
+import { useDispatch, useSelector } from '../hooks/wrappers';
 
 export function Profile() {
     const dispatch = useDispatch();
@@ -17,22 +16,14 @@ export function Profile() {
         password: '', 
         name: user.name});
 
-    // const [loginData, setLoginData] = React.useState({
-    //     email: user.email, 
-    //     password: '', 
-    //     name: user.name});
-
-    // const onChange = e => {
-    //     setLoginData({...loginData, [e.target.name]: e.target.value});
-    // }
-
-    const updateUser = (e) => {
+    const updateUser = (e: SubmitEvent) => {
         e.preventDefault();
-        dispatch(setValues({
+        setValues({
             email: values.email, 
             password: values.password, 
             name: values.name
-        }))
+        });
+        dispatch(updateUserInfo())
         console.log(user)
     }
 
@@ -59,14 +50,12 @@ export function Profile() {
                     value={values.email} 
                     name={'email'}
                     placeholder='Логин' 
-                    isIcon={true} 
-                    type='email'/>
+                    isIcon={true} />
                 <PasswordInput
                     onChange={handleChange} 
                     value={values.password} 
                     placeholder='Пароль' 
                     icon={'EditIcon'} 
-                    type='text'
                     name={'password'}/>{(values.name !== user.name) || (values.email !== user.email) || (values.password !== "") ?
                     (<div className={profileStyles.buttonBox}>
                         <div className={`${profileStyles.button} ${profileStyles.link} text text_type_main-default`} onClick={clearUpdates}>Отмена</div>

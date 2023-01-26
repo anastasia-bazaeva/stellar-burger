@@ -2,8 +2,9 @@
 export const apiLink = 'https://norma.nomoreparties.space/api/';
 export const wsLink = 'wss://norma.nomoreparties.space/orders';
 
+export type TMethods = 'POST'|'GET'|'DELETE'|'PATCH';
 type TOptions = {
-  method: 'POST'|'GET'|'DELETE'|'PATCH',
+  method: TMethods,
         headers?: {
             "Content-Type": string,
             "Authorization"?: string,
@@ -69,7 +70,7 @@ export function getInfo () {
 //   "number":37859,
 //   "price":15256}}
 
-type TOrderIngredients = Array<string>
+export type TOrderIngredients = Array<string>
 
 export const getOrderNumber = (data: TOrderIngredients) => {
     return request(`${apiLink}orders`, {
@@ -96,7 +97,7 @@ type TMultiProperty = number | string | boolean | null;
 
 type TCookieProps = {
   path?: string;
-  expires?: TMultiProperty | Date;
+  expires?: Date | TMultiProperty;
 } & { [name: string] : TMultiProperty }
 
 
@@ -118,8 +119,8 @@ export function getCookie(name: string) {
       d.setTime(d.getTime() + exp * 1000);
       exp = props.expires = d;
     }
-    if (exp && exp.toUTCString) {
-      props.expires = exp.toUTCString();
+    if (exp && exp.toGMTString()) {
+      props.expires = exp.toGMTString();
     }
     value = encodeURIComponent(value);
     let updatedCookie = name + '=' + value;
@@ -172,9 +173,7 @@ export const enrichOrder = (wsOrders, ingredientsData) => {
   const fullOrder: Array<TFullOrder> = [];
 
   fullOrder.push(wsOrders?.map(order => {
-    //console.log(wsOrders)
-    // console.log(ingredientsData[0]._id)
-    // console.log(order.ingredients.map(ingredient => ingredientsData.filter(storeIngredient => storeIngredient._id === ingredient)[0].price).reduce((acc, current) => { return acc + current},0))
+    
     fullOrder.push({
       'number': order.number,
       'status': order.status,

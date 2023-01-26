@@ -1,9 +1,19 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getOrderNumber } from '../../utils/utils';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { getOrderNumber, TIngredient, TOrderIngredients } from '../../utils/utils';
 import { nanoid } from 'nanoid';
 import update from 'immutability-helper';
 
-const initialStateConstructor = {
+type TConstructorIngredient = TIngredient & {uid?: string};
+
+type TConstructorInitial = {
+    constructorIngredients: Array<TConstructorIngredient> | null;
+    orderNumber: number;
+    priceState: number;
+    selectedBun: TIngredient | null;
+    isLoading: boolean;
+}
+
+const initialStateConstructor: TConstructorInitial = {
     constructorIngredients: [],
     orderNumber: 0,
     priceState: 0,
@@ -13,7 +23,7 @@ const initialStateConstructor = {
 
 export const getOrder = createAsyncThunk(
     'reducerConstructor/getOrder',
-    async (data, thunkAPI) => {
+    async (data: TOrderIngredients) => {
         const res = getOrderNumber(data);
         return res
     })
@@ -23,11 +33,11 @@ export const reducerConstructor = createSlice({
     initialState: initialStateConstructor,
     reducers: {
         addItem: {
-            reducer: (state, action) => {
+            reducer: (state, action: PayloadAction<TConstructorIngredient>) => {
                 state.constructorIngredients.push(action.payload);
                 state.priceState = state.priceState + action.payload.price;
             },
-            prepare: ingredient => {
+            prepare: (ingredient: TIngredient) => {
                 const uid = nanoid();
                 return { payload: { ...ingredient, uid } }
             }
@@ -64,21 +74,20 @@ export const reducerConstructor = createSlice({
             });
         },
     },
-    extraReducers: {
-        [getOrder.pending]: (state) => {
+    extraReducers: (builder) => {
+        builder.addCase(getOrder.pending, (state) => {
             state.isLoading = true
-        },
-        [getOrder.fulfilled]: (state, action) => {
+        })
+        builder.addCase(getOrder.fulfilled, (state, action) => {
             state.isLoading = false;
             state.orderNumber = action.payload.order.number
-        },
-        [getOrder.rejected]: (state) => {
+        }),
+        builder.addCase(getOrder.rejected, (state) => {
             state.isLoading = false
-        }
+        })
     }
 })
 
-export const { addItem, addItemPrice, deleteItem, removeItemPrice,
-    setOrderNumber, setBun, clearOrder, sort } = reducerConstructor.actions
+export const { addItem, deleteItem, removeItemPrice, setBun, clearOrder, sort } = reducerConstructor.actions
 
 export default reducerConstructor.reducer;

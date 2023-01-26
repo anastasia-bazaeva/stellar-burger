@@ -4,23 +4,14 @@ import Form from '../components/form/form';
 import formStyles from '../components/form/form.module.css';
 import { Link, useHistory } from 'react-router-dom';
 import { registerUser } from '../services/reducers/auth-reducers';
-import { useDispatch } from 'react-redux';
 import { useForm } from '../hooks/useForm';
+import { useDispatch } from '../hooks/wrappers';
 
 export function Register (from) {
-    const {values, handleChange, setValues} = useForm({email: '', password: '', name: ''});
-    // const [loginData, setLoginData] = React.useState({email: '', password: '', name: ''});
+    const {values, handleChange} = useForm({email: '', password: '', name: ''});
     const dispatch = useDispatch();
     const history = useHistory();
-    //const InputRef = React.useRef(null);
 
-    // const onIconClick = ()=> {
-    //     InputRef.current.focus();
-    // }
-
-    // const onChange = e => {
-    //     setLoginData({...loginData, [e.target.name]: e.target.value});
-    // }
 
     function navigate () {
         return (
@@ -28,7 +19,7 @@ export function Register (from) {
         )
     }
 
-    const onRegister = (e) => {
+    const onRegister = (e: SubmitEvent) => {
         e.preventDefault();
         dispatch(registerUser({
             email: values.email,
@@ -57,14 +48,12 @@ export function Register (from) {
                 value={values.email} 
                 name={'email'}
                 placeholder='E-mail' 
-                isIcon={true} 
-                type='email'/>
+                isIcon={true}/>
             <PasswordInput 
                 onChange={handleChange} 
                 value={values.password} 
                 placeholder='Пароль' 
                 icon={'ShowIcon'} 
-                type='text'
                 name={'password'}/>
             <Button htmlType='submit'>Зарегистрироваться</Button>
         </Form>

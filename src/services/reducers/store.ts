@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import reducerConstructor from './constructor-reducers.js';
+import reducerConstructor from './constructor-reducers';
 import reducerIngredients from './ingredient-reducers';
 import reducerDetails from './ingredient-details-reducers';
 import reducerAuth from './auth-reducers';
 import { wsConnect, wsDisconnect, wsConnecting, wsOpen, wsClose, wsMessage, wsError } from '../actions/middleware-actions';
-import { socketMiddleware } from '../middleware.js';
-import WSReducer from './ws-reducers.js';
+import { socketMiddleware } from '../middleware';
+import WSReducer from './ws-reducers';
 
 
 const wsActions = {
