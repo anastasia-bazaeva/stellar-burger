@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import PropTypes from 'prop-types';
 import { useDrag } from "react-dnd";
 import { Link, useLocation } from 'react-router-dom';
@@ -6,15 +6,18 @@ import { Link, useLocation } from 'react-router-dom';
 import menuStyles from '../burger-ingredients/burger-ingredients.module.css';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
-import Modal from "../modal/modal";
-import IngredientInfo from "../ingredient-info/ingredient-info";
 
 import { clearDetails, setDetails } from "../../services/reducers/ingredient-details-reducers";
 import { useDispatch, useSelector } from "../../hooks/wrappers";
+import { TIngredient } from "../../utils/utils";
 
-export default function Ingredient({ productInfo }) {
+interface IIngredient {
+  productInfo: TIngredient;
+}
 
-  const [isOrderDetailsOpened, setIsOrderDetailsOpened] = React.useState(false);
+const Ingredient:FC<IIngredient> = ({ productInfo }) => {
+
+  //const [isOrderDetailsOpened, setIsOrderDetailsOpened] = React.useState(false);
   const { constructorIngredients, selectedBun } = useSelector(state => state.reducerConstructor);
   const productDetails = useSelector(state => state.reducerDetails.productDetails);
   const dispatch = useDispatch();
@@ -58,7 +61,4 @@ export default function Ingredient({ productInfo }) {
     </>
   )
 }
-
-Ingredient.propTypes = ({
-  productInfo: PropTypes.object
-})
+export default Ingredient

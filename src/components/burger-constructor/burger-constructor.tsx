@@ -5,11 +5,11 @@ import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import constructStyles from './burger-constructor.module.css';
 import Modal from "../modal/modal";
-import { useSelector, useDispatch } from 'react-redux';
 import { addItem, clearOrder, deleteItem, getOrder, removeItemPrice, setBun } from "../../services/reducers/constructor-reducers";
 import FillingItem from "../filling-item/filling-item";
 import OrderDetails from "../order-details/order-details";
 import { Redirect, useLocation, useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from "../../hooks/wrappers";
 
 
 export default function BurgerConstructor() {

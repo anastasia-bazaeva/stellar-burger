@@ -1,9 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const initialDetails = {
-    productDetails: {}
-}
-
 export type TDetails = {
     _id: string;
     name: string;
@@ -18,6 +14,14 @@ export type TDetails = {
     image_large: string;
     __v: number;
 };
+
+type TIngredientDetailsInitial = {
+    productDetails: {} | TDetails;
+}
+
+const initialDetails: TIngredientDetailsInitial = {
+    productDetails: {}
+}
 
 
 export const reducerDetails = createSlice({

@@ -1,16 +1,22 @@
 import ReactDOM from 'react-dom';
-import React from "react";
+import React, { ReactElement, FC } from "react";
 import PropTypes from 'prop-types';
 import ModalOverlay from "../modal-overlay/modal-overlay";
 import modalStyles from './modal.module.css';
 import { useLocation } from 'react-router-dom';
+import { ILocationState } from '../app/app';
 
+interface IModal {
+  onClose: () => void;
+  children?: ReactElement | ReactElement[];
+  isOrder?: boolean;
+}
 
-export default function Modal({ onClose, children, isOrder }) {
-  const location = useLocation();
+ const Modal: FC<IModal> = ({ onClose, children, isOrder }) => {
+  const location = useLocation<ILocationState>();
   const modalsContainer = document.querySelector('#modals');
 
-  const handleEscKeydown = (event) => {
+  const handleEscKeydown = (event: KeyboardEvent) => {
     event.key === "Escape" && onClose();
   }
 
@@ -34,8 +40,4 @@ export default function Modal({ onClose, children, isOrder }) {
   );
 }
 
-Modal.propTypes = {
-  onClose: PropTypes.func,
-  children: PropTypes.any,
-  isOrder: PropTypes.bool
-}
+export default Modal

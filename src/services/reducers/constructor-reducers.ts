@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import update from 'immutability-helper';
 import { TUser } from './auth-reducers';
 
-type TConstructorIngredient = TIngredient & {uid?: string};
+export type TConstructorIngredient = TIngredient & {uid?: string};
 
 type TConstructorInitial = {
     constructorIngredients: Array<TConstructorIngredient> | null;

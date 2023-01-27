@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { AnyAction, configureStore, ThunkDispatch } from '@reduxjs/toolkit';
 import reducerConstructor from './constructor-reducers';
 import reducerIngredients from './ingredient-reducers';
 import reducerDetails from './ingredient-details-reducers';
@@ -35,6 +35,9 @@ const store = configureStore({
 });
 
 export default store;
-//беда какая-то
+//у меня сломался стор при типизации мидлвара, и я обновила зависимости, как показали на вебинаре.
+//Не помогло, зато теперь у меня сломалась типизация экшенов (и библиотек), и вместо
+// TAppDispatch = typeof store.dispatch пришлось прописывать новое значение. Надеюсь, так можно
+
 export type TRootState = ReturnType<typeof store.getState>
-export type TAppDispatch = typeof store.dispatch
+export type TAppDispatch = ThunkDispatch<TRootState, null, AnyAction>;

@@ -3,7 +3,7 @@ import FeedStyles from './feed.module.css';
 import { OrderCard } from "../components/order-card/order-card";
 import { Dashboard } from "../components/dashboard/dashboard";
 import { wsConnect, wsDisconnect } from "../services/actions/middleware-actions";
-import { enrichOrder, wsLink } from "../utils/utils";
+import { enrichOrder, TFullOrder, wsLink } from "../utils/utils";
 import { useDispatch, useSelector } from "../hooks/wrappers";
 
 export function Feed () {
@@ -18,7 +18,6 @@ export function Feed () {
     
 
     const orderList = enrichOrder(wsOrders, ingredientsData);
-    console.log(orderList);
 
     const disconnect = () => {
         return dispatch(wsDisconnect())

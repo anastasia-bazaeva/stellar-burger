@@ -1,12 +1,18 @@
-import React, { useRef } from 'react';
+import React, { FC, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
 import { useDrag, useDrop } from 'react-dnd';
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import constructStyles from '../../components/burger-constructor/burger-constructor.module.css';
-import { sort } from '../../services/reducers/constructor-reducers';
+import { sort, TConstructorIngredient } from '../../services/reducers/constructor-reducers';
+import { useDispatch } from '../../hooks/wrappers';
 
-export default function FillingItem({ ingredient, handleClose, index }) {
+interface IFillingItem {
+  ingredient: TConstructorIngredient;
+  handleClose: (uid: string, price: number) => void;
+  index: number;
+}
+
+const FillingItem: FC<IFillingItem> = ({ ingredient, handleClose, index }) => {
 
   const dispatch = useDispatch();
   const ref = useRef(null);
@@ -74,8 +80,4 @@ export default function FillingItem({ ingredient, handleClose, index }) {
   )
 }
 
-FillingItem.propTypes = {
-  ingredient: PropTypes.object,
-  handleClose: PropTypes.func,
-  index: PropTypes.number
-}
+export default FillingItem

@@ -1,19 +1,18 @@
 import React from "react";
-import PropTypes from 'prop-types';
 
 import menuStyles from './burger-ingredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import MenuSection from "../menu-section/menu-section";
-import { useSelector } from 'react-redux';
+import { useSelector } from "../../hooks/wrappers";
 
 function BurgerIngredients() {
   const [current, setCurrent] = React.useState('bun');
-  const menuZone = React.useRef();
+  const menuZone = React.useRef<HTMLDivElement>();
   const ingredients = useSelector(state => state.reducerIngredients.ingredientsData);
 
-  const bunZone = React.useRef();
-  const sauceZone = React.useRef();
-  const mainZone = React.useRef();
+  const bunZone = React.useRef<HTMLDivElement>();
+  const sauceZone = React.useRef<HTMLDivElement>();
+  const mainZone = React.useRef<HTMLDivElement>();
 
   React.useEffect(() => {
     const putScroll = () => {
@@ -33,7 +32,7 @@ function BurgerIngredients() {
     }
   }, [])
 
-  const putView = (value) => {
+  const putView = (value: string) => {
     setCurrent(value);
     if (value === "bun") {
       bunZone.current.scrollIntoView({ behavior: 'smooth' });

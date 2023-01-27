@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { NavLink } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../../hooks/wrappers';
 import profileStyles from '../../pages/profile.module.css';
 import { clearAuthCheck, logoutUser } from '../../services/reducers/auth-reducers';
 
-export function ProfileNav ({activeClass}) {
+interface IProfileNav {
+    activeClass: string
+}
+
+export const ProfileNav: FC<IProfileNav> = ({activeClass}) => {
     const dispatch = useDispatch();
     const user = useSelector(state => state.reducerAuth.user);
 

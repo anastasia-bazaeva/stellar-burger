@@ -5,18 +5,21 @@ import { TOrdersInfo } from "./reducers/ws-reducers";
 
 
 type TWSActions =  {
-  wsConnect: ActionCreatorWithOptionalPayload<string, string>;
+  wsConnect: ActionCreatorWithOptionalPayload<string | undefined, string>;
   wsDisconnect: ActionCreatorWithoutPayload<string>;
   wsConnecting: ActionCreatorWithoutPayload<string>;
   onOpen: ActionCreatorWithoutPayload<string>;
-  onClose: ActionCreatorWithOptionalPayload<string, string>
-  onError: ActionCreatorWithOptionalPayload<string, string>
+  onClose: ActionCreatorWithOptionalPayload<string | undefined, string>
+  onError: ActionCreatorWithOptionalPayload<string | undefined, string>
   onMessage: ActionCreatorWithOptionalPayload<TOrdersInfo, string>;
 }
 
-//: Middleware<{}, TRootState> периодически прячу
+//: Middleware<{}, TRootState> спрячу, оно ломает мне приложение
+//Я пока просто это убрала, вроде работает и видит где какой экшен нужен и где могут быть аргументы. 
+//Кстати, а зачем этому мидлвару вообще мой стор? он же сам ничего не делает с ним, только вызывает экшены, 
+//уже прописанные в ws.reducers, и вот там уже есть манипуляции со стором.
 
-export const socketMiddleware = (wsActions: TWSActions): Middleware<{}, TRootState>=> {
+export const socketMiddleware = (wsActions: TWSActions): Middleware => {
   return (store) => {
     let socket: WebSocket | null = null;
     let isConnected = false;

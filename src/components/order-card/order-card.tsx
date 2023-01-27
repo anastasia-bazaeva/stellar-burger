@@ -1,11 +1,20 @@
-import React from "react";
+import React, { FC } from "react";
 import FeedStyles from '../../pages/feed.module.css';
 import { CurrencyIcon, FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
-import { nanoid } from "nanoid";
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { ILocationState } from "../app/app";
 
-export function OrderCard({ images, status, name, price, number, date }) {
-    const location = useLocation();
+interface IOrderCard {
+    images: Array<string>;
+    status?: string;
+    name: string;
+    price: number;
+    number: number;
+    date: string;
+}
+
+export const OrderCard: FC<IOrderCard> = ({ images, status, name, price, number, date }) => {
+    const location = useLocation<ILocationState>();
 
     let text = '';
     if (status === 'cancelled') {
@@ -67,7 +76,7 @@ export function OrderCard({ images, status, name, price, number, date }) {
                     </ul>
                     <div className={FeedStyles.orderCardBox}>
                         <p className={`${FeedStyles.textBlock} text text_type_digits-medium`}>{price}</p>
-                        <CurrencyIcon />
+                        <CurrencyIcon type="primary" />
                     </div>
                 </div>
            </div>

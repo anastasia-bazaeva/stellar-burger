@@ -119,17 +119,17 @@ image_large: string;
 __v: number;
 }
 
-// type TFullOrder =[{
-//   number: number;
-//   status: string;
-//   name: string;
-//   date: string;
-//   ingredients: Array<TIngredient>;
-//   ingredientsPictures: Array<string>;
-//   price: number;
-// }]
+export type TFullOrder ={
+  number: number;
+  status: string;
+  name: string;
+  date: string;
+  ingredients: Array<TIngredient>;
+  ingredientsPictures: Array<string>;
+  price: number;
+}
 
-export const enrichOrder = (wsOrders: TOrder[], ingredientsData: TIngredient[]): any => {
+export const enrichOrder = (wsOrders: TOrder[], ingredientsData: TIngredient[]): Array<TFullOrder> => {
   const fullOrder = [];
 
   fullOrder.push(wsOrders?.map((order:TOrder) => {

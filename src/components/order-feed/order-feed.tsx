@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { OrderCard } from '../order-card/order-card';
 import FeedStyles from '../../pages/feed.module.css';
+import { TFullOrder } from '../../utils/utils';
 
-export function ProfileFeed ({orderList}) {
+interface IProfileFeed {
+    orderList: TFullOrder[]
+}
+
+export const ProfileFeed: FC<IProfileFeed> = ({orderList}) => {
 
     const myOrders = orderList?.reverse();
     
-
     return (
         <div className={FeedStyles.feed}>
                 <div className={FeedStyles.scrollzone}>

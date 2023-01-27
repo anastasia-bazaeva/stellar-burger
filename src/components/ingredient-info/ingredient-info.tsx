@@ -1,12 +1,13 @@
 import nutritionStyles from './ingredient-info.module.css';
-import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../hooks/wrappers';
+import { TIngredient } from '../../utils/utils';
+
 
 export default function IngredientInfo() {
     const ingredients = useSelector(state => state.reducerIngredients.ingredientsData);
-    const { id } = useParams();
-    let product = null;
+    const { id } = useParams<{id: string}>();
+    let product: TIngredient | null = null;
 
     if (ingredients.length < 1) {
         return (

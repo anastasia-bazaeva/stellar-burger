@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { FC } from 'react';
 import PropTypes from 'prop-types';
 import orderStyles from './order-details.module.css';
 import donePic from '../../images/done.svg'
 
-export default function OrderDetails({ orderNumber }) {
+interface IOrderDetails {
+    orderNumber: number
+}
+
+const OrderDetails: FC<IOrderDetails> = ({ orderNumber }) => {
     return (
         <div className={orderStyles.order}>
             <div className={orderStyles.info}>
@@ -19,7 +23,5 @@ export default function OrderDetails({ orderNumber }) {
     )
 }
 
-OrderDetails.propTypes = ({
-    orderNumber: PropTypes.number
-})
-// ОГО, столько человек раньше не заметили такую простую ошибку) СПАСИБО!!! <3
+
+export default OrderDetails
