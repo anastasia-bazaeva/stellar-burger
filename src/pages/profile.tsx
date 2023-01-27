@@ -18,13 +18,13 @@ export function Profile() {
 
     const updateUser = (e: SubmitEvent) => {
         e.preventDefault();
-        setValues({
+        const newValues = {
             email: values.email, 
             password: values.password, 
             name: values.name
-        });
-        dispatch(updateUserInfo())
-        console.log(user)
+        };
+        setValues(newValues);
+        dispatch(updateUserInfo(newValues))
     }
 
     const clearUpdates = () => {

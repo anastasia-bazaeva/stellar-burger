@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { getInfo, TIngredient } from '../../utils/utils';
 import { TDetails } from './ingredient-details-reducers';
 
@@ -32,7 +32,7 @@ const reducerIngredients = createSlice({
     name: 'reducerIngredients',
     initialState: initialStateIngredients,
     reducers: {
-        showDetails: (state, action) => {
+        showDetails: (state, action: PayloadAction<Readonly<TDetails>>) => {
             state.ingredientsDetails = action.payload
         },
         hideDetails: (state) => {

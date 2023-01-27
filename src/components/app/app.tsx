@@ -28,7 +28,6 @@ export interface ILocationState {
   from: {
     pathname: string;
   };
-  
   background?: {
     pathname: string;
   }
@@ -78,7 +77,7 @@ const App: FC = () => {
               <Login from={from} redirectLogin={redirectLogin}/>
             </ProtectedRoute>
             <ProtectedRoute path='/register' onlyUnAuth>
-              <Register from={from}/>
+              <Register from={from} redirectLogin={redirectLogin}/>
             </ProtectedRoute>
             <ProtectedRoute path='/forgot-password' onlyUnAuth>
               <ForgotPassword/>

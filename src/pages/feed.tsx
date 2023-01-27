@@ -2,9 +2,9 @@ import React from "react";
 import FeedStyles from './feed.module.css';
 import { OrderCard } from "../components/order-card/order-card";
 import { Dashboard } from "../components/dashboard/dashboard";
-import { useDispatch, useSelector } from "react-redux";
 import { wsConnect, wsDisconnect } from "../services/actions/middleware-actions";
 import { enrichOrder, wsLink } from "../utils/utils";
+import { useDispatch, useSelector } from "../hooks/wrappers";
 
 export function Feed () {
     const dispatch = useDispatch();
@@ -12,12 +12,13 @@ export function Feed () {
     const ingredientsData = useSelector(state => state.reducerIngredients.ingredientsData);
     const wsOrders = wsData.orders;
     const orderStat = {
-        'total': wsData.total,
-        'todayTotal': wsData.totalToday
+        'total': wsData?.total,
+        'todayTotal': wsData?.totalToday
     }
     
 
     const orderList = enrichOrder(wsOrders, ingredientsData);
+    console.log(orderList);
 
     const disconnect = () => {
         return dispatch(wsDisconnect())
@@ -36,7 +37,7 @@ export function Feed () {
             <div className={FeedStyles.feed}>
                 <h2 className={`${FeedStyles.textBlock} text text_type_main-large pt-10 pb-5`}>Лента заказов</h2>
                 <div className={FeedStyles.scrollzone}>
-                {orderList.map((order) => {
+                {orderList?.map((order) => {
                         return (<OrderCard 
                             date={order.date}
                             number={order.number} 

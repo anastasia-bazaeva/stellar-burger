@@ -1,6 +1,24 @@
-export const socketMiddleware = (wsActions) => {
+import { ActionCreatorWithOptionalPayload, ActionCreatorWithoutPayload, PayloadAction } from "@reduxjs/toolkit";
+import { TRootState } from "./reducers/store";
+import { Middleware } from 'redux';
+import { TOrdersInfo } from "./reducers/ws-reducers";
+
+
+type TWSActions =  {
+  wsConnect: ActionCreatorWithOptionalPayload<string, string>;
+  wsDisconnect: ActionCreatorWithoutPayload<string>;
+  wsConnecting: ActionCreatorWithoutPayload<string>;
+  onOpen: ActionCreatorWithoutPayload<string>;
+  onClose: ActionCreatorWithOptionalPayload<string, string>
+  onError: ActionCreatorWithOptionalPayload<string, string>
+  onMessage: ActionCreatorWithOptionalPayload<TOrdersInfo, string>;
+}
+
+//: Middleware<{}, TRootState> периодически прячу
+
+export const socketMiddleware = (wsActions: TWSActions): Middleware<{}, TRootState>=> {
   return (store) => {
-    let socket = null;
+    let socket: WebSocket | null = null;
     let isConnected = false;
     let reconnectTimer = 0;
     let url = '';

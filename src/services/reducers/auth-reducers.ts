@@ -1,7 +1,7 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { getCookie, setCookie, request, apiLink, deleteCookie, TMethods } from '../../utils/utils';
 
-type TUser = {
+export type TUser = {
     email: string | undefined;
     name: string | undefined;
 };
@@ -18,10 +18,10 @@ type TUserResponse = {
 }
 
 type TTokenResponse = Omit<TUserResponse, "user">;
-type TTokenError = {
-    success: boolean;
-    message: string;
-}
+// type TTokenError = {
+//     success: boolean;
+//     message: string;
+// }
 
 export const loginUser = createAsyncThunk(
     'reducerAuth/loginUser',
@@ -64,7 +64,7 @@ export const loginUser = createAsyncThunk(
 
     export const resetPassword = createAsyncThunk(
         'reducerAuth/resetPassword',
-        async (email: string) => {
+        async (email: {email: string}) => {
             const res = request(`${apiLink}password-reset`, {
                 method: 'POST',
                 headers: {
@@ -126,7 +126,7 @@ export const loginUser = createAsyncThunk(
 
     export const updateUserInfo = createAsyncThunk(
         'reducerAuth/updateUserInfo',
-        async (data) => {
+        async (data: TUser | TUserRegisterData): Promise<TUserResponse | undefined> => {
             if(getCookie('accessToken')) {
             return fetchUser('PATCH', JSON.stringify(data))
             }
@@ -159,9 +159,9 @@ const reducerAuth = createSlice({
     name: 'reducerAuth',
     initialState: initialAuth,
     reducers: {
-        updateUser: (state, action) => {
-            state.user[action.payload.name] = action.payload.name
-        },
+        // updateUser: (state, action: PayloadAction<{name: string}>) => {
+        //     state.user[action.payload.name] = action.payload.name
+        // },
         clearAuthCheck: (state) => {
             state.isAuthChecked = null
         }
@@ -222,7 +222,7 @@ const reducerAuth = createSlice({
             state.hasError = false;
             state.errorMessage = null
         }),
-        builder.addCase(resetPassword.fulfilled, (state, action) => {
+        builder.addCase(resetPassword.fulfilled, (state) => {
             state.isLoading = false;
             state.resetSent = true
         }),
@@ -274,5 +274,5 @@ const reducerAuth = createSlice({
         })
     }
 })
-export const { updateUser, clearAuthCheck } = reducerAuth.actions;
+export const { clearAuthCheck } = reducerAuth.actions;
 export default reducerAuth.reducer;

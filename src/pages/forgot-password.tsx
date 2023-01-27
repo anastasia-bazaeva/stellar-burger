@@ -3,24 +3,20 @@ import { Button, EmailInput } from '@ya.praktikum/react-developer-burger-ui-comp
 import Form from '../components/form/form';
 import formStyles from '../components/form/form.module.css';
 import { Link, Redirect } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { resetPassword } from '../services/reducers/auth-reducers';
 import { useForm } from '../hooks/useForm';
+import { useDispatch, useSelector } from '../hooks/wrappers';
 
 
 export function ForgotPassword() {
     const {values, handleChange, setValues} = useForm({email: ''});
-    // const [InputData, setInputData] = React.useState({email: ''});
     const dispatch = useDispatch();
     const resetSent = useSelector(state => state.reducerAuth.resetSent);
 
-    // const onChange = e => {
-    //     setInputData({email: e.target.value});
-    // }
 
-    const onSubmit = (e) => {
+    const onSubmit = (e: SubmitEvent) => {
         e.preventDefault();
-        dispatch(resetPassword(values));
+        dispatch(resetPassword({email: values.email}));
         setValues({email: ''})
     }
 
@@ -33,8 +29,7 @@ export function ForgotPassword() {
     if (resetSent) {
         return <Redirect to='/reset-password'></Redirect>
      }
-//не получается указать иначе имя для пропса isIcon, кроме такого названия компонент из библиотеки не хочет ничего принимать(
-//https://yandex-practicum.github.io/react-developer-burger-ui-components/docs/email-input
+
     return (
         <Form submitHandler={onSubmit} title='Восстановление пароля' span={navigate()} extraClass='mt-25'>
             <EmailInput 
@@ -42,8 +37,7 @@ export function ForgotPassword() {
                 value={values.email || ''} 
                 name={'email'}
                 placeholder='Укажите e-mail' 
-                isIcon={true} 
-                type='email'/>
+                isIcon={true} />
             <Button htmlType='submit'>Восстановить</Button>
         </Form>
     )

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Button, EmailInput, PasswordInput, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import Form from '../components/form/form';
 import formStyles from '../components/form/form.module.css';
@@ -6,12 +6,12 @@ import { Link, useHistory } from 'react-router-dom';
 import { registerUser } from '../services/reducers/auth-reducers';
 import { useForm } from '../hooks/useForm';
 import { useDispatch } from '../hooks/wrappers';
+import { ILogin } from './login';
 
-export function Register (from) {
+export const Register: FC<ILogin> = ({redirectLogin}) => {
     const {values, handleChange} = useForm({email: '', password: '', name: ''});
     const dispatch = useDispatch();
     const history = useHistory();
-
 
     function navigate () {
         return (
@@ -27,11 +27,12 @@ export function Register (from) {
             name: values.name
         }))
         .then(res => console.log(res))
-          if(from){
-            history.replace(from.pathname);
-          } else {
-            history.push('/');
-          }
+        redirectLogin();
+        //   if(from){
+        //     history.replace(from?.pathname);
+        //   } else {
+        //     history.push('/');
+        //   }
         }
 
     return (

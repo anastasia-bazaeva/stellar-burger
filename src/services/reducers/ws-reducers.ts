@@ -1,16 +1,46 @@
-import { createReducer, createAsyncThunk } from '@reduxjs/toolkit';
+import { createReducer, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { apiLink, request, WebsocketStatus } from "../../utils/utils";
-import { wsClose, wsConnecting, wsError, wsMessage, wsOpen, clearFetchedOrder } from '../actions/middleware-actions';
+import { wsClose, wsConnecting, wsError, wsMessage, wsOpen, clearFetchedOrder, wsConnect } from '../actions/middleware-actions';
 
-const initialState = {
+export type TOrderInitial = {
+    status: string;
+    connectionError: string;
+    orders: TOrdersInfo;
+}
+
+export type TOrder = {
+    _id: string;
+    owner: string;
+    status: string;
+    ingredients: Array<string>;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+    number: number;
+    __v: number;
+}
+
+export type TOrdersInfo = {
+    success?: boolean, 
+    orders: TOrder[] | [];
+    total: number;
+    totalToday: number;
+};
+
+
+const initialState: TOrderInitial = {
     status: WebsocketStatus.OFFLINE,
     connectionError: '',
-    orders: []
+    orders: {
+        orders: [],
+        total: 0,
+        totalToday: 0
+    }
 }
 
 export const fetchOrder = createAsyncThunk(
     'WSReducer/fetchOrder',
-    async (order: number) => {
+    async (order: number): Promise<TOrdersInfo | undefined> => {
         const res = request(`${apiLink}orders/${order}`,{
             method: 'GET',
             headers: {
@@ -34,10 +64,10 @@ export const WSReducer = createReducer(initialState, (builder) => {
         state.status = WebsocketStatus.OFFLINE;
         state.connectionError = ''
     })
-    .addCase(wsError, (state, action) => {
+    .addCase(wsError, (state, action: PayloadAction<string>) => {
         state.connectionError = action.payload
     })
-    .addCase(wsMessage, (state, action) => {
+    .addCase(wsMessage, (state, action: PayloadAction<Readonly<TOrdersInfo>>) => {
         state.orders = action.payload
     })
     .addCase(fetchOrder.pending, (state) => {
@@ -52,7 +82,11 @@ export const WSReducer = createReducer(initialState, (builder) => {
     })
     .addCase(clearFetchedOrder, (state) => {
         state.status = WebsocketStatus.OFFLINE;
-        state.orders = []
+        state.orders = {
+            orders: [],
+            total: 0,
+            totalToday: 0
+        }
     })
 })
 

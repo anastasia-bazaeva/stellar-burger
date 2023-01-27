@@ -1,3 +1,4 @@
+import { TOrder } from "../services/reducers/ws-reducers";
 
 export const apiLink = 'https://norma.nomoreparties.space/api/';
 export const wsLink = 'wss://norma.nomoreparties.space/orders';
@@ -38,38 +39,6 @@ export function getInfo () {
     return fetch(`${apiLink}ingredients`).then(checkResponse)
 }
 
-// DATA
-// {"success":true,
-//"name":"Space экзо-плантаго флюоресцентный бургер",
-//"order":
-//{"ingredients":
-//[
-//   {"_id":"60d3b41abdacab0026a733c7",
-// "name":"Флюоресцентная булка R2-D3",
-// "type":"bun",
-// "proteins":44,
-// "fat":26,
-// "carbohydrates":85,
-// "calories":643,
-// "price":988,
-// "image":"https://code.s3.yandex.net/react/code/bun-01.png",
-// "image_mobile":"https://code.s3.yandex.net/react/code/bun-01-mobile.png",
-// "image_large":"https://code.s3.yandex.net/react/code/bun-01-large.png",
-// "__v":0},
-// ],
-// "_id":"63d12fb2936b17001be53816",
-// "owner":{
-//   "name":"Anastasia",
-//   "email":"genrich.croco@gmail.com",
-//   "createdAt":"2022-12-01T11:51:32.690Z",
-//   "updatedAt":"2022-12-06T10:53:39.160Z"},
-//   "status":"done",
-//   "name":"Space экзо-плантаго флюоресцентный бургер",
-//   "createdAt":"2023-01-25T13:33:38.513Z",
-//   "updatedAt":"2023-01-25T13:33:38.953Z",
-//   "number":37859,
-//   "price":15256}}
-
 export type TOrderIngredients = Array<string>
 
 export const getOrderNumber = (data: TOrderIngredients) => {
@@ -83,15 +52,6 @@ export const getOrderNumber = (data: TOrderIngredients) => {
     })
 }
 
-//убрать в createAsyncThunk
-// export const getOrderDetails = (order) => {
-//   return request(`${apiLink}orders/${order}`,{
-//     method: 'GET',
-//     headers: {
-//       "Content-Type": "application/json",
-//     }
-//   })
-// }
 
 type TMultiProperty = number | string | boolean | null;
 
@@ -159,20 +119,20 @@ image_large: string;
 __v: number;
 }
 
-type TFullOrder = {
-  number: number;
-  status: string;
-  name: string;
-  date: string;
-  ingredients: Array<TIngredient>;
-  ingredientsPictures: Array<string>;
-  price: number;
-}
+// type TFullOrder =[{
+//   number: number;
+//   status: string;
+//   name: string;
+//   date: string;
+//   ingredients: Array<TIngredient>;
+//   ingredientsPictures: Array<string>;
+//   price: number;
+// }]
 
-export const enrichOrder = (wsOrders, ingredientsData) => {
-  const fullOrder: Array<TFullOrder> = [];
+export const enrichOrder = (wsOrders: TOrder[], ingredientsData: TIngredient[]): any => {
+  const fullOrder = [];
 
-  fullOrder.push(wsOrders?.map(order => {
+  fullOrder.push(wsOrders?.map((order:TOrder) => {
     
     fullOrder.push({
       'number': order.number,

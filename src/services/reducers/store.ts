@@ -35,6 +35,6 @@ const store = configureStore({
 });
 
 export default store;
-
+//беда какая-то
 export type TRootState = ReturnType<typeof store.getState>
 export type TAppDispatch = typeof store.dispatch

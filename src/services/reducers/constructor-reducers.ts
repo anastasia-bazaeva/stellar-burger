@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { getOrderNumber, TIngredient, TOrderIngredients } from '../../utils/utils';
 import { nanoid } from 'nanoid';
 import update from 'immutability-helper';
+import { TUser } from './auth-reducers';
 
 type TConstructorIngredient = TIngredient & {uid?: string};
 
@@ -21,9 +22,29 @@ const initialStateConstructor: TConstructorInitial = {
     isLoading: false,
 }
 
+type TOrderResponse = {
+    order : {
+        createdAt: string;
+        ingredients: TIngredient[] | TIngredient;
+        name: string;
+        number: number;
+        owner: TOwner;
+        price: number;
+        status: string;
+        updatedAt: string;
+        _id: string;
+    };
+    success: boolean;
+}
+
+type TOwner = TUser & {
+    createdAt: string;
+    updatedAt: string;
+}
+
 export const getOrder = createAsyncThunk(
     'reducerConstructor/getOrder',
-    async (data: TOrderIngredients) => {
+    async (data: TOrderIngredients): Promise<TOrderResponse | undefined> => {
         const res = getOrderNumber(data);
         return res
     })
@@ -43,15 +64,15 @@ export const reducerConstructor = createSlice({
             }
         },
 
-        deleteItem: (state, action) => {
+        deleteItem: (state, action: PayloadAction<string>) => {
             state.constructorIngredients = state.constructorIngredients.filter(item => item.uid !== action.payload);
         },
 
-        removeItemPrice: (state, action) => {
+        removeItemPrice: (state, action: PayloadAction<number>) => {
             state.priceState = state.priceState - action.payload
         },
 
-        setBun: (state, action) => {
+        setBun: (state, action: PayloadAction<TIngredient>) => {
             state.selectedBun = action.payload;
         },
 
@@ -61,7 +82,7 @@ export const reducerConstructor = createSlice({
             state.constructorIngredients = [];
         },
 
-        sort(state, action) {
+        sort(state, action: PayloadAction<{dragIndex: number, hoverIndex: number}>) {
             const dragIndex = action.payload.dragIndex;
             const hoverIndex = action.payload.hoverIndex;
             const array = [...state.constructorIngredients];
