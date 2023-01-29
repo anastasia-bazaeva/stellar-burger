@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { TOrdersInfo } from '../reducers/ws-reducers';
+import { TOrdersInfo } from '../../types/order-types';
 
 export const wsConnect = createAction<string>('WS_CONNECT');
 export const wsDisconnect = createAction('WS_DISCONNECT');

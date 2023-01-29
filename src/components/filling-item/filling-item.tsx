@@ -15,12 +15,17 @@ interface IFillingItem {
 const FillingItem: FC<IFillingItem> = ({ ingredient, handleClose, index }) => {
 
   const dispatch = useDispatch();
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const id = ingredient._id;
 
   const [{ handlerId }, drop] = useDrop({
     accept: 'constructor-item',
-    hover(item, monitor) {
+    collect(monitor) {
+      return {
+        handlerId: monitor.getHandlerId
+      }
+    },
+    hover(item: {index: number}, monitor) {
       if (!ref.current) {
         return;
       }
@@ -74,7 +79,6 @@ const FillingItem: FC<IFillingItem> = ({ ingredient, handleClose, index }) => {
         price={ingredient.price}
         thumbnail={ingredient.image}
         data-handler-id={handlerId}
-        index={index}
         handleClose={() => handleClose(ingredient.uid, ingredient.price)} />
     </div>
   )

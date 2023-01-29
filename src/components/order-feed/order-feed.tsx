@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { OrderCard } from '../order-card/order-card';
 import FeedStyles from '../../pages/feed.module.css';
-import { TFullOrder } from '../../utils/utils';
+import { TFullOrder } from '../../types/order-types';
 
 interface IProfileFeed {
     orderList: TFullOrder[]

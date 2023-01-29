@@ -1,27 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { TTokenResponse, TUser, TUserLoginData, TUserRegisterData, TUserResponse } from '../../types/user-types';
 import { getCookie, setCookie, request, apiLink, deleteCookie, TMethods } from '../../utils/utils';
 
-export type TUser = {
-    email: string | undefined;
-    name: string | undefined;
-};
-
-type TUserRegisterData = TUser & { password: string | undefined };
-
-type TUserLoginData = Omit<TUser, 'name'> & { password: string | undefined };
-
-type TUserResponse = {
-    success: boolean;
-    user: TUser;
-    accessToken: string;
-    refreshToken: string;
-}
-
-type TTokenResponse = Omit<TUserResponse, "user">;
-// type TTokenError = {
-//     success: boolean;
-//     message: string;
-// }
 
 export const loginUser = createAsyncThunk(
     'reducerAuth/loginUser',
@@ -159,14 +139,12 @@ const reducerAuth = createSlice({
     name: 'reducerAuth',
     initialState: initialAuth,
     reducers: {
-        // updateUser: (state, action: PayloadAction<{name: string}>) => {
-        //     state.user[action.payload.name] = action.payload.name
-        // },
         clearAuthCheck: (state) => {
             state.isAuthChecked = null
         }
     },
     extraReducers: (builder) => {
+        return (
         builder.addCase(loginUser.pending, (state) => {
             state.isLoading = true;
             state.hasError = false
@@ -272,7 +250,7 @@ const reducerAuth = createSlice({
             state.user = null;
             state.errorMessage = action.error.message
         })
-    }
+    )}
 })
 export const { clearAuthCheck } = reducerAuth.actions;
 export default reducerAuth.reducer;

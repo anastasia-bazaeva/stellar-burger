@@ -1,4 +1,5 @@
 import { createReducer, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { TOrdersInfo } from '../../types/order-types';
 import { apiLink, request, WebsocketStatus } from "../../utils/utils";
 import { wsClose, wsConnecting, wsError, wsMessage, wsOpen, clearFetchedOrder, wsConnect } from '../actions/middleware-actions';
 
@@ -7,26 +8,6 @@ export type TOrderInitial = {
     connectionError: string;
     orders: TOrdersInfo;
 }
-
-export type TOrder = {
-    _id: string;
-    owner: string;
-    status: string;
-    ingredients: Array<string>;
-    name: string;
-    createdAt: string;
-    updatedAt: string;
-    number: number;
-    __v: number;
-}
-
-export type TOrdersInfo = {
-    success?: boolean, 
-    orders: TOrder[] | [];
-    total: number;
-    totalToday: number;
-};
-
 
 const initialState: TOrderInitial = {
     status: WebsocketStatus.OFFLINE,

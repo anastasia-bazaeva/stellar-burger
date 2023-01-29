@@ -1,7 +1,7 @@
 import nutritionStyles from './ingredient-info.module.css';
 import { useParams } from 'react-router-dom';
 import { useSelector } from '../../hooks/wrappers';
-import { TIngredient } from '../../utils/utils';
+import { TIngredient } from '../../types/ingredient-types';
 
 
 export default function IngredientInfo() {

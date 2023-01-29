@@ -1,7 +1,7 @@
 import { ActionCreatorWithOptionalPayload, ActionCreatorWithoutPayload, PayloadAction } from "@reduxjs/toolkit";
 import { TRootState } from "./reducers/store";
 import { Middleware } from 'redux';
-import { TOrdersInfo } from "./reducers/ws-reducers";
+import { TOrdersInfo } from "../types/order-types";
 
 
 type TWSActions =  {

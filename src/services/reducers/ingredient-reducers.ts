@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { getInfo, TIngredient } from '../../utils/utils';
-import { TDetails } from './ingredient-details-reducers';
+import { TDetails, TIngredient, TIngredientsRes } from '../../types/ingredient-types';
+import { getInfo } from '../../utils/utils';
 
 type TInitialStateIngredients = {
     ingredientsData: Array<TIngredient>,
@@ -15,11 +15,6 @@ const initialStateIngredients:TInitialStateIngredients = {
     ingredientsDetails: null,
     defaultBun: null
 }
-
-type TIngredientsRes = {
-    success: boolean;
-    data: Array<TIngredient>;
-  }
 
 export const getData = createAsyncThunk(
     'reducerIngredients/getData',

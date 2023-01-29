@@ -1,22 +1,25 @@
 import { CurrencyIcon, FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
-import React from 'react';
-import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { FC, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import orderStyles from './feed-order-details.module.css';
 import FeedStyles from '../../pages/feed.module.css';
 import { fetchOrder } from '../../services/reducers/ws-reducers';
 import { clearFetchedOrder } from '../../services/actions/middleware-actions';
+import { useDispatch, useSelector } from '../../hooks/wrappers';
+import { TOrder } from '../../types/order-types';
 
+interface IFeedOrderDetails {
+    isModal?: boolean
+}
 
-export function FeedOrderDetails ({isModal}) {
+export const FeedOrderDetails:FC<IFeedOrderDetails> = ({isModal}) => {
     const dispatch = useDispatch();
     const wsData = useSelector(store => store.WSReducer.orders);
     const ingredientsData = useSelector(state => state.reducerIngredients.ingredientsData);
     const wsOrders = wsData.orders;
-    const { number } = useParams();  
+    const { number } = useParams<{number: any | number}>();  
 
-    const myOrder = wsOrders?.find(order => order.number == number);
+    const myOrder = wsOrders?.find((order: TOrder) => order.number == number);
     //console.log(myOrder);
 
     const totalPrice = myOrder?.ingredients?.map(ingredient => ingredientsData?.filter(storeIngredient => storeIngredient._id === ingredient)[0].price).reduce((acc, current) => { return acc + current},0);
@@ -53,7 +56,7 @@ export function FeedOrderDetails ({isModal}) {
         return counter
     }
 
-    React.useEffect(()=>{
+    useEffect(()=>{
 
         if(!isModal) {
             dispatch(fetchOrder(number))
@@ -61,7 +64,7 @@ export function FeedOrderDetails ({isModal}) {
 
         return () => {
             if(!isModal){
-                return dispatch(clearFetchedOrder())
+              dispatch(clearFetchedOrder())
             }
         }
 
@@ -86,7 +89,7 @@ export function FeedOrderDetails ({isModal}) {
                         </div>
                         <div className={orderStyles.listGroup}>
                             <p className={`${FeedStyles.textBlock} text text_type_digits-default`}>{count(ingredient)} x {ingredientsData.filter(storeIngredient => storeIngredient._id === ingredient)[0].price}</p>
-                            <CurrencyIcon/>
+                            <CurrencyIcon type="primary"/>
                         </div>
                     </li>
                 )
@@ -97,13 +100,9 @@ export function FeedOrderDetails ({isModal}) {
                 <FormattedDate className={`${FeedStyles.textBlock} text text_type_main-default text_color_inactive`} date={new Date(myOrder?.createdAt)}/>
                 <div className={orderStyles.listGroup}>
                     <p className={`${FeedStyles.textBlock} text text_type_digits-default`}>{totalPrice}</p>
-                    <CurrencyIcon/>
+                    <CurrencyIcon type="primary"/>
                 </div>
             </div>
         </div>
     )
 }
-
-FeedOrderDetails.propTypes = {
-    isModal: PropTypes.bool
-  }

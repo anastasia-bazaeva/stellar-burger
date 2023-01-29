@@ -5,12 +5,11 @@ import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import constructStyles from './burger-constructor.module.css';
 import Modal from "../modal/modal";
-import { addItem, clearOrder, deleteItem, getOrder, removeItemPrice, setBun } from "../../services/reducers/constructor-reducers";
+import { addItem, clearOrder, deleteItem, getOrder, removeItemPrice, setBun, TConstructorIngredient } from "../../services/reducers/constructor-reducers";
 import FillingItem from "../filling-item/filling-item";
 import OrderDetails from "../order-details/order-details";
 import { Redirect, useLocation, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from "../../hooks/wrappers";
-
 
 export default function BurgerConstructor() {
   const { priceState, constructorIngredients, orderNumber, selectedBun, isLoading } = useSelector(state => state.reducerConstructor);
@@ -22,7 +21,7 @@ export default function BurgerConstructor() {
 
   const [{ isHover, canDrop }, dropTarget] = useDrop({
     accept: "ingredient",
-    drop(item) {
+    drop(item: TConstructorIngredient) {
       dispatch(
         item.type !== "bun" ?
           addItem(item)
@@ -52,14 +51,15 @@ export default function BurgerConstructor() {
       selectedBun._id
     ]
     ))
-      .then(res => {
-        res.payload.success && setIsOrderDetailsOpened(true);
+      .then((res) => {
+        res.payload && setIsOrderDetailsOpened(true);
         dispatch(clearOrder())
+        console.log(res)
       })
       .catch(e => console.log(`При загрузке данных по заказу что-то пошло не так: ${e}`))
   }
 
-  const handleClose = (uid, price) => {
+  const handleClose = (uid: string, price: number) => {
     dispatch(deleteItem(uid));
     dispatch(removeItemPrice(price))
   }

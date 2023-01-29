@@ -1,9 +1,18 @@
-import React from "react";
+import React, { FC } from "react";
+import { TOrder, TOrdersInfo } from "../../types/order-types";
 import DashStyles from './dashboard.module.css'
 
-export function Dashboard ({wsData, orderStat}) {
+interface IDashboard {
+    wsData: TOrdersInfo;
+    orderStat: {
+        total: number;
+        todayTotal: number;
+    };
+}
 
-    const ready = wsData.orders?.map((order) => {
+export const Dashboard: FC<IDashboard> = ({wsData, orderStat}) => {
+
+    const ready = wsData.orders?.map((order: TOrder) => {
         if (order.status === 'done') {
             return (
                 <li className={`${DashStyles.readyNumbers} text_type_digits-default`} key={order.number}>
@@ -11,7 +20,7 @@ export function Dashboard ({wsData, orderStat}) {
                 </li>)
         }
     })
-    const inProgress = wsData.orders?.map((order) => {
+    const inProgress = wsData.orders?.map((order: TOrder) => {
         if (order.status !== 'done' && order.status !== 'cancelled') {
             return (
                 <li className={`${DashStyles.readyNumbers} text_type_digits-default`} key={order.number}>

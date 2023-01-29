@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import menuStyles from '../burger-ingredients/burger-ingredients.module.css';
 import Ingredient from "../ingredient/ingredient";
-import { TIngredient } from "../../utils/utils";
+import { TIngredient } from "../../types/ingredient-types";
 
 interface IMenuSection {
     list: Array<TIngredient>;

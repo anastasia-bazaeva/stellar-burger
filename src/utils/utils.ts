@@ -1,4 +1,5 @@
-import { TOrder } from "../services/reducers/ws-reducers";
+import { TIngredient } from "../types/ingredient-types";
+import { TFullOrder, TOrder } from "../types/order-types";
 
 export const apiLink = 'https://norma.nomoreparties.space/api/';
 export const wsLink = 'wss://norma.nomoreparties.space/orders';
@@ -12,16 +13,6 @@ type TOptions = {
         },
         body?: string,
 }
-
-// type TBodyResponse<T> = {
-//   success: boolean;
-//   data: T;
-// }
-
-// type TResponse<T> = {
-//   json: () => Promise<T>;
-//   ok: boolean;
-// }
 
 export function checkResponse(res) {
     if (res.ok) {
@@ -68,7 +59,7 @@ export function getCookie(name: string) {
     return matches ? decodeURIComponent(matches[1]) : undefined;
   }
   
-  export function setCookie(name: string, value: TMultiProperty, props?: TCookieProps): void {
+  export function setCookie(name: string, value: TMultiProperty, props?: TCookieProps | any): void {
     props = {
         path: '/',
         ...props
@@ -102,31 +93,6 @@ export const WebsocketStatus = {
   CONNECTING : 'CONNECTING',
   ONLINE : 'ONLINE',
   OFFLINE : 'OFFLINE'
-}
-
-export type TIngredient = {
-_id: string;
-name: string;
-type: string;
-proteins: number;
-fat: number;
-carbohydrates: number;
-calories: number;
-price: number;
-image: string;
-image_mobile: string;
-image_large: string;
-__v: number;
-}
-
-export type TFullOrder ={
-  number: number;
-  status: string;
-  name: string;
-  date: string;
-  ingredients: Array<TIngredient>;
-  ingredientsPictures: Array<string>;
-  price: number;
 }
 
 export const enrichOrder = (wsOrders: TOrder[], ingredientsData: TIngredient[]): Array<TFullOrder> => {

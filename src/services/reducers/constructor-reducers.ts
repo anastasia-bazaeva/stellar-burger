@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { getOrderNumber, TIngredient, TOrderIngredients } from '../../utils/utils';
+import { getOrderNumber, TOrderIngredients } from '../../utils/utils';
 import { nanoid } from 'nanoid';
 import update from 'immutability-helper';
-import { TUser } from './auth-reducers';
+import { TOrderResponse } from '../../types/order-types';
+import { TIngredient } from '../../types/ingredient-types';
 
 export type TConstructorIngredient = TIngredient & {uid?: string};
 
@@ -22,29 +23,9 @@ const initialStateConstructor: TConstructorInitial = {
     isLoading: false,
 }
 
-type TOrderResponse = {
-    order : {
-        createdAt: string;
-        ingredients: TIngredient[] | TIngredient;
-        name: string;
-        number: number;
-        owner: TOwner;
-        price: number;
-        status: string;
-        updatedAt: string;
-        _id: string;
-    };
-    success: boolean;
-}
-
-type TOwner = TUser & {
-    createdAt: string;
-    updatedAt: string;
-}
-
 export const getOrder = createAsyncThunk(
     'reducerConstructor/getOrder',
-    async (data: TOrderIngredients): Promise<TOrderResponse | undefined> => {
+    async (data: TOrderIngredients): Promise<TOrderResponse> => {
         const res = getOrderNumber(data);
         return res
     })
@@ -96,9 +77,10 @@ export const reducerConstructor = createSlice({
         },
     },
     extraReducers: (builder) => {
+        return(
         builder.addCase(getOrder.pending, (state) => {
             state.isLoading = true
-        })
+        }),
         builder.addCase(getOrder.fulfilled, (state, action) => {
             state.isLoading = false;
             state.orderNumber = action.payload.order.number
@@ -106,7 +88,7 @@ export const reducerConstructor = createSlice({
         builder.addCase(getOrder.rejected, (state) => {
             state.isLoading = false
         })
-    }
+    )}
 })
 
 export const { addItem, deleteItem, removeItemPrice, setBun, clearOrder, sort } = reducerConstructor.actions

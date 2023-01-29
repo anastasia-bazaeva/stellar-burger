@@ -23,15 +23,15 @@ import { getUserInfo } from '../../services/reducers/auth-reducers';
 import { ProfileOrders } from '../../pages/profile-orders';
 import { FeedOrderDetails } from '../feed-order-details/feed-order-details';
 import { useDispatch, useSelector } from '../../hooks/wrappers';
+import * as H from 'history';
 
 export interface ILocationState {
   from: {
     pathname: string;
   };
-  background?: {
-    pathname: string;
-  }
+  background?: H.Location | undefined;
 }
+
 
 const App: FC = () => {
 

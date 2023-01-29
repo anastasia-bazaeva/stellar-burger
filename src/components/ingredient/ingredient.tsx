@@ -9,7 +9,7 @@ import { Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import { clearDetails, setDetails } from "../../services/reducers/ingredient-details-reducers";
 import { useDispatch, useSelector } from "../../hooks/wrappers";
-import { TIngredient } from "../../utils/utils";
+import { TIngredient } from "../../types/ingredient-types";
 
 interface IIngredient {
   productInfo: TIngredient;
