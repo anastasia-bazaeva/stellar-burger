@@ -1,10 +1,10 @@
 import React, { FC, useRef } from 'react';
-import PropTypes from 'prop-types';
-import { useDrag, useDrop } from 'react-dnd';
+import { useDrag, useDrop, XYCoord } from 'react-dnd';
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import constructStyles from '../../components/burger-constructor/burger-constructor.module.css';
 import { sort, TConstructorIngredient } from '../../services/reducers/constructor-reducers';
 import { useDispatch } from '../../hooks/wrappers';
+import { TIngredient } from '../../types/ingredient-types';
 
 interface IFillingItem {
   ingredient: TConstructorIngredient;
@@ -18,7 +18,7 @@ const FillingItem: FC<IFillingItem> = ({ ingredient, handleClose, index }) => {
   const ref = useRef<HTMLDivElement>(null);
   const id = ingredient._id;
 
-  const [{ handlerId }, drop] = useDrop({
+  const [{ handlerId }, drop] = useDrop<{index: number}, HTMLDivElement, any>({
     accept: 'constructor-item',
     collect(monitor) {
       return {
@@ -43,7 +43,8 @@ const FillingItem: FC<IFillingItem> = ({ ingredient, handleClose, index }) => {
 
       const clientOffset = monitor.getClientOffset();
 
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+      if (clientOffset) {
+        const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
         return;
@@ -56,6 +57,7 @@ const FillingItem: FC<IFillingItem> = ({ ingredient, handleClose, index }) => {
       dispatch(sort({ dragIndex, hoverIndex }));
 
       item.index = hoverIndex;
+      }
     },
   });
 

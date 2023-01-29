@@ -6,6 +6,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { setNewPassword } from '../services/reducers/auth-reducers';
 import { useForm } from '../hooks/useForm';
 import { useDispatch, useSelector } from '../hooks/wrappers';
+import { FormEvent } from 'react';
 
 export function ResetPassword () {
     const {values, handleChange, setValues} = useForm({password: '', token: '' });
@@ -17,7 +18,7 @@ export function ResetPassword () {
         return <Redirect to='/forgot-password'></Redirect>
     }
 
-    const onSubmit = (e: SubmitEvent) => {
+    const onSubmit = (e: SubmitEvent | FormEvent) => {
         e.preventDefault();
         dispatch(setNewPassword({password: values.password}));
         setValues({password: '', token: '' });

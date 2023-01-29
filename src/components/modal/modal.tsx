@@ -14,7 +14,7 @@ interface IModal {
 
  const Modal: FC<IModal> = ({ onClose, children, isOrder }) => {
   const location = useLocation<ILocationState>();
-  const modalsContainer = document.querySelector('#modals');
+  const modalsContainer = document.querySelector('#modals') as Element;
 
   const handleEscKeydown = (event: KeyboardEvent) => {
     event.key === "Escape" && onClose();

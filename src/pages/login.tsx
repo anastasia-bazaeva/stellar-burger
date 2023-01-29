@@ -6,6 +6,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { loginUser } from '../services/reducers/auth-reducers';
 import { useForm } from '../hooks/useForm';
 import { useDispatch } from '../hooks/wrappers';
+import { FormEvent } from 'react';
 
 export interface ILogin {
     from?: {pathname: string};
@@ -17,7 +18,7 @@ export const Login: FC<ILogin> = ({redirectLogin}) => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const onLogin = (e: SubmitEvent) => {
+    const onLogin = (e: SubmitEvent | FormEvent) => {
         e.preventDefault();
         dispatch(loginUser({email: values.email, password: values.password}))
         redirectLogin();

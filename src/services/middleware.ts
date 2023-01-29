@@ -1,17 +1,17 @@
-import { ActionCreatorWithOptionalPayload, ActionCreatorWithoutPayload, PayloadAction } from "@reduxjs/toolkit";
+import { ActionCreatorWithOptionalPayload, ActionCreatorWithoutPayload, ActionCreatorWithPayload, PayloadAction } from "@reduxjs/toolkit";
 import { TRootState } from "./reducers/store";
 import { Middleware } from 'redux';
 import { TOrdersInfo } from "../types/order-types";
 
 
 type TWSActions =  {
-  wsConnect: ActionCreatorWithOptionalPayload<string | undefined, string>;
+  wsConnect: ActionCreatorWithPayload<string, string>;
   wsDisconnect: ActionCreatorWithoutPayload<string>;
   wsConnecting: ActionCreatorWithoutPayload<string>;
   onOpen: ActionCreatorWithoutPayload<string>;
   onClose: ActionCreatorWithOptionalPayload<string | undefined, string>
   onError: ActionCreatorWithOptionalPayload<string | undefined, string>
-  onMessage: ActionCreatorWithOptionalPayload<TOrdersInfo, string>;
+  onMessage: ActionCreatorWithPayload<TOrdersInfo, string>;
 }
 
 //: Middleware<{}, TRootState> спрячу, оно ломает мне приложение

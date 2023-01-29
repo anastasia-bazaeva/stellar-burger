@@ -14,7 +14,7 @@ type TOptions = {
         body?: string,
 }
 
-export function checkResponse(res) {
+export function checkResponse(res: Response) {
     if (res.ok) {
         return res.json();
     }
@@ -44,7 +44,7 @@ export const getOrderNumber = (data: TOrderIngredients) => {
 }
 
 
-type TMultiProperty = number | string | boolean | null;
+type TMultiProperty = number | string | boolean;
 
 type TCookieProps = {
   path?: string;
@@ -86,7 +86,7 @@ export function getCookie(name: string) {
   }
   
   export function deleteCookie(name: string) {
-  setCookie(name, null, { expires: -1 });
+  setCookie(name, '', { expires: -1 });
 }
 
 export const WebsocketStatus = {
@@ -96,7 +96,7 @@ export const WebsocketStatus = {
 }
 
 export const enrichOrder = (wsOrders: TOrder[], ingredientsData: TIngredient[]): Array<TFullOrder> => {
-  const fullOrder = [];
+  const fullOrder: any[] = [];
 
   fullOrder.push(wsOrders?.map((order:TOrder) => {
     
@@ -106,8 +106,10 @@ export const enrichOrder = (wsOrders: TOrder[], ingredientsData: TIngredient[]):
       'name': order.name,
       'date': order.createdAt,
       'ingredients': order.ingredients,
-      'ingredientsPictures': order.ingredients.map(ingredient => ingredientsData.filter(storeIngredient => storeIngredient._id === ingredient)[0].image),
-      'price': order.ingredients.map(ingredient => ingredientsData.filter(storeIngredient => storeIngredient._id === ingredient)[0].price).reduce((acc, current) => { return acc + current},0)
+      'ingredientsPictures': order.ingredients.map(ingredient => ingredientsData.filter
+        (storeIngredient => storeIngredient._id === ingredient)[0].image),
+      'price': order.ingredients.map(ingredient => ingredientsData.filter
+        (storeIngredient => storeIngredient._id === ingredient)[0].price).reduce((acc, current) => { return acc + current},0)
       })
   }));
   fullOrder.pop();

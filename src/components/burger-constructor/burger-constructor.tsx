@@ -37,7 +37,9 @@ export default function BurgerConstructor() {
   const borderColor = (isHover && canDrop) ? constructStyles.order__box : constructStyles.order;
 
   const getTotal = React.useMemo(() => {
-    return priceState + selectedBun?.price * 2;
+    if (selectedBun) { 
+      return priceState + selectedBun?.price * 2;
+    }
   }, [priceState, selectedBun])
 
   const closeAllModals = () => {
@@ -46,9 +48,9 @@ export default function BurgerConstructor() {
 
   const getOrderInfo = () => {
     dispatch(getOrder([
-      selectedBun._id,
+      selectedBun?._id,
       ...constructorIngredients.map(item => item._id),
-      selectedBun._id
+      selectedBun?._id
     ]
     ))
       .then((res) => {

@@ -6,19 +6,19 @@ type TInitialStateIngredients = {
     ingredientsData: Array<TIngredient>,
     isLoading: boolean,
     ingredientsDetails: TDetails | null,
-    defaultBun: TIngredient | null
+    defaultBun: TIngredient | undefined
 }
 
 const initialStateIngredients:TInitialStateIngredients = {
     ingredientsData: [],
     isLoading: false,
     ingredientsDetails: null,
-    defaultBun: null
+    defaultBun: undefined
 }
 
 export const getData = createAsyncThunk(
     'reducerIngredients/getData',
-    async () : Promise<TIngredientsRes | undefined> => {
+    async () : Promise<TIngredientsRes> => {
         const res = getInfo();
         return res
     })

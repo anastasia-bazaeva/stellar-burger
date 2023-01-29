@@ -7,6 +7,7 @@ import { registerUser } from '../services/reducers/auth-reducers';
 import { useForm } from '../hooks/useForm';
 import { useDispatch } from '../hooks/wrappers';
 import { ILogin } from './login';
+import { FormEvent } from 'react';
 
 export const Register: FC<ILogin> = ({redirectLogin}) => {
     const {values, handleChange} = useForm({email: '', password: '', name: ''});
@@ -19,7 +20,7 @@ export const Register: FC<ILogin> = ({redirectLogin}) => {
         )
     }
 
-    const onRegister = (e: SubmitEvent) => {
+    const onRegister = (e: SubmitEvent | FormEvent) => {
         e.preventDefault();
         dispatch(registerUser({
             email: values.email,
@@ -40,19 +41,19 @@ export const Register: FC<ILogin> = ({redirectLogin}) => {
             <Input
                 // ref={InputRef}
                 onChange={handleChange}
-                value={values.name}
+                value={values.name || ''}
                 placeholder='Имя'
                 type='text'
                 name={'name'}/>
             <EmailInput 
                 onChange={handleChange} 
-                value={values.email} 
+                value={values.email || ''} 
                 name={'email'}
                 placeholder='E-mail' 
                 isIcon={true}/>
             <PasswordInput 
                 onChange={handleChange} 
-                value={values.password} 
+                value={values.password || ''} 
                 placeholder='Пароль' 
                 icon={'ShowIcon'} 
                 name={'password'}/>

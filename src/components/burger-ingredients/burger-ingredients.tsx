@@ -1,45 +1,49 @@
 import React from "react";
-
 import menuStyles from './burger-ingredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import MenuSection from "../menu-section/menu-section";
 import { useSelector } from "../../hooks/wrappers";
 
+
 function BurgerIngredients() {
   const [current, setCurrent] = React.useState('bun');
-  const menuZone = React.useRef<HTMLDivElement>();
+  const menuZone = React.useRef<HTMLDivElement>(null);
   const ingredients = useSelector(state => state.reducerIngredients.ingredientsData);
 
-  const bunZone = React.useRef<HTMLDivElement>();
-  const sauceZone = React.useRef<HTMLDivElement>();
-  const mainZone = React.useRef<HTMLDivElement>();
+  const bunZone = React.useRef<HTMLDivElement>(null);
+  const sauceZone = React.useRef<HTMLDivElement>(null);
+  const mainZone = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    const putScroll = () => {
-      if (menuZone.current.scrollTop <= 270) {
-        setCurrent('bun')
-      } else if (menuZone.current.scrollTop <= 700) {
-        setCurrent('sauce')
-      } else {
-        setCurrent('main')
+    if (menuZone.current) {
+      const putScroll = () => {
+        if (menuZone.current) {
+          if (menuZone.current?.scrollTop <= 270) {
+            setCurrent('bun')
+          } else if (menuZone.current?.scrollTop <= 700) {
+            setCurrent('sauce')
+          } else {
+            setCurrent('main')
+          }
+        }
       }
-    }
-
-    menuZone.current.addEventListener('scroll', putScroll);
+  
+    menuZone.current?.addEventListener('scroll', putScroll);
 
     return () => {
       menuZone.current?.removeEventListener('scroll', putScroll);
     }
+  }
   }, [])
 
   const putView = (value: string) => {
     setCurrent(value);
     if (value === "bun") {
-      bunZone.current.scrollIntoView({ behavior: 'smooth' });
+      bunZone.current?.scrollIntoView({ behavior: 'smooth' });
     } else if (value === "sauce") {
-      sauceZone.current.scrollIntoView({ behavior: 'smooth' });
+      sauceZone.current?.scrollIntoView({ behavior: 'smooth' });
     } else {
-      mainZone.current.scrollIntoView({ behavior: 'smooth' });
+      mainZone.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }
 

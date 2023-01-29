@@ -5,13 +5,13 @@ import { wsClose, wsConnecting, wsError, wsMessage, wsOpen, clearFetchedOrder, w
 
 export type TOrderInitial = {
     status: string;
-    connectionError: string;
+    connectionError: string | undefined;
     orders: TOrdersInfo;
 }
 
 const initialState: TOrderInitial = {
     status: WebsocketStatus.OFFLINE,
-    connectionError: '',
+    connectionError: undefined,
     orders: {
         orders: [],
         total: 0,
@@ -21,7 +21,7 @@ const initialState: TOrderInitial = {
 
 export const fetchOrder = createAsyncThunk(
     'WSReducer/fetchOrder',
-    async (order: number): Promise<TOrdersInfo | undefined> => {
+    async (order: number): Promise<TOrdersInfo> => {
         const res = request(`${apiLink}orders/${order}`,{
             method: 'GET',
             headers: {
@@ -33,42 +33,42 @@ export const fetchOrder = createAsyncThunk(
 
 
 export const WSReducer = createReducer(initialState, (builder) => {
-    builder
-    .addCase(wsConnecting, (state) => {
+    return (
+    builder.addCase(wsConnecting, (state, action) => {
             state.status = WebsocketStatus.CONNECTING
-    })
-    .addCase(wsOpen, (state) => {
+    }),
+    builder.addCase(wsOpen, (state, action) => {
         state.status = WebsocketStatus.ONLINE;
         state.connectionError = ''
-    })
-    .addCase(wsClose, (state) => {
+    }),
+    builder.addCase(wsClose, (state, action) => {
         state.status = WebsocketStatus.OFFLINE;
         state.connectionError = ''
-    })
-    .addCase(wsError, (state, action: PayloadAction<string>) => {
+    }),
+    builder.addCase(wsError, (state, action: PayloadAction<string | undefined>) => {
         state.connectionError = action.payload
-    })
-    .addCase(wsMessage, (state, action: PayloadAction<Readonly<TOrdersInfo>>) => {
+    }),
+    builder.addCase(wsMessage, (state, action: PayloadAction<Readonly<TOrdersInfo>>) => {
         state.orders = action.payload
-    })
-    .addCase(fetchOrder.pending, (state) => {
+    }),
+    builder.addCase(fetchOrder.pending, (state) => {
         state.status = WebsocketStatus.CONNECTING
-    })
-    .addCase(fetchOrder.fulfilled, (state, action) => {
+    }),
+    builder.addCase(fetchOrder.fulfilled, (state, action) => {
         state.orders = action.payload;
         state.status = WebsocketStatus.ONLINE;
-    })
-    .addCase(fetchOrder.rejected, (state) => {
+    }),
+    builder.addCase(fetchOrder.rejected, (state) => {
         state.status = WebsocketStatus.OFFLINE;
-    })
-    .addCase(clearFetchedOrder, (state) => {
+    }),
+    builder.addCase(clearFetchedOrder, (state) => {
         state.status = WebsocketStatus.OFFLINE;
         state.orders = {
             orders: [],
             total: 0,
             totalToday: 0
         }
-    })
+    }))
 })
 
 export default WSReducer;

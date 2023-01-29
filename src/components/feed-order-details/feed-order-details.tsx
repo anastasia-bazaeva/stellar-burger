@@ -24,12 +24,16 @@ export const FeedOrderDetails:FC<IFeedOrderDetails> = ({isModal}) => {
 
     const totalPrice = myOrder?.ingredients?.map(ingredient => ingredientsData?.filter(storeIngredient => storeIngredient._id === ingredient)[0].price).reduce((acc, current) => { return acc + current},0);
     
-    let uniqueIngredients = [];
+    let uniqueIngredients: Array<string> = [''];
 
     const getUnique = () => {
-        return myOrder?.ingredients?.filter((item, position) => {
-          return myOrder?.ingredients?.lastIndexOf(item) === position; 
-        });
+        let unique = [''];
+        if (myOrder) {
+            unique = myOrder.ingredients?.filter((item, position) => {
+                return myOrder.ingredients?.lastIndexOf(item) === position; 
+              });
+        }
+        return unique;
     }
 
     uniqueIngredients = getUnique();
@@ -44,7 +48,7 @@ export const FeedOrderDetails:FC<IFeedOrderDetails> = ({isModal}) => {
         text = 'Готовится';
     }
 
-    const count = (id) => {
+    const count = (id: string) => {
         let counter = 0;
 
         myOrder?.ingredients?.forEach(ingredient => {
@@ -76,7 +80,7 @@ export const FeedOrderDetails:FC<IFeedOrderDetails> = ({isModal}) => {
             <h2 className={`${FeedStyles.textBlock} text text_type_main-medium`}>{myOrder?.name}</h2>
             <p className={myOrder?.status === 'done'? `${FeedStyles.status} text text_type_main-small ${FeedStyles.statusDone}` : `${FeedStyles.status} text text_type_main-small`}>{text}</p>
             <h3 className={`${FeedStyles.textBlock} text text_type_main-medium pt-15 pb-6`}>Состав:</h3>
-            <div className={uniqueIngredients?.length > 3 ? FeedStyles.scrollzone : null}>
+            <div className={uniqueIngredients?.length > 3 ? FeedStyles.scrollzone : undefined}>
                 <ul className={orderStyles.ingredientsInfo}>
                     {uniqueIngredients?.map(ingredient => {
                 return (
@@ -97,7 +101,7 @@ export const FeedOrderDetails:FC<IFeedOrderDetails> = ({isModal}) => {
                 </ul>
             </div>
             <div className={`${orderStyles.list} mt-10`}>
-                <FormattedDate className={`${FeedStyles.textBlock} text text_type_main-default text_color_inactive`} date={new Date(myOrder?.createdAt)}/>
+                {myOrder && <FormattedDate className={`${FeedStyles.textBlock} text text_type_main-default text_color_inactive`} date={new Date(myOrder.createdAt)}/>}
                 <div className={orderStyles.listGroup}>
                     <p className={`${FeedStyles.textBlock} text text_type_digits-default`}>{totalPrice}</p>
                     <CurrencyIcon type="primary"/>

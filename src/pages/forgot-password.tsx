@@ -6,6 +6,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { resetPassword } from '../services/reducers/auth-reducers';
 import { useForm } from '../hooks/useForm';
 import { useDispatch, useSelector } from '../hooks/wrappers';
+import { FormEvent } from 'react';
 
 
 export function ForgotPassword() {
@@ -14,7 +15,7 @@ export function ForgotPassword() {
     const resetSent = useSelector(state => state.reducerAuth.resetSent);
 
 
-    const onSubmit = (e: SubmitEvent) => {
+    const onSubmit = (e: SubmitEvent | FormEvent) => {
         e.preventDefault();
         dispatch(resetPassword({email: values.email}));
         setValues({email: ''})

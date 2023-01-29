@@ -11,11 +11,8 @@ import { clearDetails, setDetails } from "../../services/reducers/ingredient-det
 import { useDispatch, useSelector } from "../../hooks/wrappers";
 import { TIngredient } from "../../types/ingredient-types";
 
-interface IIngredient {
-  productInfo: TIngredient;
-}
 
-const Ingredient:FC<IIngredient> = ({ productInfo }) => {
+function Ingredient ({ productInfo }: {productInfo: TIngredient}) {
 
   //const [isOrderDetailsOpened, setIsOrderDetailsOpened] = React.useState(false);
   const { constructorIngredients, selectedBun } = useSelector(state => state.reducerConstructor);
@@ -33,32 +30,33 @@ const Ingredient:FC<IIngredient> = ({ productInfo }) => {
 
   let number = productInfo?._id === selectedBun?._id ? 2 : constructorIngredients?.filter(item => item._id === productInfo._id).length;
 
-  const handleClick = (productInfo) => {
+  const handleClick = (productInfo:TIngredient) => {
     dispatch(setDetails(productInfo));
   };
 
   return (
-    !isDrag &&
-    <>
-      <li ref={dragRef} className={menuStyles.card} id='card' onClick={() => handleClick(productInfo)}>
-      <Link className={menuStyles.link} to={{
-        pathname: `/ingredients/${productInfo._id}`,
-        state: {background: location}
-        }}>
-          <div>
-            {(number > 0) ?
-              <Counter count={number} size="default" />
-              : <></>}
-          </div>
-          <img src={productInfo.image} alt={productInfo.name} />
-          <div className={menuStyles.span_area}>
-            <span className={`${menuStyles.title} text text_type_digits-default`}>{productInfo.price}</span>
-            <CurrencyIcon type="primary" />
-          </div>
-          <p className={`${menuStyles.product__name} text text_type_main-default`}>{productInfo.name}</p>
-        </Link>
-      </li>
+      !isDrag ?
+      <>
+        <li ref={dragRef} className={menuStyles.card} id='card' onClick={() => handleClick(productInfo)}>
+        <Link className={menuStyles.link} to={{
+          pathname: `/ingredients/${productInfo._id}`,
+          state: {background: location}
+          }}>
+            <div>
+              {(number > 0) ?
+                <Counter count={number} size="default" />
+                : <></>}
+            </div>
+            <img src={productInfo.image} alt={productInfo.name} />
+            <div className={menuStyles.span_area}>
+              <span className={`${menuStyles.title} text text_type_digits-default`}>{productInfo.price}</span>
+              <CurrencyIcon type="primary" />
+            </div>
+            <p className={`${menuStyles.product__name} text text_type_main-default`}>{productInfo.name}</p>
+          </Link>
+        </li>
     </>
+    : <></>
   )
 }
 export default Ingredient

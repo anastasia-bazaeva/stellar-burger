@@ -5,7 +5,7 @@ import { getCookie, setCookie, request, apiLink, deleteCookie, TMethods } from '
 
 export const loginUser = createAsyncThunk(
     'reducerAuth/loginUser',
-    async (data: TUserLoginData):Promise<TUserResponse | undefined> => {
+    async (data: TUserLoginData):Promise<TUserResponse> => {
         const res = request(`${apiLink}auth/login`, {
             method: 'POST',
             headers: {
@@ -18,7 +18,7 @@ export const loginUser = createAsyncThunk(
 
     export const registerUser = createAsyncThunk(
         'reducerAuth/registerUser',
-        async (data: TUserRegisterData):Promise<TUserResponse | undefined> => {
+        async (data: TUserRegisterData):Promise<TUserResponse> => {
             const res = request(`${apiLink}auth/register`, {
                 method: 'POST',
                 headers: {
@@ -31,7 +31,7 @@ export const loginUser = createAsyncThunk(
     
     export const logoutUser = createAsyncThunk(
         'reducerAuth/logoutUser',
-        async (refreshToken: string) => {
+        async (refreshToken: string | null) => {
             const res = request(`${apiLink}auth/logout`, {
                 method: 'POST',
                 headers: {
@@ -79,7 +79,7 @@ export const loginUser = createAsyncThunk(
         return res
     } 
 
-    const fetchUser = async (requestMethod: TMethods, data: string):Promise<TUserResponse | undefined> => {
+    const fetchUser = async (requestMethod: TMethods, data: string | undefined):Promise<TUserResponse | undefined> => {
         const res = await request(`${apiLink}auth/user`, {
             method: requestMethod,
             headers:
@@ -96,12 +96,12 @@ export const loginUser = createAsyncThunk(
         'reducerAuth/getUserInfo',
         async (): Promise<TUserResponse | undefined> => {
             if(getCookie('accessToken')){
-                return await fetchUser('GET', null)
+                return await fetchUser('GET', undefined)
             }
             const refreshRes = await refreshToken();
                     setCookie('accessToken', refreshRes.accessToken.split('Bearer ')[1]);
                     localStorage.setItem('refreshToken', refreshRes.refreshToken);
-                    return await fetchUser('GET', null)
+                    return await fetchUser('GET', undefined)
     });
 
     export const updateUserInfo = createAsyncThunk(
@@ -118,21 +118,21 @@ export const loginUser = createAsyncThunk(
 
 
 type TUserInitial = {
-    isAuthChecked: string | null,
-    user: TUser | null;
+    isAuthChecked: string | undefined,
+    user: TUser | undefined;
     hasError: boolean;
     isLoading: boolean;
     resetSent: boolean;
-    errorMessage: string;
+    errorMessage: string | undefined,
 }            
 
 const initialAuth : TUserInitial = {
-    isAuthChecked: null,
-    user: null,
+    isAuthChecked: undefined,
+    user: undefined,
     hasError: false,
     isLoading: false,
     resetSent: false,
-    errorMessage: null
+    errorMessage: undefined
 }
 
 const reducerAuth = createSlice({
@@ -140,7 +140,7 @@ const reducerAuth = createSlice({
     initialState: initialAuth,
     reducers: {
         clearAuthCheck: (state) => {
-            state.isAuthChecked = null
+            state.isAuthChecked = undefined
         }
     },
     extraReducers: (builder) => {
@@ -151,7 +151,7 @@ const reducerAuth = createSlice({
         }),
         builder.addCase(loginUser.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.user = action.payload.user;
+            state.user = action.payload?.user;
             state.isAuthChecked = "success";
             setCookie('accessToken', action.payload.accessToken.split('Bearer ')[1]);
             localStorage.setItem('refreshToken', action.payload.refreshToken)
@@ -165,11 +165,11 @@ const reducerAuth = createSlice({
         builder.addCase(registerUser.pending, (state) => {
             state.isLoading = true;
             state.hasError = false;
-            state.errorMessage = null
+            state.errorMessage = undefined
         }),
         builder.addCase(registerUser.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.user = action.payload.user;
+            state.user = action.payload?.user;
             state.isAuthChecked = 'success';
             setCookie('accessToken', action.payload.accessToken.split('Bearer ')[1]);
             localStorage.setItem('refreshToken', action.payload.refreshToken)
@@ -182,11 +182,11 @@ const reducerAuth = createSlice({
         builder.addCase(logoutUser.pending, (state) => {
             state.isLoading = true;
             state.hasError = false;
-            state.errorMessage = null
+            state.errorMessage = undefined
         }),
         builder.addCase(logoutUser.fulfilled, (state) => {
             state.isLoading = false;
-            state.user = null;
+            state.user = undefined;
             deleteCookie('accessToken');
             localStorage.removeItem('refreshToken')
         }),
@@ -198,7 +198,7 @@ const reducerAuth = createSlice({
         builder.addCase(resetPassword.pending, (state) => {
             state.isLoading = true;
             state.hasError = false;
-            state.errorMessage = null
+            state.errorMessage = undefined
         }),
         builder.addCase(resetPassword.fulfilled, (state) => {
             state.isLoading = false;
@@ -212,7 +212,7 @@ const reducerAuth = createSlice({
         builder.addCase(setNewPassword.pending, (state) => {
             state.isLoading = true;
             state.hasError = false;
-            state.errorMessage = null
+            state.errorMessage = undefined
         }),
         builder.addCase(setNewPassword.fulfilled, (state) => {
             state.isLoading = false;
@@ -225,10 +225,10 @@ const reducerAuth = createSlice({
         builder.addCase(getUserInfo.pending, (state) => {
             state.isLoading = true;
             state.hasError = false;
-            state.errorMessage = null
+            state.errorMessage = undefined
         }),
         builder.addCase(getUserInfo.fulfilled, (state, action) => {
-            state.user = action.payload.user;
+            state.user = action.payload?.user;
         }),
         builder.addCase(getUserInfo.rejected, (state, action) => {
             state.isLoading = false;
@@ -239,15 +239,15 @@ const reducerAuth = createSlice({
         builder.addCase(updateUserInfo.pending, (state) => {
             state.isLoading = true;
             state.hasError = false;
-            state.errorMessage = null
+            state.errorMessage = undefined
         }),
         builder.addCase(updateUserInfo.fulfilled, (state, action) => {
-            state.user = action.payload.user;
+            state.user = action.payload?.user;
         }),
         builder.addCase(updateUserInfo.rejected, (state, action) => {
             state.isLoading = false;
             state.hasError = true;
-            state.user = null;
+            state.user = undefined;
             state.errorMessage = action.error.message
         })
     )}

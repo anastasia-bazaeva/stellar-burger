@@ -5,10 +5,10 @@ import update from 'immutability-helper';
 import { TOrderResponse } from '../../types/order-types';
 import { TIngredient } from '../../types/ingredient-types';
 
-export type TConstructorIngredient = TIngredient & {uid?: string};
+export type TConstructorIngredient = TIngredient & {uid: string};
 
 type TConstructorInitial = {
-    constructorIngredients: Array<TConstructorIngredient> | null;
+    constructorIngredients: Array<TConstructorIngredient> | any[];
     orderNumber: number;
     priceState: number;
     selectedBun: TIngredient | null;
