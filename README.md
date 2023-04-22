@@ -1,46 +1,41 @@
-# Getting Started with Create React App
+# Проект: Космическая бургерная
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Обзор
+* О проекте
+* Ограничения
+* Демо
 
-## Available Scripts
+**О проекте**
 
-In the project directory, you can run:
+Этот проект - виртуальный кабинет бургерной.
+В нем есть несколько страниц:
+* Главная страница
+Представляет собой онлайн-меню, разделенное по категориям, и форму для заказа. Подробности об ингредиентах можно увидеть в модальном окне при нажатии на иконку ингредиента. Для того, чтобы добавить ингредиент в заказ, нужно перетащить ингредиент в зону заказа (она подсвечивается).
+* Лена заказов
+На странице отображена лента всех заказов, размещаемых в настоящий момент. Каждый заказ можно ракрыть нажатием и ознакомиться с названием получившегося бургера, и его составом. В правой части экрана отображается табло заказов. Если кто-то недавно разместил заказ, он на несколько секунд появится в статусе "В работе".
+* Личный кабинет
+Личный кабинет доступен авторизванному пользователю, поэтому на этой странице есть несколько дополнительных роутов: 
+- Страница входа
+- Страница регистрации
+- Страница с запросом восстановления пароля
+- Страница с восстановлением пароля (доступна только если был выслан запрос на восстановление)
+В личном кабинете пользователю доступна личная лента заказов и возможность поменять учетные данные.
 
-### `npm start`
+В проекте используются:
+- Typescript
+- Модули
+- React CRA
+- React Router 5
+- Сторонняя библиотека для визуализации элементов интерфейса (@ya.praktikum/react-developer-burger-ui-components)
+- Защищенные роуты
+- Получение данных с сервера через HTTP
+- Получение данных с сервера через Websocket (ленты заказов)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+**Ограничения**
+Для стабильной работы Websocket-соединения общей ленты заказов и ленты заказов пользователя может потребоваться отключение браузерных расширений, блокирующих рекламу.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+**Демо**
 
-### `npm test`
+* [Ссылка на демо](https://russian-travel-eight.vercel.app/)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
