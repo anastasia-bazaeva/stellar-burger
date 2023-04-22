@@ -36,6 +36,6 @@
 
 **Демо**
 
-* [Ссылка на демо](https://russian-travel-eight.vercel.app/)
+* [Ссылка на демо](https://stellar-burger-tau.vercel.app/)
 
 
